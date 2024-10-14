@@ -1,0 +1,32 @@
+.bg-gradient {
+    background: linear-gradient(135deg, #7D46FD, #FDC991);
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.fade-in {
+    opacity: 1;
+}
+
+.bg-gradient-user {
+    background: linear-gradient(135deg, #00EBF8, #0E09E3);
+}
+
+.bg-gradient-pemasukan {
+    background: linear-gradient(135deg, #00FE54, #006521);
+}
+
+.bg-gradient-pengeluaran {
+    background: linear-gradient(135deg, #FFD6A4, #BF1F60);
+}
+
+.bg-gradient-saldo {
+    background: linear-gradient(to right, #ff9800, #ffb74d);
+}
+
+.bg-button {
+    background: #7D46FD;
+}
