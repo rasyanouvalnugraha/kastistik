@@ -1,27 +1,67 @@
+<!-- <?php include 'layout/table.php' ?> -->
+
+NO. NAMA IURAN
+
+1 YAYAT ROCHADIYAT 100.000
+2 EVINA IRONIKA 75.000
+3 ABADI WIBOWO 50.000
+4 IDA FARIANA 50.000
+5 AGUS MADIYONO 20.000
+6 APRILIA PUPUT NADEA 50.000
+7 ARGO NURCAHYO 30.000
+8 ARI PURNOMOSARI 20.000
+9 ARINI EKA PURWANTI 50.000
+10 BAIQ NURUL HAQIQI 30.000
+11 BUDI ISTI HERLINI 25.000
+12 DESRIA WATI 25.000
+13 EMI YUNITA 30.000
+14 IRVAN RAHMAN SALEH 50.000
+15 RAFI'UL HAYUMI HARTIN 30.000
+16 SLAMET B. WIEDE 30.000
+17 WIWIK AKTA PIANTRI 50.000
+18 ARINA MANA SIKANA 30.000
+Total
+
+YAYAT ROCHADIYAT
+EVINA IRONIKA
+ABADI WIBOWO
+IDA FARIANA
+AGUS MADIYONO
+APRILIA PUPUT NADEA
+ARGO NURCAHYO
+ARI PURNOMOSARI
+ARINI EKA PURWANTI
+BAIQ NURUL HAQIQI
+BUDI ISTI HERLINI
+DESRIA WATI
+EMI YUNITA
+IRVAN RAHMAN SALEH
+RAFI'UL HAYUMI HARTIN
+SLAMET B. WIEDE
+WIWIK AKTA PIANTRI
+ARINA MANA SIKANA
+
 <?php
-include 'connection/database.php';
-session_start();
-if ($_SESSION['role'] != 'admin') {
-    header('location: index.php');
-    exit();
-}
-
-// query memasukkan data ke table transations
-if (isset($_POST['add'])) {
-    mysqli_query($db, "INSERT INTO transactions 
-    (id_user, amount, type, date, saldo, approve) 
-    VALUES (
-        '" . $_POST['username'] . "',
-        '" . $_POST['jumlah'] . "',
-        1,
-        '" . $_POST['tanggal'] . "',
-        '" . $_POST['jumlah'] . "',
-        1
-    )") or die(mysqli_error($db));
-}
-
-
+if (mysqli_num_rows($pemasukan) > 0) {
+    // Loop melalui setiap hasil
+    while ($data = mysqli_fetch_assoc($pemasukan)) {
+        // Mengubah dari array asosiatif
+        $nama = $data['nama'];
+        $tanggal = $data['tanggal'];
+        $jumlah = $data['jumlah'];
 ?>
+        <tr class="hover:bg-gray-100">
+            <td class="py-2 px-4 border-b"><?php echo $nama; ?></td>
+            <td class="py-2 px-4 border-b"><?php echo $tanggal; ?></td>
+            <td class="py-2 px-4 border-b"><?php echo number_format($jumlah, 2); ?></td>
+        </tr>
+<?php
+    }
+} else {
+    echo "<tr><td colspan='3' class='py-2 px-4 text-center text-red-500'>Tidak ada data pemasukan yang ditemukan.</td></tr>";
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -60,17 +100,6 @@ if (isset($_POST['add'])) {
 
                     <form action="pemasukan.admin.php" class="space-y-4 font-mulish" method="POST">
                         <div>
-                            <?php 
-                            // query menampilkan jika berhasil di input data
-                            if (isset($_POST['add'])) { 
-                                echo "<div class='text-green-600 text-lg'>Data berhasil dimasukkan</div>";
-                            } else {
-                                // query menampilkan jika gagal di input data
-                                if (!isset($_POST['username']) && isset($_POST['tanggal']) && isset($_POST['jumlah'])) {
-                                    echo "<div class='text-red-600 text-lg'>Data gagal dimasukkan</div>";
-                                }
-                            }
-                            ?>
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
                                 <img src="asset/Person.png" alt="Person Icon" class="w-6 h-6 ml-3">

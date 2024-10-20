@@ -10,32 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Data Dummy -->
                 <?php
-                // Data Dummy
-                $data = [
-                    ["01/01/2024", "Rp 1.000.000", "Rp 200.000", "Pembayaran A"],
-                    ["02/01/2024", "Rp 500.000", "Rp 100.000", "Pembayaran B"],
-                    ["03/01/2024", "Rp 750.000", "Rp 300.000", "Pembayaran C"],
-                    ["04/01/2024", "Rp 600.000", "Rp 150.000", "Pembayaran D"],
-                    ["05/01/2024", "Rp 1.200.000", "Rp 400.000", "Pembayaran E"],
-                    ["06/01/2024", "Rp 900.000", "Rp 250.000", "Pembayaran F"],
-                    ["07/01/2024", "Rp 1.500.000", "Rp 600.000", "Pembayaran G"],
-                    ["08/01/2024", "Rp 800.000", "Rp 350.000", "Pembayaran H"],
-                    ["09/01/2024", "Rp 650.000", "Rp 200.000", "Pembayaran I"],
-                    ["10/01/2024", "Rp 1.100.000", "Rp 450.000", "Pembayaran J"],
-                    ["11/01/2024", "Rp 1.300.000", "Rp 300.000", "Pembayaran K"],
-                    ["12/01/2024", "Rp 700.000", "Rp 350.000", "Pembayaran L"],
-                    ["13/01/2024", "Rp 500.000", "Rp 200.000", "Pembayaran M"],
-                    ["14/01/2024", "Rp 1.600.000", "Rp 500.000", "Pembayaran N"],
-                    ["15/01/2024", "Rp 1.400.000", "Rp 350.000", "Pembayaran O"],
-                    ["16/01/2024", "Rp 1.800.000", "Rp 600.000", "Pembayaran P"],
-                    ["17/01/2024", "Rp 950.000", "Rp 200.000", "Pembayaran Q"],
-                    ["18/01/2024", "Rp 600.000", "Rp 150.000", "Pembayaran R"],
-                    ["19/01/2024", "Rp 1.200.000", "Rp 350.000", "Pembayaran S"],
-                    ["20/01/2024", "Rp 850.000", "Rp 300.000", "Pembayaran T"],
-                ];
-
                 foreach ($data as $row) {
                     echo "<tr class='text-center'>";
                     foreach ($row as $cell) {

@@ -2,7 +2,7 @@
     $namaserver = "localhost";
     $username = "root";
     $password = "";
-    $namadatabase = "roleuser";
+    $namadatabase = "kastistik";
 
     $db = mysqli_connect($namaserver, $username, $password, $namadatabase);
 
