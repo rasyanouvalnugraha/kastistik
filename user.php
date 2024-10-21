@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION['role'] != 'user') {
+if ($_SESSION['role'] != '2') {
     header('location: index.php');
     exit();
 }
@@ -13,33 +13,43 @@ if ($_SESSION['role'] != 'user') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard User</title>
+    <title>DASHBOARD ADMIN</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
-    <style>
-        .bg-gradient {
-            background: linear-gradient(135deg, #7D46FD, #FDC991);
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="card.css">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/navbar.css">
+
+
 </head>
 
 <body class="bg-gray-100">
     <div class="flex">
         <section class="relative">
-            <nav class="navbar sticky top-0 z-10 h-screen">
-                <?php include "layout/navbar.user.php"; ?>
+            <nav class="navbar h-screen">
+                <?php include "layout.user/navbar.user.php"; ?>
             </nav>
         </section>
+
         <section class="flex-1">
-            <h1 class="text-lg font-bold w-full p-5 justify-end flex">
-                <?php print $_SESSION['username']; ?>
-            </h1>
-            <hr>
-            <section class="flex-1">
+            <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
+                <h1>Dashboard</h1>
+                <h1><?php print $_SESSION['username']; ?></h1>
+            </div>
+            <section class="flex-1 ml-2">
                 <?php include 'layout/card.php' ?>
             </section>
         </section>
     </div>
 </body>
+<style>
+
+</style>
+
 
 </html>

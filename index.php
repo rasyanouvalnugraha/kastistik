@@ -18,10 +18,10 @@ if (isset($_POST['login'])) {
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role'];
 
-        if ($user['role'] == 'admin') {
+        if ($user['role'] == '1') {
             header('Location: admin.php');
         }
-        if ($user['role'] == 'user') {
+        if ($user['role'] == '2') {
             header('Location: user.php');
         } else {
             print "<script>alert('akun tidak ditemukan')</script>";

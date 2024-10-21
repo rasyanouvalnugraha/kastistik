@@ -3,7 +3,7 @@ include "connection/database.php";
 
 
 //menghitung jumlah users
-$sql = "SELECT COUNT(*) as total_users FROM users WHERE role = 'user'";
+$sql = "SELECT COUNT(*) as total_users FROM users WHERE role = '2'";
 $result = $db->query($sql);
 // Mendapatkan hasil sebagai array asosiatif
 $row = $result->fetch_assoc();
@@ -17,11 +17,13 @@ $data = $result1->fetch_assoc();
 $pemasukan = $data['pemasukan'];
 
 // menghitung pengeluaran 
-$querypengeluaran = "SELECT SUM(amount) AS pengeluaran FROM `transactions` WHERE type = 3;";
+$querypengeluaran = "SELECT SUM(amount) AS pengeluaran FROM `transactions` WHERE type = 3 AND approve = 1;";
 $result1 = $db->query($querypengeluaran);
 $data = $result1->fetch_assoc();
 $pengeluaran = $data['pengeluaran'];
 
+
+//menghitung saldo
 $sisa = $pemasukan - $pengeluaran;
 
 ?>

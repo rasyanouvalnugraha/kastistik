@@ -1,7 +1,7 @@
 <?php
 include 'connection/database.php';
 session_start();
-if ($_SESSION['role'] != 'admin') {
+if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
@@ -22,7 +22,8 @@ if (isset($_POST['min'])) {
         1
     )") or die(mysqli_error($db));
 
-    echo "<script>alert('data berhasil dimasukkan')</script>";
+    header('location: pengeluaran.admin.php');
+
 }
 
 
@@ -83,7 +84,7 @@ if (isset($_POST['min'])) {
                                     <option value="">Pilih User</option>
                                     <?php
                                     // query mengambil jumlah users di table user
-                                    $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = 'user'") or die(mysqli_error($db));
+                                    $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = '2'") or die(mysqli_error($db));
                                     while ($data = mysqli_fetch_array($sql)) {
                                         echo "<option value=$data[id]> $data[username]</option>";
                                     }

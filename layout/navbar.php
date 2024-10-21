@@ -12,13 +12,13 @@
     <!-- NAVIGASI SECTION / BAGIAN NAVIGASI -->
     <nav>
         <ul class="font-mulish">
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:bg-blue-700 hover:text-white rounded-xl mx-1">
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1">
                 <a href="admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/Content.png" alt="" class="w-6 h-6">
                     <span class="">Dashboard</span>
                 </a>
             </li>
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:bg-blue-700 hover:text-white rounded-xl mx-1">
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1">
                 <a href="user.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/User.png" alt="" class="w-6 h-6">
                     <span class="">User</span>
@@ -28,14 +28,14 @@
 
             <!-- NAVIGASI INPUT DATA -->
             <h1 class="font-mulish flex justify-center items-center pt-5">INPUT DATA</h1>
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:bg-blue-700 hover:text-white rounded-xl mx-1">
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
                 <a href="pemasukan.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/Database Restore.png" alt="" class="w-6 h-6">
                     <span class="">Pemasukan</span>
                 </a>
             </li>
 
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:bg-blue-700 hover:text-white rounded-xl mx-1">
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
                 <a href="pengeluaran.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/Database Export.png" alt="" class="w-6 h-6">
                     <span class="">Pengeluaran</span>
@@ -46,14 +46,14 @@
 
             <!-- NAVIGASI DATA PEMASUKAN -->
             <h1 class="font-mulish flex justify-center items-center pt-5">DATA</h1>
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:bg-blue-700 hover:text-white rounded-xl mx-1">
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
                 <a href="data.pemasukan.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/Database Restore.png" alt="" class="w-6 h-6">
                     <span class="">Pemasukan</span>
                 </a>
             </li>
 
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:bg-blue-700 hover:text-white rounded-xl mx-1">
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
                 <a href="data.pengeluaran.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/Database Export.png" alt="" class="w-6 h-6">
                     <span class="">Pengeluaran</span>
@@ -63,7 +63,14 @@
             <hr>
 
             <!-- NAVIGASI LOG OUT -->
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:bg-blue-700 hover:text-white rounded-xl mx-1">
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
+                <a href="request.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
+                    <img src="asset/Invite.svg" alt="" class="w-6 h-6">
+                    <span class="">Request</span>
+                </a>
+            </li>
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1 flex">
+                <img src="asset/logout.svg" alt="" class="w-6 mr-3">
                 <?php include "layout/exit.php" ?>
             </li>
 

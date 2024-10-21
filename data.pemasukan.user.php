@@ -2,64 +2,47 @@
 session_start();
 
 include "connection/database.php";
-if ($_SESSION['role'] != '1') {
+if ($_SESSION['role'] != '2') {
     header('location: index.php');
     exit(); 
-}
+} 
 
 // query ambil data pemasukan di database yang type = 1 / 2
 // Ambil data pemasukan di database yang type = 1 / 2
 
 
-    // button seacrh 
-    if (isset($_POST['sumbit'])) {
-        $start = $_POST['tanggal_awal'];
-        $end = $_POST['tanggal_akhir'];
+// button seacrh 
+if (isset($_POST['sumbit'])) {
+    $start = $_POST['tanggal_awal'];
+    $end = $_POST['tanggal_akhir'];
 
-        //query seacrhing tanggal
+    //query seacrhing tanggal
 
-        if ($start != null || $end != null) {
-            $pemasukan = mysqli_query($db, "
-            SELECT 
-            transactions.date AS tanggal, 
-            users.username AS nama, 
-            transactions.amount AS jumlah, 
-            transactions.keterangan AS Keterangan 
-            FROM transactions 
-            JOIN users ON transactions.id_user = users.id 
-            WHERE transactions.type = 1 
-            AND transactions.approve = 1 
-            AND transactions.date BETWEEN '$start' AND '$end'
-            ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
-        );
-        } else {
-            $pemasukan = mysqli_query($db, "
-            SELECT 
-            transactions.date AS tanggal, 
-            users.username AS nama, 
-            transactions.amount AS jumlah, 
-            transactions.keterangan AS Keterangan 
-            FROM transactions 
-            JOIN users ON transactions.id_user = users.id 
-            WHERE transactions.type = 1 
-            AND transactions.approve = 1 
-            ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
-        );
-        }
+    if ($start != null || $end != null) {
+        $pemasukan = mysqli_query($db, "
+        SELECT date AS tanggal, username AS nama, amount AS jumlah 
+        FROM transactions 
+        JOIN users ON transactions.id_user = users.id 
+        WHERE type IN (1, 2) AND date BETWEEN '$start' AND '$end'
+        ORDER BY date DESC. username DESC, amount DESC;
+    ");
     } else {
         $pemasukan = mysqli_query($db, "
-            SELECT 
-            transactions.date AS tanggal, 
-            users.username AS nama, 
-            transactions.amount AS jumlah, 
-            transactions.keterangan AS Keterangan 
-            FROM transactions 
-            JOIN users ON transactions.id_user = users.id 
-            WHERE transactions.type = 1
-            AND transactions.approve = 1 
-            ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
-        );
+        SELECT date AS tanggal, username AS nama, amount AS jumlah 
+        FROM transactions 
+        JOIN users ON transactions.id_user = users.id 
+        WHERE type IN (1, 2) 
+        ORDEY BY date DESC, username DESC , amount DESC;");
     }
+} else {
+    $pemasukan = mysqli_query($db, "
+        SELECT date AS tanggal, username AS nama, amount AS jumlah 
+        FROM transactions 
+        JOIN users ON transactions.id_user = users.id 
+        WHERE type IN (1, 2) 
+        ORDER BY date DESC, username DESC, amount DESC;
+        ;");
+}
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +73,7 @@ if ($_SESSION['role'] != '1') {
         <!-- NAVBAR -->
         <section class="relative">
             <nav class="navbar h-screen mr-5">
-                <?php include "layout/navbar.php"; ?>
+                <?php include "layout.user/navbar.user.php"; ?>
             </nav>
         </section>
 

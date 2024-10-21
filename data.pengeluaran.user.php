@@ -2,64 +2,67 @@
 session_start();
 
 include "connection/database.php";
-if ($_SESSION['role'] != '1') {
+
+if ($_SESSION['role'] != '2'){
     header('location: index.php');
-    exit(); 
+    exit();
 }
 
-// query ambil data pemasukan di database yang type = 1 / 2
-// Ambil data pemasukan di database yang type = 1 / 2
+// query ambil data pemasukan di database yang type = 3
+// Ambil data pemasukan di database yang type = 3
 
 
-    // button seacrh 
-    if (isset($_POST['sumbit'])) {
-        $start = $_POST['tanggal_awal'];
-        $end = $_POST['tanggal_akhir'];
+// button seacrh 
+if (isset($_POST['sumbit'])) {
+    $start = $_POST['tanggal_awal'];
+    $end = $_POST['tanggal_akhir'];
 
-        //query seacrhing tanggal
+    //query seacrhing tanggal
 
-        if ($start != null || $end != null) {
-            $pemasukan = mysqli_query($db, "
-            SELECT 
-            transactions.date AS tanggal, 
-            users.username AS nama, 
-            transactions.amount AS jumlah, 
-            transactions.keterangan AS Keterangan 
-            FROM transactions 
-            JOIN users ON transactions.id_user = users.id 
-            WHERE transactions.type = 1 
-            AND transactions.approve = 1 
-            AND transactions.date BETWEEN '$start' AND '$end'
-            ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
-        );
-        } else {
-            $pemasukan = mysqli_query($db, "
-            SELECT 
-            transactions.date AS tanggal, 
-            users.username AS nama, 
-            transactions.amount AS jumlah, 
-            transactions.keterangan AS Keterangan 
-            FROM transactions 
-            JOIN users ON transactions.id_user = users.id 
-            WHERE transactions.type = 1 
-            AND transactions.approve = 1 
-            ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
-        );
-        }
+    if ($start != null || $end != null) {
+        $pengeluaran = mysqli_query($db, "
+    SELECT 
+        transactions.date AS tanggal, 
+        users.username AS nama, 
+        transactions.amount AS jumlah, 
+        transactions.keterangan AS Keterangan 
+    FROM transactions 
+    JOIN users ON transactions.id_user = users.id 
+    WHERE transactions.type = 3 
+    AND transactions.approve = 1 
+    AND transactions.date BETWEEN '$start' AND '$end'
+    ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC
+");
     } else {
-        $pemasukan = mysqli_query($db, "
-            SELECT 
-            transactions.date AS tanggal, 
-            users.username AS nama, 
-            transactions.amount AS jumlah, 
-            transactions.keterangan AS Keterangan 
-            FROM transactions 
-            JOIN users ON transactions.id_user = users.id 
-            WHERE transactions.type = 1
-            AND transactions.approve = 1 
-            ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
-        );
+        $pengeluaran = mysqli_query($db, "
+    SELECT 
+        transactions.date AS tanggal, 
+        users.username AS nama, 
+        transactions.amount AS jumlah, 
+        transactions.keterangan AS Keterangan 
+    FROM transactions 
+    JOIN users ON transactions.id_user = users.id 
+    WHERE transactions.type = 3 
+    AND transactions.approve = 1 
+    AND transactions.date
+    ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC
+");
     }
+} else {
+    $pengeluaran = mysqli_query($db, "
+    SELECT 
+        transactions.date AS tanggal, 
+        users.username AS nama, 
+        transactions.amount AS jumlah, 
+        transactions.keterangan AS Keterangan 
+    FROM transactions 
+    JOIN users ON transactions.id_user = users.id 
+    WHERE transactions.type = 3 
+    AND transactions.approve = 1 
+    AND transactions.date
+    ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC
+");
+}
 ?>
 
 <!DOCTYPE html>
@@ -90,7 +93,7 @@ if ($_SESSION['role'] != '1') {
         <!-- NAVBAR -->
         <section class="relative">
             <nav class="navbar h-screen mr-5">
-                <?php include "layout/navbar.php"; ?>
+                <?php include "layout.user/navbar.user.php"; ?>
             </nav>
         </section>
 
@@ -103,7 +106,7 @@ if ($_SESSION['role'] != '1') {
             </div>
 
 
-            <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pemasukan</h1>
+            <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pengeluaran</h1>
 
             <section class="container mx-auto px-4 flex-1">
                 <!-- FITUR SEACRHING TANGGAL-->
@@ -135,15 +138,17 @@ if ($_SESSION['role'] != '1') {
                             <tr class="bg-gradient navbar text-white">
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
+                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Keterangan</th>
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Jumlah</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            while ($row = mysqli_fetch_assoc($pemasukan)) {
+                            while ($row = mysqli_fetch_assoc($pengeluaran)) {
                                 echo "<tr class='hover:bg-gray-300 hover:cursor-pointer'>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['tanggal'] . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>Rp. " . number_format($row['jumlah'], 0, '.', '.') . "</td>";
                                 echo "</tr>";
                             }

@@ -1,7 +1,7 @@
 <?php
 include 'connection/database.php';
 session_start();
-if ($_SESSION['role'] != 'admin') {
+if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
@@ -13,12 +13,16 @@ if (isset($_POST['add'])) {
     VALUES (
         '" . $_POST['username'] . "',
         '" . $_POST['jumlah'] . "',
-        1,
+        '" . $_POST['type'] ."',
         '" . $_POST['tanggal'] . "',
         '" . $_POST['jumlah'] . "',
         1
     )") or die(mysqli_error($db));
+
+    header('location: pemasukan.admin.php');
 }
+
+
 
 
 ?>
@@ -66,7 +70,7 @@ if (isset($_POST['add'])) {
                                 echo "<div class='text-green-600 text-lg'>Data berhasil dimasukkan</div>";
                             } else {
                                 // query menampilkan jika gagal di input data
-                                if (!isset($_POST['username']) && isset($_POST['tanggal']) && isset($_POST['jumlah'])) {
+                                if (!isset($_POST['username']) && isset($_POST['tanggal']) && isset($_POST['jumlah']) && isset($_POST['type'])) {
                                     echo "<div class='text-red-600 text-lg'>Data gagal dimasukkan</div>";
                                 }
                             }
@@ -78,7 +82,7 @@ if (isset($_POST['add'])) {
                                     <option value="">Pilih User</option>
                                     <?php
                                     // query mengambil jumlah users di table user
-                                    $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = 'user'") or die(mysqli_error($db));
+                                    $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = '2'") or die(mysqli_error($db));
                                     while ($data = mysqli_fetch_array($sql)) {
                                         echo "<option value=$data[id]> $data[username]</option>";
                                     }
@@ -93,6 +97,14 @@ if (isset($_POST['add'])) {
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
                                 <img src="asset/Receive Cash.svg" alt="Coins Icon" class="w-6 h-6 ml-3">
                                 <input type="text" id="amount" name="jumlah" class="w-full px-4 py-4 focus:outline-none" placeholder="Masukkan jumlah uang" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="type" class="block text-gray-700 font-semibold mb-2">Type</label>
+                            <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
+                                <img src="asset/Strategy.svg" alt="Coins Icon" class="w-6 h-6 ml-3">
+                                <input type="text" id="amount" name="type" class="w-full px-4 py-4 focus:outline-none" placeholder="1 = Kas , 2 = Non Kas" required>
                             </div>
                         </div>
 

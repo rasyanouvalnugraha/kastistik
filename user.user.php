@@ -1,6 +1,8 @@
+
+
 <?php
 session_start();
-if ($_SESSION['role'] != '1') {
+if ($_SESSION['role'] != '2') {
     header('location: index.php');
     exit();
 }
@@ -25,24 +27,24 @@ if ($_SESSION['role'] != '1') {
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
 
-
 </head>
 
 <body class="bg-gray-100">
     <div class="flex">
         <section class="relative">
             <nav class="navbar h-screen">
-                <?php include "layout/navbar.php"; ?>
+                <?php include "layout.user/navbar.user.php"; ?>
             </nav>
         </section>
-
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+                <h1>User</h1>
+                <?php print $_SESSION['username']; ?>
             </div>
-            <section class="flex-1 ml-2">
+            <section class="flex-1">
                 <?php include 'layout/card.php' ?>
+            </section>
+            <section>
             </section>
         </section>
     </div>
@@ -50,6 +52,5 @@ if ($_SESSION['role'] != '1') {
 <style>
 
 </style>
-
 
 </html>
