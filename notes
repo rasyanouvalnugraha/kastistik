@@ -175,3 +175,14 @@ if (mysqli_num_rows($pemasukan) > 0) {
 </style>
 
 </html>
+
+ mysqli_query($db, "INSERT INTO transactions 
+    (id_user, amount, type, date, saldo, approve) 
+    VALUES (
+        '" . $_POST['username'] . "',
+        '" . $_POST['jumlah'] . "',
+        '" . $_POST['type'] ."',
+        '" . $_POST['tanggal'] . "',
+        '" . $_POST['jumlah'] . "',
+        1
+    )") or die(mysqli_error($db));

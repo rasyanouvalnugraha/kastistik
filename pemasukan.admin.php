@@ -5,27 +5,8 @@ if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
-
-// query memasukkan data ke table transations
-if (isset($_POST['add'])) {
-    mysqli_query($db, "INSERT INTO transactions 
-    (id_user, amount, type, date, saldo, approve) 
-    VALUES (
-        '" . $_POST['username'] . "',
-        '" . $_POST['jumlah'] . "',
-        '" . $_POST['type'] ."',
-        '" . $_POST['tanggal'] . "',
-        '" . $_POST['jumlah'] . "',
-        1
-    )") or die(mysqli_error($db));
-
-    header('location: pemasukan.admin.php');
-}
-
-
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,6 +23,7 @@ if (isset($_POST['add'])) {
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
 </head>
 
 <body class="">
@@ -55,36 +37,63 @@ if (isset($_POST['add'])) {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 flex justify-between shadow-md navbar">
                 <h1>Input Data</h1>
-                <?php print $_SESSION['username']; ?>
+                <?php print $_SESSION['fullname']; ?>
             </div>
 
             <section class="flex flex-col md:flex-row">
                 <div class="flex flex-1 flex-col w-full h-full p-6">
                     <h1 class="text-2xl font-mulish-extend mb-6">Pemasukan</h1>
 
-                    <form action="pemasukan.admin.php" class="space-y-4 font-mulish" method="POST">
+                    <form action="" class="space-y-4 font-mulish" method="POST">
                         <div>
-                            <?php 
-                            // query menampilkan jika berhasil di input data
-                            if (isset($_POST['add'])) { 
-                                echo "<div class='text-green-600 text-lg'>Data berhasil dimasukkan</div>";
-                            } else {
-                                // query menampilkan jika gagal di input data
-                                if (!isset($_POST['username']) && isset($_POST['tanggal']) && isset($_POST['jumlah']) && isset($_POST['type'])) {
-                                    echo "<div class='text-red-600 text-lg'>Data gagal dimasukkan</div>";
+                            <?php
+                            // query memasukkan data ke table transactions
+                            if (isset($_POST['add'])) {
+                                // Ambil premi dari user berdasarkan username yang dipilih
+                                $fullname = $_POST['fullname'];
+                                $getPremi = mysqli_query($db, "SELECT premi FROM users WHERE id = '$fullname'");
+                                $premiData = mysqli_fetch_assoc($getPremi);
+                                $premi = $premiData['premi'];
+
+                                // Ambil jumlah yang diinput user
+                                $jumlah = $_POST['jumlah'];
+
+                                // Pengecekan apakah jumlah lebih kecil dari premi
+                                if ($jumlah < $premi) {
+                                    $dec =  "<div class='text-red-600 text-lg'>Data gagal dimasukkan karna kurang dari premi</div>";
+                                    print $dec;
+                                } else {
+                                    // Jika jumlah lebih besar atau sama dengan premi, masukkan ke database
+                                    mysqli_query($db, "INSERT INTO transactions 
+                                    (id_user, amount, type, date, saldo, approve) 
+                                    VALUES (
+                                        '$username',
+                                        '$jumlah',
+                                        '" . $_POST['type'] . "',
+                                        '" . $_POST['tanggal'] . "',
+                                        '$jumlah',
+                                        1
+                                    )") or die(mysqli_error($db));
+
+                                    $acc = "<div class='text-green-600 text-lg'>Data berhasil dimasukkan</div>";
+                                    print $acc;
+
+                                    // Redirect setelah sukses
+                                    header('location: pemasukan.admin.php');
+                                    exit();
                                 }
                             }
                             ?>
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
                                 <img src="asset/Person.png" alt="Person Icon" class="w-6 h-6 ml-3">
-                                <select name="username" id="username" class="w-full px-6 py-4 no-border">
+                                <select name="fullname" id="username" class="w-full px-6 py-4 no-border">
                                     <option value="">Pilih User</option>
                                     <?php
                                     // query mengambil jumlah users di table user
                                     $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = '2'") or die(mysqli_error($db));
                                     while ($data = mysqli_fetch_array($sql)) {
-                                        echo "<option value=$data[id]> $data[username]</option>";
+                                        echo "<option value=$data[id]> $data[fullname]</option>";
                                     }
                                     ?>
                                 </select>

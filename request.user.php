@@ -1,10 +1,13 @@
 <?php
 session_start();
 include 'connection/database.php';
+
 if ($_SESSION['role'] != '2') {
     header('location: index.php');
     exit();
 }
+
+$message = '';
 
 if (isset($_POST['add'])) {
 
@@ -13,12 +16,20 @@ if (isset($_POST['add'])) {
     $amount = $_POST['amount'];
     $tanggal = $_POST['tanggal'];
 
+    $inputdata = "INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL, '$username', '$amount', '3', '$tanggal', '$keperluan', '$amount', '0')";
 
-    mysqli_query($db, "
-    INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL, '$username', '$amount', '3', '$tanggal', '$keperluan', '$amount', '0');
-    ") or die(mysqli_error($db));
+
+    // kondisi pengecekan
+    if (mysqli_query($db, $inputdata)) {
+        // melakukan pengecekan jika data berhasil ditambah
+        $message = "<div class='text-green-600 text-lg'>Request berhasil dikirim ke Admin, tunggu admin approve</div>";
+    } else {
+        // melakukan pengecekan jika data gagal ditambah
+        $message = "<div class='text-red-600 text-lg'>Request gagal dikirim: " . mysqli_error($db) . "</div>";
+    }
 
     header("location: request.user.php");
+    exit();
 }
 ?>
 
@@ -28,20 +39,16 @@ if (isset($_POST['add'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD ADMIN</title>
+    <title>DASHBOARD</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="card.css">
-    <link rel="stylesheet" href="css/background.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
 </head>
 
-<body class>
+<body>
     <div class="flex">
         <section class="relative">
             <nav class="navbar h-screen">
@@ -60,24 +67,23 @@ if (isset($_POST['add'])) {
                     <div class="flex flex-1 flex-col w-full h-full p-6">
                         <h1 class="text-2xl font-mulish-extend mb-6">Request User To Admin</h1>
     
+                        <!-- Menampilkan pesan berhasil atau gagal -->
+                        <?php if (!empty($message)) { 
+                            echo $message; 
+                            } 
+                        ?>
+    
                         <form action="request.user.php" class="space-y-4 font-mulish" method="POST">
                             <div>
-                                <?php
-                                // query menampilkan jika berhasil di input data
-                                if (isset($_POST['add'])) {
-                                    echo "<div class='text-green-600 text-lg'>Request Berhasil dikirim ke Admin, tunggu admin approve</div>";
-                                }
-                                ?>
                                 <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
                                     <img src="asset/Person.png" alt="Person Icon" class="w-6 h-6 ml-3">
                                     <select name="username" id="username" class="w-full px-6 py-4 no-border" required>
                                         <option value="">Pilih User</option>
                                         <?php
-                                        // query mengambil jumlah users di table user
                                         $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = '2'") or die(mysqli_error($db));
                                         while ($data = mysqli_fetch_array($sql)) {
-                                            echo "<option value=$data[id]> $data[username]</option>";
+                                            echo "<option value=$data[id]> $data[fullname]</option>";
                                         }
                                         ?>
                                     </select>
@@ -122,14 +128,13 @@ if (isset($_POST['add'])) {
                 </section>
                 
                 <section>
-                    <?php include 'layout/card.php'?>
+                    <?php include 'layout/card.php' ?>
                 </section>
             </section>
-
-
         </section>
     </div>
 </body>
+
 <style>
     .bg-button {
         background: #7D46FD;
@@ -147,9 +152,7 @@ if (isset($_POST['add'])) {
 
     select.no-border option {
         border: none;
-        /* Pastikan opsi juga tidak memiliki border */
     }
 </style>
-
 
 </html>

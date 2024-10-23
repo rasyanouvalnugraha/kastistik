@@ -1,6 +1,3 @@
-<?php
-
-?>
 <link rel="stylesheet" href="css/background.css">
 <link rel="stylesheet" href="css/font.css">
 
@@ -67,6 +64,12 @@
                 <a href="request.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/Invite.svg" alt="" class="w-6 h-6">
                     <span class="">Request</span>
+                </a>
+            </li>
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
+                <a href="decline.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
+                    <img src="asset/Urgent Message.svg" alt="" class="w-6 h-6">
+                    <span class="">Decline Req</span>
                 </a>
             </li>
             <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1 flex">

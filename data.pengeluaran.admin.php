@@ -17,7 +17,7 @@ if (isset($_POST['submit'])) {
         $pengeluaran = mysqli_query($db, "
     SELECT 
         transactions.date AS tanggal, 
-        users.username AS nama, 
+        users.fullname AS nama, 
         transactions.amount AS jumlah, 
         transactions.keterangan AS Keterangan 
     FROM transactions 
@@ -31,7 +31,7 @@ if (isset($_POST['submit'])) {
         $pengeluaran = mysqli_query($db, "
     SELECT 
         transactions.date AS tanggal, 
-        users.username AS nama, 
+        users.fullname AS nama, 
         transactions.amount AS jumlah, 
         transactions.keterangan AS Keterangan 
     FROM transactions 
@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
     $pengeluaran = mysqli_query($db, "
     SELECT 
         transactions.date AS tanggal, 
-        users.username AS nama, 
+        users.fullname AS nama, 
         transactions.amount AS jumlah, 
         transactions.keterangan AS Keterangan 
     FROM transactions 
@@ -73,6 +73,7 @@ if (isset($_POST['submit'])) {
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
 </head>
 
 <body class="bg-gray-100">
@@ -88,7 +89,7 @@ if (isset($_POST['submit'])) {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+                <h1><?php print $_SESSION['fullname']; ?></h1>
             </div>
 
             <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pengeluaran</h1>

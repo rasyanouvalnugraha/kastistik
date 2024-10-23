@@ -17,7 +17,7 @@ $getData = mysqli_query($db, "
         transactions.keterangan AS Keterangan 
     FROM transactions
     JOIN users ON transactions.id_user = users.id 
-    WHERE transactions.approve = 0 
+    WHERE transactions.approve = 2 
     ORDER BY transactions.date DESC;
 ");
 
@@ -79,7 +79,7 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
 
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>Permintaan Dari User</h1>
+                <h1>Permintaan Yang Ditolak</h1>
                 <h1><?php print $_SESSION['fullname']; ?></h1>
             </div>
             <section>
@@ -105,26 +105,27 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
 
                         // Loop untuk menampilkan data
                         while ($row = mysqli_fetch_assoc($getData)) {
-                            echo "<tr>";
+                            echo "<tr class='hover:bg-gray-400'>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['tanggal'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . number_format($row['jumlah'], 0, ',', '.') . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>
-                        <form action='request.admin.php' method='post'>
-                            <input type='hidden' name='id' value='" . $row['nomor'] . "'>
-                            <button type='submit' name='approve' value='setujui'>
-                                <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 bg-green-500 m-1 rounded-md p-1'>
-                            </button>
-                            <button type='submit' name='decline' value='tolak'>
-                                <img src='asset/Thumbs Down.svg' alt='Tolak' class='w-8 h-8 bg-red-600 m-1 rounded-md p-1'>
-                            </button>
-                        </form>
-                    </td>";
+                                    <form action='request.admin.php' method='post'>
+                                        <input type='hidden' name='id' value='" . $row['nomor'] . "'>
+                                        <button type='submit' name='approve' value='setujui'>
+                                            <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 bg-green-500 m-1 rounded-md p-1'>
+                                        </button>
+                                        <button type='submit' name='decline' value='tolak'>
+                                            <img src='asset/Thumbs Down.svg' alt='Tolak' class='w-8 h-8 bg-red-600 m-1 rounded-md p-1'>
+                                        </button>
+                                    </form>
+                                </td>";
                             echo "</tr>";
                         }
 
-                        echo '</tbody></table>';
+                    echo '</tbody>';
+                    echo '</table>';
                     } else {
                         // Jika tidak ada data, tampilkan pesan
                         echo "<div class='text-center text-lg py-5 my-5 font-mulish text-gray-500'>Data tidak ada</div>";

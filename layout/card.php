@@ -11,7 +11,7 @@ $total_users = $row['total_users'];
 
 
 // menghitung pemasukan
-$querypemasukan = "SELECT SUM(amount) AS pemasukan FROM `transactions` WHERE type = 1;";
+$querypemasukan = "SELECT SUM(amount) AS pemasukan FROM `transactions` WHERE type = 1 AND approve = 1; ";
 $result1 = $db->query($querypemasukan);
 $data = $result1->fetch_assoc();
 $pemasukan = $data['pemasukan'];
@@ -53,7 +53,16 @@ $sisa = $pemasukan - $pengeluaran;
             <img src="asset/Increase.png" alt="Pemasukan Icon" class="w-12 h-12 mr-4">
             <div class="flex flex-col">
                 <label class="md:text-2xl">Pemasukan</label>
-                <label class="md:text-xl">Rp <?php print number_format($pemasukan, 0, ',', '.'); ?></label>
+                <label class="md:text-xl">
+                <?php
+                    // Menampilkan pesan jika tidak ada pemasukan
+                    if ($pemasukan > 0) {
+                        echo "Rp " . number_format($pemasukan, 0, ',', '.');
+                    } else {
+                        echo "<span class='text-xl'>Tidak Ada</span>";
+                    }
+                    ?>
+                </label>
                 <label class="text-lg font-mulish-ket">Bulan Ini</label>
             </div>
         </li>
@@ -63,7 +72,16 @@ $sisa = $pemasukan - $pengeluaran;
             <img src="asset/Decrease.png" alt="Pengeluaran Icon" class="w-12 h-12 mr-4">
             <div class="flex flex-col">
                 <label class="md:text-2xl">Pengeluaran</label>
-                <label class="md:text-xl">Rp <?php print number_format($pengeluaran, 0, ',', '.'); ?></label>
+                <label class="md:text-xl">
+                    <?php 
+                    // Menampilkan pesan jika tidak ada pemasukan
+                    if ($pengeluaran > 0) {
+                        echo "Rp " . number_format($pengeluaran, 0, ',', '.');
+                    } else {
+                        echo "<span class='text-xl'>Tidak ada</span>";
+                    }
+                    ?>
+                </label>
                 <label class="text-lg font-mulish-ket">Bulan Ini</label>
             </div>
         </li>

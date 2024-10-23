@@ -20,7 +20,7 @@ if (isset($_POST['sumbit'])) {
 
     if ($start != null || $end != null) {
         $pemasukan = mysqli_query($db, "
-        SELECT date AS tanggal, username AS nama, amount AS jumlah 
+        SELECT date AS tanggal, fullname AS nama, amount AS jumlah 
         FROM transactions 
         JOIN users ON transactions.id_user = users.id 
         WHERE type IN (1, 2) AND date BETWEEN '$start' AND '$end'
@@ -28,7 +28,7 @@ if (isset($_POST['sumbit'])) {
     ");
     } else {
         $pemasukan = mysqli_query($db, "
-        SELECT date AS tanggal, username AS nama, amount AS jumlah 
+        SELECT date AS tanggal, fullname AS nama, amount AS jumlah 
         FROM transactions 
         JOIN users ON transactions.id_user = users.id 
         WHERE type IN (1, 2) 
@@ -36,7 +36,7 @@ if (isset($_POST['sumbit'])) {
     }
 } else {
     $pemasukan = mysqli_query($db, "
-        SELECT date AS tanggal, username AS nama, amount AS jumlah 
+        SELECT date AS tanggal, fullname AS nama, amount AS jumlah 
         FROM transactions 
         JOIN users ON transactions.id_user = users.id 
         WHERE type IN (1, 2) 
@@ -51,7 +51,7 @@ if (isset($_POST['sumbit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD ADMIN</title>
+    <title>DASHBOARD</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -62,6 +62,7 @@ if (isset($_POST['sumbit'])) {
     <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
 
 
 </head>
@@ -82,7 +83,7 @@ if (isset($_POST['sumbit'])) {
             <!--  -->
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+                <h1><?php print $_SESSION['fullname']; ?></h1>
             </div>
 
 

@@ -15,7 +15,7 @@ if ($_SESSION['role'] != '2') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD ADMIN</title>
+    <title>DASHBOARD</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -26,6 +26,7 @@ if ($_SESSION['role'] != '2') {
     <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
 
 </head>
 
@@ -49,6 +50,7 @@ if ($_SESSION['role'] != '2') {
         </section>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 
 </style>

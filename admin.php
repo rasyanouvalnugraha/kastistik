@@ -1,9 +1,56 @@
 <?php
 session_start();
+
+include "connection/database.php";
+
 if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
+
+// Query untuk menghitung pemasukan dan pengeluaran per bulan di tahun 2024
+$querySaldoBulanan = "
+    SELECT 
+        DATE_FORMAT(date, '%m') AS bulan, 
+        SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS pemasukan,
+        SUM(CASE WHEN type = 3 AND approve = 1 THEN amount ELSE 0 END) AS pengeluaran
+    FROM transactions
+    WHERE YEAR(date) = 2024
+    GROUP BY bulan
+    ORDER BY bulan;
+";
+
+$result = $db->query($querySaldoBulanan);
+$saldoBulanan = [];
+
+while($row = $result->fetch_assoc()) {
+    $bulan = $row['bulan'];
+    $pemasukan = $row['pemasukan'];
+    $pengeluaran = $row['pengeluaran'];
+    $saldo = $pemasukan - $pengeluaran;
+    
+    $saldoBulanan[] = [
+        'bulan' => $bulan,
+        'saldo' => $saldo
+    ];
+}
+
+
+$bulanArray = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+];
+
+$saldoArray = array_fill(0, 12, 0); // Inisialisasi saldo dengan 0
+
+foreach ($saldoBulanan as $data) {
+    $bulanIndex = intval($data['bulan']) - 1; // Mengonversi bulan ke indeks array
+    $saldoArray[$bulanIndex] = $data['saldo']; // Mengupdate saldo pada bulan yang sesuai
+}
+
+$bulanJson = json_encode($bulanArray);
+$saldoJson = json_encode($saldoArray);
+$year = 2024;
 
 ?>
 
@@ -24,6 +71,9 @@ if ($_SESSION['role'] != '1') {
     <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
+
 
 
 </head>
@@ -39,10 +89,16 @@ if ($_SESSION['role'] != '1') {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+                <h1><?php print $_SESSION['fullname']; ?></h1>
             </div>
             <section class="flex-1 ml-2">
                 <?php include 'layout/card.php' ?>
+                <section class="border-3">
+                    <h1 class="mx-6 text-xl font-mulish-extend">Saldo <?php print $year?></h1>
+                    <div class="max-h-80 flex items-center justify-center">
+                        <canvas id="saldoChart"></canvas>
+                    </div>
+                </section>
             </section>
         </section>
     </div>
@@ -50,6 +106,41 @@ if ($_SESSION['role'] != '1') {
 <style>
 
 </style>
+
+<script>
+    var ctx = document.getElementById('saldoChart').getContext('2d');
+    var saldoChart = new Chart(ctx, {
+        type: 'bar', // 
+        data: {
+            labels: <?php echo $bulanJson; ?>, // Bulan
+            datasets: [{
+                label: 'Saldo Setiap Bulan',
+                data: <?php echo $saldoJson; ?>, // Data saldo
+                borderColor: '#7D46FD',
+                backgroundColor: '#7D46FD',
+                fill: true,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Bulan'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Saldo (dalam rupiah)'
+                    }
+                }
+            }
+        }
+    });
+</script>
 
 
 </html>

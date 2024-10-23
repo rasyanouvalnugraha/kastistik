@@ -24,6 +24,7 @@ if ($_SESSION['role'] != '1') {
     <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
 
 </head>
 
@@ -37,7 +38,7 @@ if ($_SESSION['role'] != '1') {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>User</h1>
-                <?php print $_SESSION['username']; ?>
+                <?php print $_SESSION['fullname']; ?>
             </div>
             <section class="flex-1">
                 <?php include 'layout/card.php' ?>

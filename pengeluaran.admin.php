@@ -5,28 +5,36 @@ if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
- 
-// masukkan data ke table transaction 
+
+// Cek apakah form telah disubmit
 if (isset($_POST['min'])) {
+    // Masukkan data ke tabel transactions
+    $query = "INSERT INTO transactions (id_user, amount, keterangan, type, date, saldo, approve) VALUES (?, ?, ?, 3, ?, ?, 1)";
+    $stmt = mysqli_prepare($db, $query);
+    
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'issss', $_POST['username'], $_POST['jumlah'], $_POST['keterangan'], $_POST['tanggal'], $_POST['jumlah']);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
 
-
-    mysqli_query($db, "INSERT INTO transactions 
-    (id_user, amount, keterangan, type, date, saldo, approve) 
-    VALUES (
-        '" . $_POST['username'] . "',
-        '" . $_POST['jumlah'] . "',
-        '" . $_POST['keterangan'] . "',
-        3,
-        '" . $_POST['tanggal'] . "',
-        '" . $_POST['jumlah'] . "',
-        1
-    )") or die(mysqli_error($db));
-
-    header('location: pengeluaran.admin.php');
-
+        // Tampilkan pesan sukses menggunakan SweetAlert
+        echo '<script>
+            Swal.fire({
+                title: "Berhasil!",
+                text: "Data pengeluaran berhasil ditambahkan!",
+                icon: "success",
+                confirmButtonText: "OK"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "pengeluaran.admin.php"; // Redirect setelah menekan OK
+                }
+            });
+        </script>';
+    } else {
+        // Tangani error jika gagal menyiapkan pernyataan
+        die(mysqli_error($db));
+    }
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +52,7 @@ if (isset($_POST['min'])) {
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
 </head>
 
 <body class="">
@@ -57,7 +66,7 @@ if (isset($_POST['min'])) {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 flex justify-between shadow-md navbar">
                 <h1>Input Data</h1>
-                <?php print $_SESSION['username']; ?>
+                <?php print $_SESSION['fullname']; ?>
             </div>
 
             <section class="flex flex-col md:flex-row">
@@ -66,17 +75,30 @@ if (isset($_POST['min'])) {
 
                     <form action="pengeluaran.admin.php" class="space-y-4 font-mulish" method="POST">
                         <div>
-                            <!-- QUERY KALO DATA BERHASIL DITAMBAH -->
-                             <?php
-                             if (isset($_POST['add'])) {
-                                 echo "<div class='text-green-600 text-lg'>Data berhasil dimasukkan</div>";
-                             } else {
-                                 // query kalo data gagal ditambah
-                                 if (!isset($_POST['username']) && isset($_POST['tanggal']) && isset($_POST['jumlah'])) {
-                                     echo "<div class='text-red-600 text-lg'>Data gagal dimasukkan</div>";
-                                 }
-                             }
-                            ?>
+                            <!-- <?php
+                            ob_start();
+                            // masukkan data ke table transaction 
+                            if (isset($_POST['min'])) {
+
+
+                                mysqli_query($db, "INSERT INTO transactions 
+                                (id_user, amount, keterangan, type, date, saldo, approve) 
+                                VALUES (
+                                    '" . $_POST['username'] . "',
+                                    '" . $_POST['jumlah'] . "',
+                                    '" . $_POST['keterangan'] . "',
+                                    3,
+                                    '" . $_POST['tanggal'] . "',
+                                    '" . $_POST['jumlah'] . "',
+                                    1
+                                )") or die(mysqli_error($db));
+                                echo '<script>Swal.fire({title: "Berhasil!", text: "Data pengeluaran berhasil ditambahkan!", icon: "success", confirmButtonText: "OK"})</script>';
+
+                                // header('location: pengeluaran.admin.php');
+                            }
+
+                            ob_end_flush();
+                            ?> -->
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
                                 <img src="asset/Person.png" alt="Person Icon" class="w-6 h-6 ml-3">
@@ -86,7 +108,7 @@ if (isset($_POST['min'])) {
                                     // query mengambil jumlah users di table user
                                     $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = '2'") or die(mysqli_error($db));
                                     while ($data = mysqli_fetch_array($sql)) {
-                                        echo "<option value=$data[id]> $data[username]</option>";
+                                        echo "<option value=$data[id]> $data[fullname]</option>";
                                     }
                                     ?>
                                 </select>
@@ -136,6 +158,7 @@ if (isset($_POST['min'])) {
         </section>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 <style>
     .bg-button {
