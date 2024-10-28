@@ -5,7 +5,35 @@ if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
+// query memasukkan data ke table transactions
+if (isset($_POST['add'])) {
+    // Ambil premi dari user berdasarkan username yang dipilih
+    $fullname = $_POST['fullname'];
+    $getPremi = mysqli_query($db, "SELECT premi FROM users WHERE id = '$fullname'");
+    $premiData = mysqli_fetch_assoc($getPremi);
+    $premi = $premiData['premi'];
+
+    // Ambil jumlah yang diinput user
+    $jumlah = $_POST['jumlah'];
+    $username = $_POST['fullname'];
+    $tanggal = $_POST['tanggal'];
+    $type = $_POST['type'];
+
+    // Pengecekan apakah jumlah lebih kecil dari premi
+    if ($jumlah < $premi) {
+        echo "<div class='text-red-600 text-lg'>Data gagal dimasukkan karna kurang dari premi</div>";
+    } else {
+        // Jika jumlah lebih besar atau sama dengan premi, masukkan ke database
+        $result = mysqli_query($db, "INSERT INTO transactions (id_user, amount, type, date, saldo, approve)
+        VALUES ('$username', '$jumlah', '$type', '$tanggal', '$jumlah', 1)");
+
+        echo "<div class='font-mulish text-green-500'>Data berhasil ditambah</div>";
+        header('location: pemasukan.admin.php');
+        exit();
+    }
+}
 ?>
+
 
 
 <!DOCTYPE html>
@@ -46,48 +74,10 @@ if ($_SESSION['role'] != '1') {
 
                     <form action="" class="space-y-4 font-mulish" method="POST">
                         <div>
-                            <?php
-                            // query memasukkan data ke table transactions
-                            if (isset($_POST['add'])) {
-                                // Ambil premi dari user berdasarkan username yang dipilih
-                                $fullname = $_POST['fullname'];
-                                $getPremi = mysqli_query($db, "SELECT premi FROM users WHERE id = '$fullname'");
-                                $premiData = mysqli_fetch_assoc($getPremi);
-                                $premi = $premiData['premi'];
-
-                                // Ambil jumlah yang diinput user
-                                $jumlah = $_POST['jumlah'];
-
-                                // Pengecekan apakah jumlah lebih kecil dari premi
-                                if ($jumlah < $premi) {
-                                    $dec =  "<div class='text-red-600 text-lg'>Data gagal dimasukkan karna kurang dari premi</div>";
-                                    print $dec;
-                                } else {
-                                    // Jika jumlah lebih besar atau sama dengan premi, masukkan ke database
-                                    mysqli_query($db, "INSERT INTO transactions 
-                                    (id_user, amount, type, date, saldo, approve) 
-                                    VALUES (
-                                        '$username',
-                                        '$jumlah',
-                                        '" . $_POST['type'] . "',
-                                        '" . $_POST['tanggal'] . "',
-                                        '$jumlah',
-                                        1
-                                    )") or die(mysqli_error($db));
-
-                                    $acc = "<div class='text-green-600 text-lg'>Data berhasil dimasukkan</div>";
-                                    print $acc;
-
-                                    // Redirect setelah sukses
-                                    header('location: pemasukan.admin.php');
-                                    exit();
-                                }
-                            }
-                            ?>
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
                                 <img src="asset/Person.png" alt="Person Icon" class="w-6 h-6 ml-3">
-                                <select name="fullname" id="username" class="w-full px-6 py-4 no-border">
+                                <select name="fullname" id="fullname" class="w-full px-6 py-4 no-border">
                                     <option value="">Pilih User</option>
                                     <?php
                                     // query mengambil jumlah users di table user

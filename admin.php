@@ -23,12 +23,12 @@ $querySaldoBulanan = "
 $result = $db->query($querySaldoBulanan);
 $saldoBulanan = [];
 
-while($row = $result->fetch_assoc()) {
+while ($row = $result->fetch_assoc()) {
     $bulan = $row['bulan'];
     $pemasukan = $row['pemasukan'];
     $pengeluaran = $row['pengeluaran'];
     $saldo = $pemasukan - $pengeluaran;
-    
+
     $saldoBulanan[] = [
         'bulan' => $bulan,
         'saldo' => $saldo
@@ -37,8 +37,18 @@ while($row = $result->fetch_assoc()) {
 
 
 $bulanArray = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
 ];
 
 $saldoArray = array_fill(0, 12, 0); // Inisialisasi saldo dengan 0
@@ -94,17 +104,26 @@ $year = 2024;
             <section class="flex-1 ml-2">
                 <?php include 'layout/card.php' ?>
                 <section class="border-3">
-                    <h1 class="mx-6 text-xl font-mulish-extend">Saldo <?php print $year?></h1>
-                    <div class="max-h-80 flex items-center justify-center">
-                        <canvas id="saldoChart"></canvas>
-                    </div>
+                    <h1 class="mx-6 text-xl font-mulish-extend">Saldo <?php print $year ?></h1>
+
+                    <section class="flex justify-around mx-auto p-3">
+                        <div class="max-h-72 flex items-center justify-center flex-1">
+                            <canvas id="saldoChart"></canvas>
+                        </div>
+                        <div class="flex-col flex  px-5 justify-evenly "> 
+                            <a href="pemasukan.php" target="_blank" rel="noopener noreffer" class="button rounded-lg font-mulish text-white py-2 px-4 text-center">CETAK DATA PEMASUKAN</a>
+                            <a href="pengeluaran.php" target="_blank" rel="noopener noreffer" class="button rounded-lg font-mulish text-white py-2 px-4 text-center">CETAK DATA PENGELUARAN</a>
+                        </div>
+                    </section>
                 </section>
             </section>
         </section>
     </div>
 </body>
 <style>
-
+    .button {
+        background-color: #7D46FD;
+    }
 </style>
 
 <script>
@@ -114,7 +133,7 @@ $year = 2024;
         data: {
             labels: <?php echo $bulanJson; ?>, // Bulan
             datasets: [{
-                label: 'Saldo Setiap Bulan',
+                label: 'Saldo',
                 data: <?php echo $saldoJson; ?>, // Data saldo
                 borderColor: '#7D46FD',
                 backgroundColor: '#7D46FD',
@@ -135,6 +154,7 @@ $year = 2024;
                     title: {
                         display: true,
                         text: 'Saldo (dalam rupiah)'
+                        
                     }
                 }
             }

@@ -28,19 +28,20 @@ if (isset($_POST['delete'])) {
 
 
 // button seacrh 
+// query ambil data pemasukan di database yang type = 1 / 2
+// Ambil data pemasukan di database yang type = 1 / 2
+
 if (isset($_POST['sumbit'])) {
     $start = $_POST['tanggal_awal'];
     $end = $_POST['tanggal_akhir'];
 
-
-    //query seacrhing tanggal
-
+    // Query pencarian berdasarkan tanggal
     if ($start != null || $end != null) {
         $pemasukan = mysqli_query(
             $db,
             "
             SELECT 
-            transactions.id AS ID
+            transactions.id AS ID, 
             transactions.date AS tanggal, 
             users.fullname AS nama, 
             transactions.amount AS jumlah, 
@@ -57,7 +58,7 @@ if (isset($_POST['sumbit'])) {
             $db,
             "
             SELECT 
-            transactions.id AS ID,
+            transactions.id AS ID, 
             transactions.date AS tanggal, 
             users.fullname AS nama, 
             transactions.amount AS jumlah, 
@@ -73,19 +74,20 @@ if (isset($_POST['sumbit'])) {
     $pemasukan = mysqli_query(
         $db,
         "
-            SELECT 
-            transactions.id AS ID,
-            transactions.date AS tanggal, 
-            users.fullname AS nama, 
-            transactions.amount AS jumlah, 
-            transactions.keterangan AS Keterangan 
-            FROM transactions 
-            JOIN users ON transactions.id_user = users.id 
-            WHERE transactions.type IN (1,2)
-            AND transactions.approve = 1 
-            ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
+        SELECT 
+        transactions.id AS ID, 
+        transactions.date AS tanggal, 
+        users.fullname AS nama, 
+        transactions.amount AS jumlah, 
+        transactions.keterangan AS Keterangan 
+        FROM transactions 
+        JOIN users ON transactions.id_user = users.id 
+        WHERE transactions.type IN (1,2)
+        AND transactions.approve = 1 
+        ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
     );
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -155,8 +157,8 @@ if (isset($_POST['sumbit'])) {
 
 
             <!-- TABEL DATA PEMASUKAN -->
-            <div class="overflow-x-auto mx-8">
-                <div class="max-h-72 relative overflow-y-auto no-scrollbar">
+            <div class="overflow-x-auto mx-8 border-b-2">
+                <div class="max-h-80 relative overflow-y-auto no-scrollbar">
                     <table class="min-w-full rounded-lg shadow-md">
                         <thead>
                             <tr class="bg-gradient navbar text-white">
@@ -173,17 +175,14 @@ if (isset($_POST['sumbit'])) {
                                 echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['tanggal'] . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>Rp. " . number_format($row['jumlah'], 0, '.', '.') . "</td>";
-
-                                // Tombol Delete menggunakan gambar
                                 echo "<td class='py-2 px-4 text-center font-mulish'>";
                                 echo "<form method='POST' action=''>";
                                 echo "<input type='hidden' name='delete_id' value='" . $row['ID'] . "'>";
                                 echo "<button type='submit' name='delete' class='focus:outline-none'>";
-                                echo "<img src='asset/Thumbs Down.svg' alt='Delete' class='w-8 h-8 up m-2 p-1 rounded-md'>";
+                                echo "<img src='asset/Thumbs Down.svg' alt='Delete' class='w-8 h-8 up p-1 rounded-md'>";
                                 echo "</button>";
                                 echo "</form>";
                                 echo "</td>";
-
                                 echo "</tr>";
                             }
                             ?>

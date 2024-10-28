@@ -103,7 +103,7 @@ if (isset($_POST['sumbit'])) {
             <!--  -->
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['fullname']; ?></h1>
+                <h1><?php print $_SESSION['username']; ?></h1>
             </div>
 
 

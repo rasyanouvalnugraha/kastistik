@@ -7,6 +7,20 @@ if ($_SESSION['role'] != '1') {
     exit();
 }
 
+// Proses delete jika tombol delete ditekan
+if (isset($_POST['delete'])) {
+    $delete_id = $_POST['delete_id'];
+
+    // Query untuk menghapus data berdasarkan id
+    $delete_query = "DELETE FROM transactions WHERE id = '$delete_id'";
+    $delete_result = mysqli_query($db, $delete_query);
+
+    if ($delete_result) {
+        echo "<div class='text-green-600 text-lg'>Data berhasil dihapus</div>";
+    } else {
+        echo "<div class='text-red-600 text-lg'>Gagal menghapus data</div>";
+    }
+}
 // button search
 if (isset($_POST['submit'])) {
     $start = $_POST['tanggal_awal'];
@@ -14,8 +28,11 @@ if (isset($_POST['submit'])) {
 
     // query pencarian berdasarkan tanggal
     if ($start != null && $end != null) {
-        $pengeluaran = mysqli_query($db, "
+        $pengeluaran = mysqli_query(
+            $db,
+            "
     SELECT 
+        transactions.id AS ID,
         transactions.date AS tanggal, 
         users.fullname AS nama, 
         transactions.amount AS jumlah, 
@@ -26,10 +43,11 @@ if (isset($_POST['submit'])) {
     AND transactions.approve = 1 
     AND transactions.date BETWEEN '$start' AND '$end'
     ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
-    );
+        );
     } else {
         $pengeluaran = mysqli_query($db, "
     SELECT 
+        transactions.id AS ID,
         transactions.date AS tanggal, 
         users.fullname AS nama, 
         transactions.amount AS jumlah, 
@@ -45,6 +63,7 @@ if (isset($_POST['submit'])) {
 } else {
     $pengeluaran = mysqli_query($db, "
     SELECT 
+        transactions.id AS ID,
         transactions.date AS tanggal, 
         users.fullname AS nama, 
         transactions.amount AS jumlah, 
@@ -116,8 +135,8 @@ if (isset($_POST['submit'])) {
             </section>
 
             <!-- TABEL DATA PENGELUARAN -->
-            <div class="overflow-x-auto mx-8">
-                <div class="max-h-72 relative overflow-y-auto no-scrollbar">
+            <div class="overflow-x-auto mx-8 border-b-2">
+                <div class="max-h-80 relative overflow-y-auto no-scrollbar">
                     <table class="min-w-full rounded-lg shadow-md">
                         <thead>
                             <tr class="bg-gradient navbar text-white">
@@ -125,6 +144,7 @@ if (isset($_POST['submit'])) {
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Keterangan</th>
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Jumlah</th>
+                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -135,6 +155,14 @@ if (isset($_POST['submit'])) {
                                 echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['tanggal'] . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>Rp. " . number_format($row['jumlah'], 0, '.', '.') . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish'>";
+                                echo "<form method='POST' action=''>";
+                                echo "<input type='hidden' name='delete_id' value='" . $row['ID'] . "'>";
+                                echo "<button type='submit' name='delete' class='focus:outline-none'>";
+                                echo "<img src='asset/Thumbs Down.svg' alt='Delete' class='w-8 h-8 down p-1 rounded-md'>";
+                                echo "</button>";
+                                echo "</form>";
+                                echo "</td>";
                                 echo "</tr>";
                             }
                             ?>
@@ -155,6 +183,10 @@ if (isset($_POST['submit'])) {
     .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
+    }
+
+    .down {
+        background-color: #F51313;
     }
 </style>
 

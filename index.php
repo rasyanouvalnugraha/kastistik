@@ -52,6 +52,7 @@ $db->close();
     <main class="h-screen flex">
         <?php include 'layout/form.login.php' ?>
     </main>
+    
 </body>
 
 </html>
