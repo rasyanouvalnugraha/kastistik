@@ -6,7 +6,7 @@ if ($_SESSION['role'] != '2') {
     exit();
 }
 
-// Query untuk menghitung pemasukan dan pengeluaran per bulan di tahun 2024
+// Query untuk menghitung pemasukan dan pengeluaran per bulan 
 $querySaldoBulanan = "
     SELECT 
         DATE_FORMAT(date, '%m') AS bulan, 
@@ -35,18 +35,18 @@ while ($row = $result->fetch_assoc()) {
 
 
 $bulanArray = [
-    'Januari',
-    'Februari',
-    'Maret',
-    'April',
-    'Mei',
-    'Juni',
-    'Juli',
-    'Agustus',
-    'September',
-    'Oktober',
-    'November',
-    'Desember'
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'July',
+    'Aug',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Des'
 ];
 
 $saldoArray = array_fill(0, 12, 0); // Inisialisasi saldo dengan 0
@@ -97,7 +97,7 @@ $year = 2024;
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+                <h1><?php print $_SESSION['fullname']; ?></h1>
             </div>
             <section class="flex-1 ml-2">
                 <?php include 'layout/card.php' ?>

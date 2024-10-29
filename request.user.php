@@ -59,7 +59,7 @@ if (isset($_POST['add'])) {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+                <h1><?php print $_SESSION['fullname']; ?></h1>
             </div>
 
             <section class="">

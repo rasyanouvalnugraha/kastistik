@@ -1,10 +1,11 @@
 <link rel="stylesheet" href="css/background.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="../kastistik/css/font.css">
 
 <!-- TEXT SELAMAT DATANG -->
 <div class="hidden md:flex md:w-1/2 md:mx-auto bg-gradient">
     <div class="flex items-center justify-center w-full h-full">
-        <h1 id="welcome-text" class="text-white text-6xl font-mulish fade">Selamat Datang!</h1>
+        <h1 id="welcome-text" class="text-white text-6xl font-mulish-extend fade">Welcome Back!</h1>
     </div>
 </div>
 
@@ -14,7 +15,7 @@
         <h2 class="text-2xl font-mulish-extend text-center mb-6">Login</h2>
 
         <!-- LOGIN FORM -->
-        <form action="index.php" method="POST">
+        <form action="index.php" method="POST" class="font-mulish">
             <div class="mb-4">
                 <!-- USERNAME -->
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
@@ -47,7 +48,7 @@
 
 <script>
     // ANIMASI TEXT FADE IN , FADE OUT 
-    const texts = ["Selamat Datang!", "Kastistik"];
+    const texts = ["Selamat Datang!", "Kastistik" , "ようこそ" , "환영" , "Sugeng Rawuh" , "Wilujeng" , "Welcome!!" , "स्वागतम्‌r"];
     let index = 0;
 
     function changeText() {

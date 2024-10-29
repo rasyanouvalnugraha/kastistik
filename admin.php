@@ -11,14 +11,16 @@ if ($_SESSION['role'] != '1') {
 // Query untuk menghitung pemasukan dan pengeluaran per bulan di tahun 2024
 $querySaldoBulanan = "
     SELECT 
-        DATE_FORMAT(date, '%m') AS bulan, 
-        SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS pemasukan,
-        SUM(CASE WHEN type = 3 AND approve = 1 THEN amount ELSE 0 END) AS pengeluaran
+    DATE_FORMAT(date, '%m') AS bulan, 
+    SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS pemasukan,
+    SUM(CASE WHEN type = 3 AND approve = 1 THEN amount ELSE 0 END) AS pengeluaran
     FROM transactions
     WHERE YEAR(date) = 2024
     GROUP BY bulan
     ORDER BY bulan;
 ";
+
+
 
 $result = $db->query($querySaldoBulanan);
 $saldoBulanan = [];
@@ -31,24 +33,26 @@ while ($row = $result->fetch_assoc()) {
 
     $saldoBulanan[] = [
         'bulan' => $bulan,
+        'pemasukan' => $pemasukan,
+        'pengeluaran' => $pengeluaran,
         'saldo' => $saldo
     ];
 }
 
 
 $bulanArray = [
-    'Januari',
-    'Februari',
-    'Maret',
-    'April',
-    'Mei',
-    'Juni',
-    'Juli',
-    'Agustus',
-    'September',
-    'Oktober',
-    'November',
-    'Desember'
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'July',
+    'Aug',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Des'
 ];
 
 $saldoArray = array_fill(0, 12, 0); // Inisialisasi saldo dengan 0
@@ -99,7 +103,7 @@ $year = 2024;
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['fullname']; ?></h1>
+                <h1><?php print $_SESSION['username']; ?></h1>
             </div>
             <section class="flex-1 ml-2">
                 <?php include 'layout/card.php' ?>
@@ -107,7 +111,7 @@ $year = 2024;
                     <h1 class="mx-6 text-xl font-mulish-extend">Saldo <?php print $year ?></h1>
 
                     <section class="flex justify-around mx-auto p-3">
-                        <div class="max-h-72 flex items-center justify-center flex-1">
+                        <div class="h-72 w-72 flex items-center justify-center flex-1">
                             <canvas id="saldoChart"></canvas>
                         </div>
                         <div class="flex-col flex  px-5 justify-evenly "> 
@@ -129,17 +133,32 @@ $year = 2024;
 <script>
     var ctx = document.getElementById('saldoChart').getContext('2d');
     var saldoChart = new Chart(ctx, {
-        type: 'bar', // 
+        type: 'bar',
         data: {
             labels: <?php echo $bulanJson; ?>, // Bulan
-            datasets: [{
-                label: 'Saldo',
-                data: <?php echo $saldoJson; ?>, // Data saldo
-                borderColor: '#7D46FD',
-                backgroundColor: '#7D46FD',
-                fill: true,
-                borderWidth: 2
-            }]
+            datasets: [
+                {
+                    label: 'Pemasukan',
+                    data: <?php echo json_encode(array_column($saldoBulanan, 'pemasukan')); ?>,
+                    backgroundColor: '#4CAF50', // Warna hijau untuk pemasukan
+                    borderColor: '#4CAF50',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Pengeluaran',
+                    data: <?php echo json_encode(array_column($saldoBulanan, 'pengeluaran')); ?>,
+                    backgroundColor: '#F44336', // Warna merah untuk pengeluaran
+                    borderColor: '#F44336',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Saldo',
+                    data: <?php echo $saldoJson; ?>, // Data saldo
+                    backgroundColor: '#7D46FD', // Warna ungu untuk saldo
+                    borderColor: '#7D46FD',
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -153,14 +172,16 @@ $year = 2024;
                 y: {
                     title: {
                         display: true,
-                        text: 'Saldo (dalam rupiah)'
-                        
-                    }
+                        text: 'Jumlah (dalam rupiah)'
+                    },
+                    beginAtZero: true
                 }
             }
         }
     });
 </script>
+
+
 
 
 </html>

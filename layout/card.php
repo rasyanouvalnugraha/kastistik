@@ -63,7 +63,7 @@ $sisa = $pemasukan - $pengeluaran;
                     }
                     ?>
                 </label>
-                <label class="text-lg font-mulish-ket">Bulan Ini</label>
+                <label class="text-lg font-mulish-ket">Tahun Ini</label>
             </div>
         </li>
 
@@ -82,7 +82,7 @@ $sisa = $pemasukan - $pengeluaran;
                     }
                     ?>
                 </label>
-                <label class="text-lg font-mulish-ket">Bulan Ini</label>
+                <label class="text-lg font-mulish-ket">Tahun Ini</label>
             </div>
         </li>
 

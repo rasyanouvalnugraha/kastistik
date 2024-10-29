@@ -19,7 +19,7 @@ ob_start();
     </thead>
     <?php while ($row = mysqli_fetch_assoc($data)) { ?>
         <tr>
-            <td><?php echo $row['nama']; ?></td>
+            <td><?php echo $row['nama']; ?></td>c
             <td><?php echo $row['tanggal']; ?></td>
             <td><?php echo "Rp " . number_format($row['pemasukan'], 0, ',', '.'); ?></td>
         </tr>

@@ -8,20 +8,6 @@ if ($_SESSION['role'] != '1') {
 }
 
 
-// Proses delete jika tombol delete ditekan
-if (isset($_POST['delete'])) {
-    $delete_id = $_POST['delete_id'];
-
-    // Query untuk menghapus data berdasarkan id
-    $delete_query = "DELETE FROM transactions WHERE id = '$delete_id'";
-    $delete_result = mysqli_query($db, $delete_query);
-
-    if ($delete_result) {
-        echo "<div class='text-green-600 text-lg'>Data berhasil dihapus</div>";
-    } else {
-        echo "<div class='text-red-600 text-lg'>Gagal menghapus data</div>";
-    }
-}
 
 // query ambil data pemasukan di database yang type = 1 / 2
 // Ambil data pemasukan di database yang type = 1 / 2
@@ -128,7 +114,7 @@ if (isset($_POST['sumbit'])) {
             <!--  -->
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['fullname']; ?></h1>
+                <h1><?php print $_SESSION['username']; ?></h1>
             </div>
 
 
@@ -154,6 +140,24 @@ if (isset($_POST['sumbit'])) {
                     </div>
                 </form>
             </section>
+
+            <?php
+
+            // Proses delete jika tombol delete ditekan
+            if (isset($_POST['delete'])) {
+                $delete_id = $_POST['delete_id'];
+
+                // Query untuk menghapus data berdasarkan id
+                $delete_query = "DELETE FROM transactions WHERE id = '$delete_id'";
+                $delete_result = mysqli_query($db, $delete_query);
+
+                if ($delete_result) {
+                    echo "<div class='text-green-600 text-lg'>Data berhasil dihapus</div>";
+                } else {
+                    echo "<div class='text-red-600 text-lg'>Gagal menghapus data</div>";
+                }
+            }
+            ?>
 
 
             <!-- TABEL DATA PEMASUKAN -->

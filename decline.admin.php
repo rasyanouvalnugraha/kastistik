@@ -80,7 +80,7 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Permintaan Yang Ditolak</h1>
-                <h1><?php print $_SESSION['fullname']; ?></h1>
+                <h1><?php print $_SESSION['username']; ?></h1>
             </div>
             <section>
                 <?php include "layout/card.php" ?>

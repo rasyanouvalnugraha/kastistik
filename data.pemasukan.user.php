@@ -7,7 +7,7 @@ if ($_SESSION['role'] != '2') {
     exit(); 
 } 
 
-// query ambil data pemasukan di database yang type = 1 / 2
+// query ambil data pemasukan di databasxe yang type = 1 / 2
 // Ambil data pemasukan di database yang type = 1 / 2
 
 
@@ -83,7 +83,7 @@ if (isset($_POST['sumbit'])) {
             <!--  -->
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+                <h1><?php print $_SESSION['fullname']; ?></h1>
             </div>
 
 

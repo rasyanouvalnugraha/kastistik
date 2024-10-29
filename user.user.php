@@ -40,7 +40,7 @@ if ($_SESSION['role'] != '2') {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>User</h1>
-                <?php print $_SESSION['username']; ?>
+                <?php print $_SESSION['fullname']; ?>
             </div>
             <section class="flex-1">
                 <?php include 'layout/card.php' ?>

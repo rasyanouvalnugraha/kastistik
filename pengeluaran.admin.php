@@ -5,8 +5,21 @@ if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
+if (isset($_POST['min'])) {
+    // masukkan data ke tabel dengan type = 3
+    $username = $_POST['username'];
+    $keterangan = $_POST['keterangan']; 
+    $jumlah = $_POST['jumlah'];
+    $tanggal = $_POST['tanggal'];
 
-// Cek apakah form telah disubmit
+    $result = mysqli_query($db, "
+    INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL,'$username', '$jumlah', 3 ,'$tanggal', '$keterangan', '$jumlah', 1);
+    ");
+
+    echo "<div class='font-mulish text-green-500'>Data berhasil ditambah</div>";
+    header("location: pengeluaran.admin.php");
+}
+
 
 ?>
 
@@ -39,28 +52,12 @@ if ($_SESSION['role'] != '1') {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 flex justify-between shadow-md navbar">
                 <h1>Input Data</h1>
-                <?php print $_SESSION['fullname']; ?>
+                <?php print $_SESSION['username']; ?>
             </div>
 
             <section class="flex flex-col md:flex-row">
                 <div class="flex flex-1 flex-col w-full h-full p-6">
                     <h1 class="text-2xl font-mulish-extend mb-6">Pengeluaran</h1>
-                    <?php
-                        if (isset($_POST['min'])) {
-                            // masukkan data ke tabel dengan type = 3
-                            $username = $_POST['username'];
-                            $keterangan = $_POST['keterangan']; 
-                            $jumlah = $_POST['jumlah'];
-                            $tanggal = $_POST['tanggal'];
-
-                            $result = mysqli_query($db, "
-                            INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL,'$username', '$jumlah', 3 ,'$tanggal', '$keterangan', '$jumlah', 1);
-                            ");
-
-                            echo "<div class='font-mulish text-green-500'>Data berhasil ditambah</div>";
-                            header('location: pengeluaran.admin.php');
-                        }
-                    ?>
                     <form action="pengeluaran.admin.php" class="space-y-4 font-mulish" method="POST">
                         <div>
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>

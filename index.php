@@ -2,12 +2,6 @@
 include "connection/database.php";
 session_start();
 
-$getFullname = "SELECT fullname FROM users";
-$result2 = $db->query($getFullname);
-$user2 = mysqli_fetch_assoc($result2);
-$_SESSION['fullname'] = $user2['fullname'];
-
-
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -19,12 +13,12 @@ if (isset($_POST['login'])) {
         $user = mysqli_fetch_assoc($result);
         
         $_SESSION['username'] = $user['username'];
+        $_SESSION['fullname'] = $user['fullname'];
         $_SESSION['role'] = $user['role'];
 
         if ($user['role'] == '1') {
             header('Location: admin.php');
-        }
-        if ($user['role'] == '2') {
+        } elseif ($user['role'] == '2') {
             header('Location: user.php');
         } else {
             print "<script>alert('akun tidak ditemukan')</script>";
@@ -32,8 +26,6 @@ if (isset($_POST['login'])) {
     }
 }
 $db->close();
-
-
 ?>
 
 <!DOCTYPE html>

@@ -7,20 +7,7 @@ if ($_SESSION['role'] != '1') {
     exit();
 }
 
-// Proses delete jika tombol delete ditekan
-if (isset($_POST['delete'])) {
-    $delete_id = $_POST['delete_id'];
 
-    // Query untuk menghapus data berdasarkan id
-    $delete_query = "DELETE FROM transactions WHERE id = '$delete_id'";
-    $delete_result = mysqli_query($db, $delete_query);
-
-    if ($delete_result) {
-        echo "<div class='text-green-600 text-lg'>Data berhasil dihapus</div>";
-    } else {
-        echo "<div class='text-red-600 text-lg'>Gagal menghapus data</div>";
-    }
-}
 // button search
 if (isset($_POST['submit'])) {
     $start = $_POST['tanggal_awal'];
@@ -108,10 +95,11 @@ if (isset($_POST['submit'])) {
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
                 <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['fullname']; ?></h1>
+                <h1><?php print $_SESSION['username']; ?></h1>
             </div>
 
             <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pengeluaran</h1>
+
 
             <section class="container mx-auto px-4 flex-1">
                 <!-- FITUR PENCARIAN TANGGAL -->
@@ -134,6 +122,22 @@ if (isset($_POST['submit'])) {
                 </form>
             </section>
 
+            <?php
+            // Proses delete jika tombol delete ditekan
+            if (isset($_POST['delete'])) {
+                $delete_id = $_POST['delete_id'];
+
+                // Query untuk menghapus data berdasarkan id
+                $delete_query = "DELETE FROM transactions WHERE id = '$delete_id'";
+                $delete_result = mysqli_query($db, $delete_query);
+
+                if ($delete_result) {
+                    echo "<div class='text-green-600 text-lg'>Data berhasil dihapus</div>";
+                } else {
+                    echo "<div class='text-red-600 text-lg'>Gagal menghapus data</div>";
+                }
+            }
+            ?>
             <!-- TABEL DATA PENGELUARAN -->
             <div class="overflow-x-auto mx-8 border-b-2">
                 <div class="max-h-80 relative overflow-y-auto no-scrollbar">
