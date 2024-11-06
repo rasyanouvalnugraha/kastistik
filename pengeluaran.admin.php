@@ -8,8 +8,8 @@ if ($_SESSION['role'] != '1') {
 if (isset($_POST['min'])) {
     // masukkan data ke tabel dengan type = 3
     $username = $_POST['username'];
-    $keterangan = $_POST['keterangan']; 
-    $jumlah = $_POST['jumlah'];
+    $keterangan = $_POST['keterangan'];
+    $jumlah = preg_replace('/\D/', '', $_POST['jumlah']);
     $tanggal = $_POST['tanggal'];
 
     $result = mysqli_query($db, "
@@ -141,5 +141,35 @@ if (isset($_POST['min'])) {
         /* Pastikan opsi juga tidak memiliki border */
     }
 </style>
+
+<script>
+    const jumlahUangInput = document.getElementById('amount');
+
+    jumlahUangInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Menghapus karakter non-digit
+        let formatted = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(value);
+
+        e.target.value = formatted.replace("Rp", "Rp ");
+    });
+
+    jumlahUangInput.addEventListener('focus', function(e) {
+        // Menghapus format saat fokus, sehingga bisa diubah
+        e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    jumlahUangInput.addEventListener('blur', function(e) {
+        // Memformat kembali ketika input kehilangan fokus
+        let value = e.target.value.replace(/\D/g, '');
+        e.target.value = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(value).replace("Rp", "Rp ");
+    });
+</script>
 
 </html>

@@ -117,12 +117,15 @@ if (isset($_POST['sumbit'])) {
                 <h1><?php print $_SESSION['username']; ?></h1>
             </div>
 
+            <div class="flex justify-between">
+                <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pemasukan</h1>
 
-            <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pemasukan</h1>
+            </div>
+
 
             <section class="container mx-auto px-4 flex-1">
                 <!-- FITUR SEACRHING TANGGAL-->
-                <form method="POST" action="" class="flex">
+                <form method="POST" action="" class="flex mb-4">
                     <div class="ml-5 w-2/3">
                         <label for="tanggal_awal" class="block text-gray-500 text-sm font-mulish mb-2">Tanggal Awal</label>
                         <input type="date" id="tanggal_awal" name="tanggal_awal"
@@ -133,10 +136,16 @@ if (isset($_POST['sumbit'])) {
                         <input type="date" id="tanggal_akhir" name="tanggal_akhir"
                             class="py-4 appearance-none border-2 w-full px-4 leading-tight rounded-lg focus:outline-none focus:border-blue-500">
                     </div>
-                    <div class="ml-4 mr-10 mt-2">
-                        <button type="submit" name="sumbit" class="bg-gradient text-white p-2 rounded w-full mx-2 my-5 font-mulish">
-                            <img src="asset/Search.svg" alt="">
+                    <div class="ml-4 mr-4 mt-8 mb-1 flex gap-2">
+                        <button type="submit" name="sumbit" class="bg-gradient text-white px-3 rounded-lg font-mulish">
+                            <img src="asset/Search.svg" alt="" class="">
                         </button>
+                        <a href="pemasukan.admin.php" class="bg-gradient text-white px-3 rounded-lg font-mulish">
+                            <img src="../kastistik/asset/Plus Math.svg" alt="" class="mt-4">
+                        </a>
+                        <a href="pemasukan.php" class="bg-gradient text-white px-3 rounded-lg font-mulish" target="_blank">
+                            <img src="../kastistik/asset/Open Document.svg" alt="" class="mt-4">
+                        </a>
                     </div>
                 </form>
             </section>
@@ -152,9 +161,9 @@ if (isset($_POST['sumbit'])) {
                 $delete_result = mysqli_query($db, $delete_query);
 
                 if ($delete_result) {
-                    echo "<div class='text-green-600 text-lg'>Data berhasil dihapus</div>";
+                    echo "<div class='text-green-600 text-lg ml-8 my-2 font-mulish'>Data berhasil dihapus</div>";
                 } else {
-                    echo "<div class='text-red-600 text-lg'>Gagal menghapus data</div>";
+                    echo "<div class='text-red-600 text-lg ml-8 font-mulish'>Gagal menghapus data</div>";
                 }
             }
             ?>
@@ -169,6 +178,7 @@ if (isset($_POST['sumbit'])) {
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Jumlah</th>
+                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Keterangan</th>
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Action</th>
                             </tr>
                         </thead>
@@ -176,14 +186,24 @@ if (isset($_POST['sumbit'])) {
                             <?php
                             while ($row = mysqli_fetch_assoc($pemasukan)) {
                                 echo "<tr class='hover:bg-gray-300 hover:cursor-pointer'>";
-                                echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
-                                echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['tanggal'] . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish'>" . htmlspecialchars($row['nama']) . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish'>" . htmlspecialchars($row['tanggal']) . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>Rp. " . number_format($row['jumlah'], 0, '.', '.') . "</td>";
+
+                                // Memeriksa apakah 'Keterangan' memiliki nilai
+                                echo "<td class='py-2 px-4 text-center font-mulish'>";
+                                if (!empty($row['Keterangan'])) {
+                                    echo htmlspecialchars($row['Keterangan']); // Tampilkan keterangan jika ada
+                                } else {
+                                    echo " - "; // Tampilkan '-' jika tidak ada keterangan
+                                }
+                                echo "</td>";
+
                                 echo "<td class='py-2 px-4 text-center font-mulish'>";
                                 echo "<form method='POST' action=''>";
                                 echo "<input type='hidden' name='delete_id' value='" . $row['ID'] . "'>";
                                 echo "<button type='submit' name='delete' class='focus:outline-none'>";
-                                echo "<img src='asset/Thumbs Down.svg' alt='Delete' class='w-8 h-8 up p-1 rounded-md'>";
+                                echo "<img src='asset/Remove.svg' alt='Delete' class='w-8 h-8 up p-1 rounded-md'>";
                                 echo "</button>";
                                 echo "</form>";
                                 echo "</td>";
@@ -191,13 +211,11 @@ if (isset($_POST['sumbit'])) {
                             }
                             ?>
                         </tbody>
-
-
                     </table>
                 </div>
             </div>
 
-            <!-- table data pemasukan yang type nya 2 -->
+
 
 
         </section>
@@ -222,6 +240,10 @@ if (isset($_POST['sumbit'])) {
 
     .up {
         background-color: #F51313;
+    }
+
+    .btn {
+        background-color: #7D46FD;
     }
 </style>
 

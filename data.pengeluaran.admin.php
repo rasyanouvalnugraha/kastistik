@@ -100,10 +100,9 @@ if (isset($_POST['submit'])) {
 
             <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pengeluaran</h1>
 
-
             <section class="container mx-auto px-4 flex-1">
-                <!-- FITUR PENCARIAN TANGGAL -->
-                <form method="POST" action="" class="flex">
+                <!-- FITUR SEACRHING TANGGAL-->
+                <form method="POST" action="" class="flex mb-4">
                     <div class="ml-5 w-2/3">
                         <label for="tanggal_awal" class="block text-gray-500 text-sm font-mulish mb-2">Tanggal Awal</label>
                         <input type="date" id="tanggal_awal" name="tanggal_awal"
@@ -114,10 +113,16 @@ if (isset($_POST['submit'])) {
                         <input type="date" id="tanggal_akhir" name="tanggal_akhir"
                             class="py-4 appearance-none border-2 w-full px-4 leading-tight rounded-lg focus:outline-none focus:border-blue-500">
                     </div>
-                    <div class="ml-4 mr-10 mt-2">
-                        <button type="submit" name="submit" class="bg-gradient text-white p-2 rounded w-full mx-2 my-5 font-mulish">
-                            <img src="asset/Search.svg" alt="">
+                    <div class="ml-4 mr-4 mt-8 mb-1 flex gap-2">
+                        <button type="submit" name="sumbit" class="bg-gradient text-white px-3 rounded-lg font-mulish">
+                            <img src="asset/Search.svg" alt="" class="">
                         </button>
+                        <a href="pengeluaran.admin.php" class="bg-gradient text-white px-3 rounded-lg font-mulish">
+                            <img src="../kastistik/asset/Plus Math.svg" alt="" class="mt-4">
+                        </a>
+                        <a href="pengeluaran.php" class="bg-gradient text-white px-3 rounded-lg font-mulish" target="_blank">
+                            <img src="../kastistik/asset/Open Document.svg" alt="" class="mt-4">
+                        </a>
                     </div>
                 </form>
             </section>
@@ -163,7 +168,7 @@ if (isset($_POST['submit'])) {
                                 echo "<form method='POST' action=''>";
                                 echo "<input type='hidden' name='delete_id' value='" . $row['ID'] . "'>";
                                 echo "<button type='submit' name='delete' class='focus:outline-none'>";
-                                echo "<img src='asset/Thumbs Down.svg' alt='Delete' class='w-8 h-8 down p-1 rounded-md'>";
+                                echo "<img src='asset/Remove.svg' alt='Delete' class='w-8 h-8 down p-1 rounded-md'>";
                                 echo "</button>";
                                 echo "</form>";
                                 echo "</td>";

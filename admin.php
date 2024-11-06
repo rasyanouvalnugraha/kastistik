@@ -15,15 +15,18 @@ $querySaldoBulanan = "
     SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS pemasukan,
     SUM(CASE WHEN type = 3 AND approve = 1 THEN amount ELSE 0 END) AS pengeluaran
     FROM transactions
-    WHERE YEAR(date) = 2024
+    WHERE YEAR(date) = YEAR(CURDATE())
     GROUP BY bulan
     ORDER BY bulan;
 ";
 
-
-
 $result = $db->query($querySaldoBulanan);
 $saldoBulanan = [];
+
+// Inisialisasi array pemasukan, pengeluaran, dan saldo dengan 0
+$pemasukanArray = array_fill(0, 12, 0);
+$pengeluaranArray = array_fill(0, 12, 0);
+$saldoArray = array_fill(0, 12, 0);
 
 while ($row = $result->fetch_assoc()) {
     $bulan = $row['bulan'];
@@ -37,35 +40,17 @@ while ($row = $result->fetch_assoc()) {
         'pengeluaran' => $pengeluaran,
         'saldo' => $saldo
     ];
+
+    // Mengupdate array sesuai dengan bulan yang ditemukan
+    $bulanIndex = intval($bulan) - 1; // Mengonversi bulan ke indeks array
+    $pemasukanArray[$bulanIndex] = $pemasukan;
+    $pengeluaranArray[$bulanIndex] = $pengeluaran;
+    $saldoArray[$bulanIndex] = $saldo;
 }
 
-
-$bulanArray = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'July',
-    'Aug',
-    'Sep',
-    'Okt',
-    'Nov',
-    'Des'
-];
-
-$saldoArray = array_fill(0, 12, 0); // Inisialisasi saldo dengan 0
-
-foreach ($saldoBulanan as $data) {
-    $bulanIndex = intval($data['bulan']) - 1; // Mengonversi bulan ke indeks array
-    $saldoArray[$bulanIndex] = $data['saldo']; // Mengupdate saldo pada bulan yang sesuai
-}
-
-$bulanJson = json_encode($bulanArray);
+$pemasukanJson = json_encode($pemasukanArray);
+$pengeluaranJson = json_encode($pengeluaranArray);
 $saldoJson = json_encode($saldoArray);
-$year = 2024;
-
 ?>
 
 <!DOCTYPE html>
@@ -77,19 +62,10 @@ $year = 2024;
     <title>DASHBOARD ADMIN</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="card.css">
-    <link rel="stylesheet" href="css/background.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
-
-
-
 </head>
 
 <body class="bg-gray-100">
@@ -108,22 +84,26 @@ $year = 2024;
             <section class="flex-1 ml-2">
                 <?php include 'layout/card.php' ?>
                 <section class="border-3">
-                    <h1 class="mx-6 text-xl font-mulish-extend">Saldo <?php print $year ?></h1>
+                    <div class="flex">
+                        <h1 class="mx-6 text-xl font-mulish-extend mr-4" id="tahun">Saldo :</h1>
+                        <p id="year" class="text-xl font-mulish-extend"></p>
+                    </div>
 
-                    <section class="flex justify-around mx-auto p-3">
-                        <div class="h-72 w-72 flex items-center justify-center flex-1">
-                            <canvas id="saldoChart"></canvas>
-                        </div>
-                        <div class="flex-col flex  px-5 justify-evenly "> 
-                            <a href="pemasukan.php" target="_blank" rel="noopener noreffer" class="button rounded-lg font-mulish text-white py-2 px-4 text-center">CETAK DATA PEMASUKAN</a>
-                            <a href="pengeluaran.php" target="_blank" rel="noopener noreffer" class="button rounded-lg font-mulish text-white py-2 px-4 text-center">CETAK DATA PENGELUARAN</a>
-                        </div>
-                    </section>
+                    <script>
+                        const getYear = new Date();
+                        const year = getYear.getFullYear();
+                        document.getElementById('year').innerHTML = year;
+                    </script>
+
+                    <div class="flex h-80 mx-auto justify-center">
+                        <canvas id="saldoChart"></canvas>
+                    </div>
                 </section>
             </section>
         </section>
     </div>
 </body>
+
 <style>
     .button {
         background-color: #7D46FD;
@@ -135,18 +115,17 @@ $year = 2024;
     var saldoChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: <?php echo $bulanJson; ?>, // Bulan
-            datasets: [
-                {
+            labels: <?php echo json_encode(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']); ?>, // Bulan
+            datasets: [{
                     label: 'Pemasukan',
-                    data: <?php echo json_encode(array_column($saldoBulanan, 'pemasukan')); ?>,
+                    data: <?php echo $pemasukanJson; ?>, // Data pemasukan
                     backgroundColor: '#4CAF50', // Warna hijau untuk pemasukan
                     borderColor: '#4CAF50',
                     borderWidth: 1
                 },
                 {
                     label: 'Pengeluaran',
-                    data: <?php echo json_encode(array_column($saldoBulanan, 'pengeluaran')); ?>,
+                    data: <?php echo $pengeluaranJson; ?>, // Data pengeluaran
                     backgroundColor: '#F44336', // Warna merah untuk pengeluaran
                     borderColor: '#F44336',
                     borderWidth: 1
@@ -180,8 +159,5 @@ $year = 2024;
         }
     });
 </script>
-
-
-
 
 </html>

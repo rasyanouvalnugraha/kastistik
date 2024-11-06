@@ -114,10 +114,10 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                         <form action='request.admin.php' method='post'>
                             <input type='hidden' name='id' value='" . $row['nomor'] . "'>
                             <button type='submit' name='approve' value='setujui'>
-                                <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 bg-green-500 m-1 rounded-md p-1'>
+                                <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 up m-1 rounded-md p-1'>
                             </button>
                             <button type='submit' name='decline' value='tolak'>
-                                <img src='asset/Thumbs Down.svg' alt='Tolak' class='w-8 h-8 bg-red-600 m-1 rounded-md p-1'>
+                                <img src='asset/Remove.svg' alt='Tolak' class='w-8 h-8 down m-1 rounded-md p-1'>
                             </button>
                         </form>
                     </td>";
@@ -135,6 +135,15 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
 
         </section>
     </div>
+
+    <style>
+        .up {
+            background-color: #13F566;
+        }
+        .down {
+            background-color: #F51313;
+        }
+    </style>
 </body>
 
 </html>

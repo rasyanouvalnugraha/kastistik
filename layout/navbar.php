@@ -23,22 +23,6 @@
             </li>
             <hr>
 
-            <!-- NAVIGASI INPUT DATA -->
-            <h1 class="font-mulish flex justify-center items-center pt-5">INPUT DATA</h1>
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
-                <a href="pemasukan.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
-                    <img src="asset/Database Restore.png" alt="" class="w-6 h-6">
-                    <span class="">Pemasukan</span>
-                </a>
-            </li>
-
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
-                <a href="pengeluaran.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
-                    <img src="asset/Database Export.png" alt="" class="w-6 h-6">
-                    <span class="">Pengeluaran</span>
-                </a>
-            </li>
-
             <hr>
 
             <!-- NAVIGASI DATA PEMASUKAN -->

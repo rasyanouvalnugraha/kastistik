@@ -11,26 +11,38 @@ $message = '';
 
 if (isset($_POST['add'])) {
 
-    $username = $_POST['username'];
+    $username = $_SESSION['fullname']; // Mengambil nama pengguna dari session
     $keperluan = $_POST['keperluan'];
     $amount = $_POST['amount'];
     $tanggal = $_POST['tanggal'];
 
-    $inputdata = "INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL, '$username', '$amount', '3', '$tanggal', '$keperluan', '$amount', '0')";
+    // Ambil ID pengguna berdasarkan username
+    $query = "SELECT id FROM users WHERE fullname = '$username' AND role = '2'";
+    $result = mysqli_query($db, $query);
 
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $id_user = $row['id']; // Dapatkan ID pengguna
 
-    // kondisi pengecekan
-    if (mysqli_query($db, $inputdata)) {
-        // melakukan pengecekan jika data berhasil ditambah
-        $message = "<div class='text-green-600 text-lg'>Request berhasil dikirim ke Admin, tunggu admin approve</div>";
+        // Sekarang kita bisa menggunakan $id_user di query insert
+        $inputdata = "INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL, '$id_user', '$amount', '3', '$tanggal', '$keperluan', '$amount', '0')";
+
+        // kondisi pengecekan
+        if (mysqli_query($db, $inputdata)) {
+            // melakukan pengecekan jika data berhasil ditambah
+            $message = "<div class='text-green-600 text-lg'>Request berhasil dikirim ke Admin, tunggu admin approve</div>";
+        } else {
+            // melakukan pengecekan jika data gagal ditambah
+            $message = "<div class='text-red-600 text-lg'>Request gagal dikirim: " . mysqli_error($db) . "</div>";
+        }
     } else {
-        // melakukan pengecekan jika data gagal ditambah
-        $message = "<div class='text-red-600 text-lg'>Request gagal dikirim: " . mysqli_error($db) . "</div>";
+        $message = "<div class='text-red-600 text-lg'>User tidak ditemukan.</div>";
     }
 
     header("location: request.user.php");
     exit();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -66,30 +78,17 @@ if (isset($_POST['add'])) {
                 <section class="flex flex-col md:flex-row">
                     <div class="flex flex-1 flex-col w-full h-full p-6">
                         <h1 class="text-2xl font-mulish-extend mb-6">Request User To Admin</h1>
-    
+
                         <!-- Menampilkan pesan berhasil atau gagal -->
-                        <?php if (!empty($message)) { 
-                            echo $message; 
-                            } 
+                        <?php if (!empty($message)) {
+                            echo $message;
+                        }
                         ?>
-    
+
                         <form action="request.user.php" class="space-y-4 font-mulish" method="POST">
-                            <div>
-                                <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
-                                <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
-                                    <img src="asset/Person.png" alt="Person Icon" class="w-6 h-6 ml-3">
-                                    <select name="username" id="username" class="w-full px-6 py-4 no-border" required>
-                                        <option value="">Pilih User</option>
-                                        <?php
-                                        $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = '2'") or die(mysqli_error($db));
-                                        while ($data = mysqli_fetch_array($sql)) {
-                                            echo "<option value=$data[id]> $data[fullname]</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-    
+                            <!-- Tambahkan input tersembunyi untuk username -->
+                            <input type="hidden" name="username" value="<?php echo $_SESSION['fullname']; ?>">
+
                             <div>
                                 <label for="needs" class="block text-gray-700 font-semibold mb-2">Keperluan</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
@@ -97,7 +96,7 @@ if (isset($_POST['add'])) {
                                     <input type="text" id="amount" name="keperluan" class="w-full px-4 py-4 focus:outline-none" placeholder="Beli Sabun....." required>
                                 </div>
                             </div>
-    
+
                             <div>
                                 <label for="amount" class="block text-gray-700 font-semibold mb-2">Jumlah Uang</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
@@ -105,7 +104,7 @@ if (isset($_POST['add'])) {
                                     <input type="text" id="amount" name="amount" class="w-full px-4 py-4 focus:outline-none" placeholder="Masukkkan Jumlah Uang" required>
                                 </div>
                             </div>
-    
+
                             <div>
                                 <label for="date" class="block text-gray-700 font-semibold mb-2">Tanggal</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
@@ -113,20 +112,21 @@ if (isset($_POST['add'])) {
                                     <input type="datetime-local" id="date" name="tanggal" class="w-full px-4 py-4 focus:outline-none" required>
                                 </div>
                             </div>
-    
+
                             <div class="mt-3">
                                 <input type="submit" name="add" value="Sumbit" class="w-full bg-button text-white px-4 py-4 rounded-md transition-colors duration-300 font-mulish-extend">
                             </div>
                         </form>
+
                     </div>
                     <div class="flex-1 w-full md:flex md:items-center hidden ">
                         <div>
                             <img src="asset/Male specialist working in support service.svg" alt="Man and woman discussing idea" class="p-6">
                         </div>
                     </div>
-    
+
                 </section>
-                
+
                 <section>
                     <?php include 'layout/card.php' ?>
                 </section>
