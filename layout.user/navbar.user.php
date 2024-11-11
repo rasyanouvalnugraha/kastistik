@@ -18,15 +18,16 @@
                     <span class="">Dashboard</span>
                 </a>
             </li>
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1">
+            <!-- <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1">
                 <a href="user.user.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/User.png" alt="" class="w-6 h-6">
                     <span class="">User</span>
                 </a>
-            </li>
-            <hr>
+            </li> -->
 
             <hr>
+            <hr>
+
 
             <!-- NAVIGASI DATA PEMASUKAN -->
             <h1 class="font-mulish flex justify-center items-center pt-5">DATA</h1>
@@ -44,6 +45,7 @@
                 </a>
             </li>
 
+            <hr>
             <hr>
 
             <!-- NAVIGASI LOG OUT -->

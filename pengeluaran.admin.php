@@ -17,7 +17,7 @@ if (isset($_POST['min'])) {
     ");
 
     echo "<div class='font-mulish text-green-500'>Data berhasil ditambah</div>";
-    header("location: pengeluaran.admin.php");
+    header("location: data.pengeluaran.admin.php");
 }
 
 
@@ -54,10 +54,16 @@ if (isset($_POST['min'])) {
                 <h1>Input Data</h1>
                 <?php print $_SESSION['username']; ?>
             </div>
+            <div class="flex justify-between items-center px-6 pt-2">
+                <h1 class="text-2xl font-mulish-extend">Pengeluaran</h1>
+                <a href="data.pengeluaran.admin.php" class="bg-button p-2 rounded-lg mt-2 flex text-white font-mulish gap-2 w-1/7">
+                    Cancel
+                    <img src="../kastistik/asset/Left 2.svg" alt="" class="h-7 mr-1">
+                </a>
+            </div>
 
             <section class="flex flex-col md:flex-row">
                 <div class="flex flex-1 flex-col w-full h-full p-6">
-                    <h1 class="text-2xl font-mulish-extend mb-6">Pengeluaran</h1>
                     <form action="pengeluaran.admin.php" class="space-y-4 font-mulish" method="POST">
                         <div>
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>

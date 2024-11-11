@@ -7,32 +7,7 @@ if ($_SESSION['role'] != '1') {
     exit();
 }
 
-
-// button search
-if (isset($_POST['submit'])) {
-    $start = $_POST['tanggal_awal'];
-    $end = $_POST['tanggal_akhir'];
-
-    // query pencarian berdasarkan tanggal
-    if ($start != null && $end != null) {
-        $pengeluaran = mysqli_query(
-            $db,
-            "
-    SELECT 
-        transactions.id AS ID,
-        transactions.date AS tanggal, 
-        users.fullname AS nama, 
-        transactions.amount AS jumlah, 
-        transactions.keterangan AS Keterangan 
-    FROM transactions 
-    JOIN users ON transactions.id_user = users.id 
-    WHERE transactions.type = 3 
-    AND transactions.approve = 1 
-    AND transactions.date BETWEEN '$start' AND '$end'
-    ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC"
-        );
-    } else {
-        $pengeluaran = mysqli_query($db, "
+$pengeluaran = mysqli_query($db, "
     SELECT 
         transactions.id AS ID,
         transactions.date AS tanggal, 
@@ -44,25 +19,8 @@ if (isset($_POST['submit'])) {
     WHERE transactions.type = 3 
     AND transactions.approve = 1 
     AND transactions.date
-    ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC
+    ORDER BY username 
 ");
-    }
-} else {
-    $pengeluaran = mysqli_query($db, "
-    SELECT 
-        transactions.id AS ID,
-        transactions.date AS tanggal, 
-        users.fullname AS nama, 
-        transactions.amount AS jumlah, 
-        transactions.keterangan AS Keterangan 
-    FROM transactions 
-    JOIN users ON transactions.id_user = users.id 
-    WHERE transactions.type = 3 
-    AND transactions.approve = 1 
-    AND transactions.date
-    ORDER BY transactions.date DESC, users.username DESC, transactions.amount DESC
-");
-}
 ?>
 
 <!DOCTYPE html>
@@ -80,6 +38,11 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+
 </head>
 
 <body class="bg-gray-100">
@@ -94,59 +57,24 @@ if (isset($_POST['submit'])) {
 
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>Dashboard</h1>
+                <h1>Data Pengeluaran</h1>
                 <h1><?php print $_SESSION['username']; ?></h1>
             </div>
 
-            <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pengeluaran</h1>
+            <div class="flex justify-between">
+                <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pengeluaran</h1>
+                <div class="flex mr-10">
+                    <a href="pengeluaran.admin.php" class="flex items-center justify-center gap-2">
+                        <h1 class="font-mulish">Tambah</h1>
+                        <img src="asset/Plus Math.svg" alt="" class="w-10 h-10 bg-gradient p-1 rounded-lg">
+                    </a>
+                </div>
+            </div>
 
-            <section class="container mx-auto px-4 flex-1">
-                <!-- FITUR SEACRHING TANGGAL-->
-                <form method="POST" action="" class="flex mb-4">
-                    <div class="ml-5 w-2/3">
-                        <label for="tanggal_awal" class="block text-gray-500 text-sm font-mulish mb-2">Tanggal Awal</label>
-                        <input type="date" id="tanggal_awal" name="tanggal_awal"
-                            class="py-4 appearance-none border-2 w-full px-2 text-gray-700 leading-tight rounded-lg focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div class="w-2/3 ml-6">
-                        <label for="tanggal_akhir" class="block text-gray-500 text-sm font-mulish mb-2">Tanggal Akhir</label>
-                        <input type="date" id="tanggal_akhir" name="tanggal_akhir"
-                            class="py-4 appearance-none border-2 w-full px-4 leading-tight rounded-lg focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div class="ml-4 mr-4 mt-8 mb-1 flex gap-2">
-                        <button type="submit" name="sumbit" class="bg-gradient text-white px-3 rounded-lg font-mulish">
-                            <img src="asset/Search.svg" alt="" class="">
-                        </button>
-                        <a href="pengeluaran.admin.php" class="bg-gradient text-white px-3 rounded-lg font-mulish">
-                            <img src="../kastistik/asset/Plus Math.svg" alt="" class="mt-4">
-                        </a>
-                        <a href="pengeluaran.php" class="bg-gradient text-white px-3 rounded-lg font-mulish" target="_blank">
-                            <img src="../kastistik/asset/Open Document.svg" alt="" class="mt-4">
-                        </a>
-                    </div>
-                </form>
-            </section>
-
-            <?php
-            // Proses delete jika tombol delete ditekan
-            if (isset($_POST['delete'])) {
-                $delete_id = $_POST['delete_id'];
-
-                // Query untuk menghapus data berdasarkan id
-                $delete_query = "DELETE FROM transactions WHERE id = '$delete_id'";
-                $delete_result = mysqli_query($db, $delete_query);
-
-                if ($delete_result) {
-                    echo "<div class='text-green-600 text-lg'>Data berhasil dihapus</div>";
-                } else {
-                    echo "<div class='text-red-600 text-lg'>Gagal menghapus data</div>";
-                }
-            }
-            ?>
             <!-- TABEL DATA PENGELUARAN -->
             <div class="overflow-x-auto mx-8 border-b-2">
                 <div class="max-h-80 relative overflow-y-auto no-scrollbar">
-                    <table class="min-w-full rounded-lg shadow-md">
+                    <table id="pengeluaranTable" class="min-w-full rounded-lg shadow-md">
                         <thead>
                             <tr class="bg-gradient navbar text-white">
                                 <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
@@ -161,7 +89,7 @@ if (isset($_POST['submit'])) {
                             while ($row = mysqli_fetch_assoc($pengeluaran)) {
                                 echo "<tr class='hover:bg-gray-300 hover:cursor-pointer'>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
-                                echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['tanggal'] . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish' data-order='" . date('Y-m-d', strtotime($row['tanggal'])) . "'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>Rp. " . number_format($row['jumlah'], 0, '.', '.') . "</td>";
                                 echo "<td class='py-2 px-4 text-center font-mulish'>";
@@ -176,11 +104,51 @@ if (isset($_POST['submit'])) {
                             }
                             ?>
                         </tbody>
+
                     </table>
                 </div>
             </div>
         </section>
     </div>
+
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#pengeluaranTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                "order": [
+                    [1, "desc"]
+                ], // Urutkan berdasarkan kolom tanggal (index 1) secara descending
+                "columnDefs": [{
+                        "orderable": false,
+                        "targets": [0, 2, 3, 4]
+                    } // Nonaktifkan fitur urutan di kolom lainnya
+                ],
+                "language": {
+                    "search": "Cari:",
+                    "lengthMenu": "Tampilkan _MENU_ data",
+                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    "paginate": {
+                        "first": "Awal",
+                        "last": "Akhir",
+                        "next": "Selanjutnya",
+                        "previous": "Sebelumnya"
+                    }
+                }
+            });
+        });
+    </script>
+
 </body>
 <style>
     /* Hapus scrollbar pada browser berbasis WebKit */

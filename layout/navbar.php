@@ -43,6 +43,8 @@
 
             <hr>
 
+            <hr>
+
             <!-- NAVIGASI LOG OUT -->
             <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
                 <a href="request.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">

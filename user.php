@@ -6,20 +6,26 @@ if ($_SESSION['role'] != '2') {
     exit();
 }
 
-// Query untuk menghitung pemasukan dan pengeluaran per bulan 
+
+// Query untuk menghitung pemasukan dan pengeluaran per bulan di tahun 2024
 $querySaldoBulanan = "
     SELECT 
-        DATE_FORMAT(date, '%m') AS bulan, 
-        SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS pemasukan,
-        SUM(CASE WHEN type = 3 AND approve = 1 THEN amount ELSE 0 END) AS pengeluaran
+    DATE_FORMAT(date, '%m') AS bulan, 
+    SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS pemasukan,
+    SUM(CASE WHEN type = 3 AND approve = 1 THEN amount ELSE 0 END) AS pengeluaran
     FROM transactions
-    WHERE YEAR(date) = 2024
+    WHERE YEAR(date) = YEAR(CURDATE())
     GROUP BY bulan
     ORDER BY bulan;
 ";
 
 $result = $db->query($querySaldoBulanan);
 $saldoBulanan = [];
+
+// Inisialisasi array pemasukan, pengeluaran, dan saldo dengan 0
+$pemasukanArray = array_fill(0, 12, 0);
+$pengeluaranArray = array_fill(0, 12, 0);
+$saldoArray = array_fill(0, 12, 0);
 
 while ($row = $result->fetch_assoc()) {
     $bulan = $row['bulan'];
@@ -29,36 +35,21 @@ while ($row = $result->fetch_assoc()) {
 
     $saldoBulanan[] = [
         'bulan' => $bulan,
+        'pemasukan' => $pemasukan,
+        'pengeluaran' => $pengeluaran,
         'saldo' => $saldo
     ];
+
+    // Mengupdate array sesuai dengan bulan yang ditemukan
+    $bulanIndex = intval($bulan) - 1; // Mengonversi bulan ke indeks array
+    $pemasukanArray[$bulanIndex] = $pemasukan;
+    $pengeluaranArray[$bulanIndex] = $pengeluaran;
+    $saldoArray[$bulanIndex] = $saldo;
 }
 
-
-$bulanArray = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'July',
-    'Aug',
-    'Sep',
-    'Okt',
-    'Nov',
-    'Des'
-];
-
-$saldoArray = array_fill(0, 12, 0); // Inisialisasi saldo dengan 0
-
-foreach ($saldoBulanan as $data) {
-    $bulanIndex = intval($data['bulan']) - 1; // Mengonversi bulan ke indeks array
-    $saldoArray[$bulanIndex] = $data['saldo']; // Mengupdate saldo pada bulan yang sesuai
-}
-
-$bulanJson = json_encode($bulanArray);
+$pemasukanJson = json_encode($pemasukanArray);
+$pengeluaranJson = json_encode($pengeluaranArray);
 $saldoJson = json_encode($saldoArray);
-$year = 2024;
 
 ?>
 
@@ -101,9 +92,22 @@ $year = 2024;
             </div>
             <section class="flex-1 ml-2">
                 <?php include 'layout/card.php' ?>
-                <div class="max-h-72 flex items-center justify-center flex-1 ">
-                    <canvas id="saldoChart"></canvas>
-                </div>
+                <section class="border-3">
+                    <div class="flex">
+                        <h1 class="mx-6 text-xl font-mulish-extend mr-4" id="tahun">Saldo :</h1>
+                        <p id="year" class="text-xl font-mulish-extend"></p>
+                    </div>
+
+                    <script>
+                        const getYear = new Date();
+                        const year = getYear.getFullYear();
+                        document.getElementById('year').innerHTML = year;
+                    </script>
+
+                    <div class="flex h-80 mx-auto justify-center">
+                        <canvas id="saldoChart"></canvas>
+                    </div>
+                </section>
             </section>
         </section>
     </div>
@@ -115,17 +119,31 @@ $year = 2024;
 <script>
     var ctx = document.getElementById('saldoChart').getContext('2d');
     var saldoChart = new Chart(ctx, {
-        type: 'bar', // 
+        type: 'bar',
         data: {
-            labels: <?php echo $bulanJson; ?>, // Bulan
+            labels: <?php echo json_encode(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']); ?>, // Bulan
             datasets: [{
-                label: 'Saldo',
-                data: <?php echo $saldoJson; ?>, // Data saldo
-                borderColor: '#7D46FD',
-                backgroundColor: '#7D46FD',
-                fill: true,
-                borderWidth: 2
-            }]
+                    label: 'Pemasukan',
+                    data: <?php echo $pemasukanJson; ?>, // Data pemasukan
+                    backgroundColor: '#4CAF50', // Warna hijau untuk pemasukan
+                    borderColor: '#4CAF50',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Pengeluaran',
+                    data: <?php echo $pengeluaranJson; ?>, // Data pengeluaran
+                    backgroundColor: '#F44336', // Warna merah untuk pengeluaran
+                    borderColor: '#F44336',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Saldo',
+                    data: <?php echo $saldoJson; ?>, // Data saldo
+                    backgroundColor: '#7D46FD', // Warna ungu untuk saldo
+                    borderColor: '#7D46FD',
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -139,8 +157,9 @@ $year = 2024;
                 y: {
                     title: {
                         display: true,
-                        text: 'Saldo (dalam rupiah)'
-                    }
+                        text: 'Jumlah (dalam rupiah)'
+                    },
+                    beginAtZero: true
                 }
             }
         }

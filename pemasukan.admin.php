@@ -72,7 +72,7 @@ if (isset($_POST['add'])) {
                 <h1 class="text-2xl font-mulish-extend">Pemasukan</h1>
                 <a href="data.pemasukan.admin.php" class="bg-button p-2 rounded-lg mt-2 flex text-white font-mulish gap-2 w-1/7">
                     Cancel
-                    <img src="../kastistik/asset/Left 2.svg" alt="" class="h-7 mr-1">
+                    <img src="asset/Left 2.svg" alt="" class="h-7 mr-1">
                 </a>
             </div>
             <section class="flex flex-col md:flex-row">
