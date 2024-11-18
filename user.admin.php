@@ -17,10 +17,11 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD ADMIN</title>
+    <title>Dashboard Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../kastistik/css/font.css">
     <link rel="stylesheet" href="../kastistik/css/navbar.css">
+    <link rel="icon" href="asset/BPS.png" type="image/x-icon">
 </head>
 
 <body class="bg-gray-100">
@@ -42,7 +43,7 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
                     <h1 class="text-3xl mr-2 items-center justify-center flex" id="year"></h1>
                     <img src="asset/Calendar.png" alt="" class="bg-gradient h-12 p-2 rounded-lg text-white">
                 </div>
-                <a href="manage_user.admin.php" class="bg-gradient p-2 rounded-lg">
+                <a href="manage.user.admin.php" class="bg-gradient p-2 rounded-lg">
                     <img src="asset/Add User Male.svg" alt="" class="ml-1 h-8 ">
                 </a>
             </section>
@@ -67,10 +68,10 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
                             <?php
                             $no = 1;
                             while ($row = mysqli_fetch_array($getuser)) {
-                                $premi = (float)$row['premi'];
+                                $premi = (float) $row['premi'];
                                 $pemasukan_result = mysqli_query($db, "SELECT SUM(amount) AS total_pemasukan FROM transactions WHERE id_user = '{$row['id']}' AND type = '1' AND approve = '1'");
                                 $pemasukan_row = mysqli_fetch_assoc($pemasukan_result);
-                                $total_pemasukan = (float)$pemasukan_row['total_pemasukan'];
+                                $total_pemasukan = (float) $pemasukan_row['total_pemasukan'];
 
                                 echo "<tr>";
                                 echo "<td class='px-4 py-2'>$no</td>";

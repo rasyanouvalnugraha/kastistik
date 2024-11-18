@@ -24,6 +24,7 @@ $getData = mysqli_query($db, "
 // Jika tombol approve atau decline dipencet
 if (isset($_POST['approve']) || isset($_POST['decline'])) {
     $id = $_POST['id'];
+    
 
     if (isset($_POST['approve'])) {
         // Jika tombol approve dipencet
@@ -55,7 +56,7 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD ADMIN</title>
+    <title>Dashboard Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">

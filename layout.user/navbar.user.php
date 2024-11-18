@@ -18,12 +18,6 @@
                     <span class="">Dashboard</span>
                 </a>
             </li>
-            <!-- <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1">
-                <a href="user.user.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
-                    <img src="asset/User.png" alt="" class="w-6 h-6">
-                    <span class="">User</span>
-                </a>
-            </li> -->
 
             <hr>
             <hr>
@@ -55,11 +49,12 @@
                     <span class="">Request</span>
                 </a>
             </li>
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1 flex">
-                <img src="asset/Logout.svg" alt="" class="w-6 mr-3">
-                <?php include "layout/exit.php" ?>
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
+                <a href="logout.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
+                    <img src="asset/Logout.svg" alt="" class="w-6 h-6">
+                    <span class="">Logout</span>
+                </a>
             </li>
-
         </ul>
     </nav>
 </section>
@@ -83,7 +78,9 @@
         /* Atur latar belakang navbar */
         overflow-y: auto;
     }
+
     .navbar::-webkit-scrollbar {
-        display: none; /* Menyembunyikan scrollbar untuk Webkit browsers */
+        display: none;
+        /* Menyembunyikan scrollbar untuk Webkit browsers */
     }
 </style>

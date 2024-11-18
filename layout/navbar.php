@@ -53,16 +53,17 @@
                 </a>
             </li>
             <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
-                <a href="decline.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
+                <a href="history.admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/Urgent Message.svg" alt="" class="w-6 h-6">
-                    <span class="">Decline Req</span>
+                    <span class="">History</span>
                 </a>
             </li>
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1 flex">
-                <img src="asset/logout.svg" alt="" class="w-6 mr-3">
-                <?php include "layout/exit.php" ?>
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
+                <a href="logout.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
+                    <img src="asset/Logout.svg" alt="" class="w-6 h-6">
+                    <span class="">Logout</span>
+                </a>
             </li>
-
         </ul>
     </nav>
 </section>

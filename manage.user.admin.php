@@ -8,13 +8,24 @@ if ($_SESSION['role'] != '1') {
 }
 
 // Proses hapus data jika ada permintaan delete
-if (isset($_POST['delete_id'])) {
+if (isset($_POST['delete'])) {
     $delete_id = $_POST['delete_id'];
-    $deleteQuery = $db->prepare('DELETE FROM users WHERE id = ?');
-    $deleteQuery->bind_param('i', $delete_id);
-    $deleteQuery->execute();
-    header('location: manage_user.admin.php');
-    exit();
+
+    // Hapus transaksi terkait user
+    $deleteTransactions = $db->prepare('DELETE FROM transactions WHERE id_user = ?');
+    $deleteTransactions->bind_param('d', $delete_id);
+    $deleteTransactions->execute();
+
+    // Hapus user
+    $query = $db->prepare('DELETE FROM users WHERE id = ?');
+    $query->bind_param('d', $delete_id);
+
+    if ($query->execute()) {
+        header('Location: manage.user.admin.php');
+        exit();
+    } else {
+        echo "Error: " . $query->error;
+    }
 }
 
 // Ambil data semua user
@@ -37,7 +48,7 @@ if (isset($_POST['create'])) {
     $query->bind_param('sssd', $fullname, $username, $password, $newpremi);
 
     if ($query->execute()) {
-        header('Location: manage_user.admin.php');
+        header('Location: manage.user.admin.php');
         exit();
     } else {
         echo "Error: " . $query->error;
@@ -57,7 +68,7 @@ if (isset($_POST['update'])) {
     $query = $db->prepare('UPDATE users SET fullname = ?, username = ?, password = ?, premi = ? WHERE id = ?');
     $query->bind_param('ssssd', $fullname, $username, $password, $premi, $id);
     $query->execute();
-    header('location: manage_user.admin.php');
+    header('location: manage.   user.admin.php');
     exit();
 }
 ?>
@@ -68,7 +79,7 @@ if (isset($_POST['update'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD ADMIN</title>
+    <title>Dashboard Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
     <link rel="stylesheet" href="card.css">
@@ -111,9 +122,13 @@ if (isset($_POST['update'])) {
                                     <td class="py-3 px-4 font-mulish"><?php echo htmlspecialchars($data->username); ?></td>
                                     <td class="py-3 px-4 font-mulish text-center"><?php echo htmlspecialchars($data->password); ?></td>
                                     <td class="py-3 px-4 font-mulish text-center"><?php echo "Rp " . number_format($data->premi, 0, ',', '.'); ?></td>
-                                    <td class="py-3 px-4 font-mulish text-center">
-                                        <a href="javascript:void(0);" onclick="openEditForm('<?php echo $data->id; ?>', '<?php echo htmlspecialchars($data->fullname); ?>', '<?php echo htmlspecialchars($data->username); ?>', '<?php echo htmlspecialchars($data->password); ?>', '<?php echo number_format($data->premi, 0, ',', '.'); ?>')" class="text-blue-600 hover:text-blue-800 font-semibold mr-3">Edit</a>
-                                        <a href="javascript:void(0);" onclick="confirmDelete('<?php echo $data->id; ?>')" class="text-red-600 hover:text-red-800 font-semibold">Delete</a>
+                                    <td class="py-3 px-4 font-mulish text-center flex justify-center">
+                                        <a href="javascript:void(0);" onclick="openEditForm('<?php echo $data->id; ?>', '<?php echo htmlspecialchars($data->fullname); ?>', '<?php echo htmlspecialchars($data->username); ?>', '<?php echo htmlspecialchars($data->password); ?>', '<?php echo number_format($data->premi, 0, ',', '.'); ?>')" class="text-blue-600 hover:text-blue-800 font-semibold mr-3 font-mulish">Edit</a>
+                                        <!-- Form Hapus -->
+                                        <form action="" method="POST">
+                                            <input type="hidden" name="delete_id" value="<?php echo $data->id; ?>">
+                                            <button type="submit" class="text-red-500 font-mulish" name="delete" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -126,10 +141,7 @@ if (isset($_POST['update'])) {
                 </div>
             </div>
 
-            <!-- Form Hapus -->
-            <form id="deleteForm" action="" method="POST" class="hidden">
-                <input type="hidden" name="delete_id" id="delete_id" value="">
-            </form>
+
 
             <!-- Form Edit Modal -->
             <div id="editForm" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-20">
@@ -145,7 +157,7 @@ if (isset($_POST['update'])) {
                         <input type="text" name="username" id="username" class="w-full mt-1 p-2 border rounded-lg mb-4" required>
 
                         <label for="password" class="block text-sm font-mulish text-gray-700">Password</label>
-                        <input type="text" name="password" id="password" class="w-full mt-1 p-2 border rounded-lg mb-4" required>
+                        <input type="password" name="password" id="password" class="w-full mt-1 p-2 border rounded-lg mb-4" required>
 
                         <label for="premi" class="block text-sm font-mulish text-gray-700">Premi</label>
                         <input type="text" name="premi" id="premi" class="w-full mt-1 p-2 border rounded-lg mb-4" required oninput="formatRupiah(this)">
@@ -170,7 +182,7 @@ if (isset($_POST['update'])) {
                         <input type="text" name="username" id="username" class="w-full mt-1 p-2 border rounded-lg mb-4" required>
 
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="text" name="password" id="password" class="w-full mt-1 p-2 border rounded-lg mb-4" required>
+                        <input type="password" name="password" id="password" class="w-full mt-1 p-2 border rounded-lg mb-4" required>
 
                         <label for="premi" class="block text-sm font-medium text-gray-700">Premi</label>
                         <input type="text" name="premi" id="premi" class="w-full mt-1 p-2 border rounded-lg mb-4" required oninput="formatRupiah(this)">

@@ -14,7 +14,6 @@ if (isset($_POST['add'])) {
     $username = $_SESSION['fullname']; // Mengambil nama pengguna dari session
     $keperluan = $_POST['keperluan'];
     $amount = $_POST['amount'];
-    $tanggal = $_POST['tanggal'];
 
     // Ambil ID pengguna berdasarkan username
     $query = "SELECT id FROM users WHERE fullname = '$username' AND role = '2'";
@@ -24,15 +23,15 @@ if (isset($_POST['add'])) {
         $row = mysqli_fetch_assoc($result);
         $id_user = $row['id']; // Dapatkan ID pengguna
 
-        // Sekarang kita bisa menggunakan $id_user di query insert
-        $inputdata = "INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL, '$id_user', '$amount', '3', '$tanggal', '$keperluan', '$amount', '0')";
+        // Query insert dengan tanggal otomatis menggunakan fungsi NOW()
+        $inputdata = "INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL, '$id_user', '$amount', '3', NOW(), '$keperluan', '$amount', '0')";
 
         // kondisi pengecekan
         if (mysqli_query($db, $inputdata)) {
-            // melakukan pengecekan jika data berhasil ditambah
+            // Pengecekan jika data berhasil ditambah
             $message = "<div class='text-green-600 text-lg'>Request berhasil dikirim ke Admin, tunggu admin approve</div>";
         } else {
-            // melakukan pengecekan jika data gagal ditambah
+            // Pengecekan jika data gagal ditambah
             $message = "<div class='text-red-600 text-lg'>Request gagal dikirim: " . mysqli_error($db) . "</div>";
         }
     } else {
@@ -76,55 +75,43 @@ if (isset($_POST['add'])) {
 
             <section class="">
                 <section class="flex flex-col md:flex-row">
-                    <div class="flex flex-1 flex-col w-full h-full p-6">
-                        <h1 class="text-2xl font-mulish-extend mb-6">Request User To Admin</h1>
+                    <div class="flex flex-1 flex-col w-full h-full p-4">
+                        <h1 class="text-2xl font-mulish-extend mt-4">Request User To Admin</h1>
 
                         <!-- Menampilkan pesan berhasil atau gagal -->
                         <?php if (!empty($message)) {
                             echo $message;
-                        }
-                        ?>
+                        } ?>
 
-                        <form action="request.user.php" class="space-y-4 font-mulish" method="POST">
-                            <!-- Tambahkan input tersembunyi untuk username -->
+                        <form action="request.user.php" class="space-y-4 font-mulish mt-4" method="POST">
                             <input type="hidden" name="username" value="<?php echo $_SESSION['fullname']; ?>">
 
                             <div>
-                                <label for="needs" class="block text-gray-700 font-semibold mb-2">Keperluan</label>
+                                <label for="keperluan" class="block text-gray-700 font-semibold mb-2">Keperluan</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
-                                    <img src="asset/Strategy.svg" alt="Coins Icon" class="w-6 h-6 ml-3">
-                                    <input type="text" id="amount" name="keperluan" class="w-full px-4 py-4 focus:outline-none" placeholder="Beli Sabun....." required>
+                                    <img src="asset/Strategy.svg" alt="Keperluan Icon" class="w-6 h-6 ml-3">
+                                    <input type="text" id="keperluan" name="keperluan" class="w-full px-4 py-4 focus:outline-none" placeholder="Beli Sabun....." required>
                                 </div>
                             </div>
 
                             <div>
                                 <label for="amount" class="block text-gray-700 font-semibold mb-2">Jumlah Uang</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
-                                    <img src="asset/Receive Cash.svg" alt="Coins Icon" class="w-6 h-6 ml-3">
-                                    <input type="text" id="amount" name="amount" class="w-full px-4 py-4 focus:outline-none" placeholder="Masukkkan Jumlah Uang" required>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label for="date" class="block text-gray-700 font-semibold mb-2">Tanggal</label>
-                                <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
-                                    <img src="asset/Calendar.svg" alt="Calendar Icon" class="w-6 h-6 ml-3">
-                                    <input type="datetime-local" id="date" name="tanggal" class="w-full px-4 py-4 focus:outline-none" required>
+                                    <img src="asset/Receive Cash.svg" alt="Amount Icon" class="w-6 h-6 ml-3">
+                                    <input type="text" id="amount" name="amount" class="w-full px-4 py-4 focus:outline-none" placeholder="Masukkan Jumlah Uang" required>
                                 </div>
                             </div>
 
                             <div class="mt-3">
-                                <input type="submit" name="add" value="Sumbit" class="w-full bg-button text-white px-4 py-4 rounded-md transition-colors duration-300 font-mulish-extend">
+                                <input type="submit" name="add" value="Submit" class="w-full bg-button text-white px-4 py-4 rounded-md transition-colors duration-300 font-mulish-extend">
                             </div>
                         </form>
-
                     </div>
-                    <div class="flex-1 w-full md:flex md:items-center hidden ">
+                    <div class="flex-1 w-full md:flex md:items-center hidden">
                         <div>
-                            <img src="asset/Male specialist working in support service.svg" alt="Man and woman discussing idea" class="p-6">
+                            <img src="asset/Male specialist working in support service.svg" alt="Support Service" class="p-6">
                         </div>
                     </div>
-
                 </section>
 
                 <section>

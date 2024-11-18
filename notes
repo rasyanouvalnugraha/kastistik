@@ -176,13 +176,29 @@ if (mysqli_num_rows($pemasukan) > 0) {
 
 </html>
 
- mysqli_query($db, "INSERT INTO transactions 
-    (id_user, amount, type, date, saldo, approve) 
-    VALUES (
-        '" . $_POST['username'] . "',
-        '" . $_POST['jumlah'] . "',
-        '" . $_POST['type'] ."',
-        '" . $_POST['tanggal'] . "',
-        '" . $_POST['jumlah'] . "',
-        1
-    )") or die(mysqli_error($db));
+mysqli_query($db, "INSERT INTO transactions
+(id_user, amount, type, date, saldo, approve)
+VALUES (
+'" . $_POST['username'] . "',
+'" . $_POST['jumlah'] . "',
+'" . $_POST['type'] ."',
+'" . $_POST['tanggal'] . "',
+'" . $_POST['jumlah'] . "',
+1
+)") or die(mysqli_error($db));
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DASHBOARD</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/background.css">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="card.css">
+<link rel="stylesheet" href="css/background.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/font.css">
+<link rel="stylesheet" href="css/navbar.css">
+<link rel="icon" href="asset/BPS.png" type="image/x-icon">

@@ -15,32 +15,35 @@ if (isset($_POST['delete'])) {
     $result = mysqli_query($db, $delete_query);
 
     if ($result) {
-        // Jika berhasil, arahkan kembali ke halaman ini
-        header("Location: data.pemasukan.admin.php");
-        exit();
+        // Set session untuk success message
+        $_SESSION['message'] = 'Data berhasil dihapus.';
+        $_SESSION['message_type'] = 'success'; // Tipe pesan: success
     } else {
-        // Jika gagal, tampilkan pesan error
-        echo "<script>alert('Error deleting record');</script>";
+        // Set session untuk error message
+        $_SESSION['message'] = 'Error deleting record.';
+        $_SESSION['message_type'] = 'error'; // Tipe pesan: error
     }
-}
 
+    // Arahkan kembali ke halaman ini
+    header("Location: data.pemasukan.admin.php");
+    exit();
+}
 
 $pemasukan = mysqli_query(
     $db,
     "
-    SELECT 
-    transactions.id AS ID, 
-    transactions.date AS tanggal, 
-    users.fullname AS nama, 
-    transactions.amount AS jumlah, 
-    transactions.keterangan AS Keterangan 
-    FROM transactions 
-    JOIN users ON transactions.id_user = users.id 
+    SELECT
+    transactions.id AS ID,
+    transactions.date AS tanggal,
+    users.fullname AS nama,
+    transactions.amount AS jumlah,
+    transactions.keterangan AS Keterangan
+    FROM transactions
+    JOIN users ON transactions.id_user = users.id
     WHERE transactions.type IN (1,2)
-    AND transactions.approve = 1 
+    AND transactions.approve = 1
     ORDER BY transactions.date DESC, transactions.id DESC"
 );
-
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +52,7 @@ $pemasukan = mysqli_query(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD ADMIN</title>
+    <title>Dashboard Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
     <link rel="stylesheet" href="css/navbar.css">
@@ -152,12 +155,14 @@ $pemasukan = mysqli_query(
     <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.53/build/pdfmake.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.53/build/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    
     <script>
         $(document).ready(function() {
+            // Inisialisasi DataTable
             $('#dataPemasukan').DataTable({
-                dom: 'Bfrtip',
-                buttons: ['copy', 'csv', 'excel', 'pdf'],
+                dom: 'Bfrtip', // Menentukan tata letak tombol
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf' // Tombol ekspor lainnya
+                ],
                 "language": {
                     "search": "Cari:",
                     "lengthMenu": "Tampilkan _MENU_ data",
@@ -173,14 +178,23 @@ $pemasukan = mysqli_query(
                 "ordering": true,
                 "autoWidth": false,
                 "order": [
-                    [1, "desc"]
-                ], // Urutkan berdasarkan kolom tanggal (index 1) secara descending
+                    [1, "desc"] // Urutkan berdasarkan kolom tanggal (index 1) secara descending
+                ],
                 "columnDefs": [{
-                        "orderable": false,
-                        "targets": [0, 2, 3, 4]
-                    } // Nonaktifkan fitur urutan di kolom lainnya
-                ]
+                    "orderable": false,
+                    "targets": [0, 2, 3, 4] // Nonaktifkan fitur urutan di kolom lainnya
+                }]
             });
+
+            // Menampilkan pesan dari session jika ada
+            <?php if (isset($_SESSION['message'])) { ?>
+                var message = "<?php echo $_SESSION['message']; ?>";
+                var messageType = "<?php echo $_SESSION['message_type']; ?>";
+
+                alert(message); // Menampilkan pesan
+                <?php unset($_SESSION['message']);
+                unset($_SESSION['message_type']); ?>
+            <?php } ?>
         });
     </script>
 

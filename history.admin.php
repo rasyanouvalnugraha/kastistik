@@ -43,7 +43,7 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
         echo "<script>alert('Terjadi kesalahan: " . mysqli_error($db) . "');</script>";
     }
 
-    header('location: request.admin.php');
+    header('location: history.admin.php');
     exit();
 }
 
@@ -55,7 +55,7 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD ADMIN</title>
+    <title>Dashboard Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -112,10 +112,6 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>
                                     <form action='request.admin.php' method='post'>
-                                        <input type='hidden' name='id' value='" . $row['nomor'] . "'>
-                                        <button type='submit' name='approve' value='setujui'>
-                                            <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 up m-1 rounded-md p-1'>
-                                        </button>
                                         <button type='submit' name='decline' value='tolak'>
                                             <img src='asset/Remove.svg' alt='Tolak' class='w-8 h-8 down m-1 rounded-md p-1'>
                                         </button>
