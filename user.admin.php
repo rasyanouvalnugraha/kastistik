@@ -50,7 +50,7 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
 
             <section class="flex-1 mx-6 pb-4">
                 <section class="overflow-x-auto p-2">
-                    <table class="border-2 border-purple-500 font-mulish mx-auto w-full text-center rounded-lg overflow-hidden max-h-96">
+                    <table class="border-2 border-purple-500 font-mulish mx-auto w-full text-center rounded-lg overflow-hidden max-h">
                         <!-- Header Bulan -->
                         <thead class="bg-gradient text-white">
                             <tr>
@@ -115,7 +115,4 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
         background: #B0B0B0;
     }
 </style>
-
-
-
 </html>

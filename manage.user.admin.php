@@ -101,8 +101,12 @@ if (isset($_POST['update'])) {
                 <h1><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
             </div>
 
+
+            <!-- table user -->
             <div class="overflow-x-auto mx-8 mt-4 border-b-2 rounded-lg">
-                <div class="max-h-96 relative overflow-y-auto no-scrollbar">
+
+
+                <div class="max-h relative overflow-y-auto no-scrollbar">
                     <table class="min-w-full rounded-lg">
                         <thead>
                             <tr class="bg-gradient text-white sticky top-0 z-10">
@@ -194,6 +198,8 @@ if (isset($_POST['update'])) {
                     </form>
                 </div>
             </div>
+
+
         </section>
     </div>
 
@@ -243,6 +249,9 @@ if (isset($_POST['update'])) {
         .bg-gradient-r {
             background: rgb(125, 70, 253);
             background: linear-gradient(270deg, rgba(125, 70, 253, 1) 0%, rgba(253, 201, 145, 1) 100%);
+        }
+        .max-h {
+            max-height: 29rem;
         }
     </style>
 </body>
