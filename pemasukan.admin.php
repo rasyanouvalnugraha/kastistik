@@ -5,13 +5,10 @@ if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
+
+$messageCreateData = '';
 // query memasukkan data ke table transactions
 if (isset($_POST['add'])) {
-    // Ambil premi dari user berdasarkan username yang dipilih
-    $fullname = $_POST['fullname'];
-    $getPremi = mysqli_query($db, "SELECT premi FROM users WHERE id = '$fullname'");
-    $premiData = mysqli_fetch_assoc($getPremi);
-    $premi = $premiData['premi'];
 
     // Ambil jumlah yang diinput user
     $jumlah = preg_replace('/\D/', '', $_POST['jumlah']);
@@ -20,17 +17,16 @@ if (isset($_POST['add'])) {
     $type = $_POST['type'];
     $keterangan = $_POST['keterangan'];
 
-    // Pengecekan apakah jumlah lebih kecil dari premi
-    if ($jumlah < $premi) {
-        echo "<div class='text-red-600 text-lg'>Data gagal dimasukkan karna kurang dari premi</div>";
-    } else {
-        // Jika jumlah lebih besar atau sama dengan premi, masukkan ke database
-        $result = mysqli_query($db, "INSERT INTO transactions (id_user, amount, type, date, saldo, keterangan,approve)
-        VALUES ('$username', '$jumlah', '$type', '$tanggal', '$jumlah','$keterangan' , 1)");
+    $result = mysqli_query($db, "INSERT INTO transactions (id_user, amount, type, date, saldo, keterangan,approve)
+    VALUES ('$username', '$jumlah', '$type', '$tanggal', '$jumlah','$keterangan' , 1)");
 
-        header('location: data.pemasukan.admin.php');
-        exit();
+    if($result > 0) {
+        $messageCreateData = "Sucsess";
+    } else {
+        $messageCreateData = "Failed";
     }
+    header('location: data.pemasukan.admin.php?messageCreateData='.$messageCreateData);
+    exit();
 }
 ?>
 
@@ -52,6 +48,8 @@ if (isset($_POST['add'])) {
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
 </head>
 
 <body class="">

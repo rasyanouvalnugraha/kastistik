@@ -7,6 +7,7 @@ if ($_SESSION['role'] != '1') {
     exit();
 }
 
+$messageDeleteData = '';
 if (isset($_POST['delete'])) {
     $delete_id = $_POST['delete_id'];
 
@@ -15,17 +16,13 @@ if (isset($_POST['delete'])) {
     $result = mysqli_query($db, $delete_query);
 
     if ($result) {
-        // Set session untuk success message
-        $_SESSION['message'] = 'Data berhasil dihapus.';
-        $_SESSION['message_type'] = 'success'; // Tipe pesan: success
+        $messageDeleteData = "Sucsess";
     } else {
-        // Set session untuk error message
-        $_SESSION['message'] = 'Error deleting record.';
-        $_SESSION['message_type'] = 'error'; // Tipe pesan: error
-    }
+        $messageDeleteData = "Failed";
+    }   
 
     // Arahkan kembali ke halaman ini
-    header("Location: data.pemasukan.admin.php");
+    header("Location: data.pemasukan.admin.php?messageDeleteData=" . $messageDeleteData);
     exit();
 }
 
@@ -58,31 +55,10 @@ $pemasukan = mysqli_query(
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/font.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
-
-    <!-- DataTables CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-
-    <!-- DataTables Buttons CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
-
-    <style>
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .up {
-            background-color: #F51313;
-        }
-
-        .btn {
-            background-color: #7D46FD;
-        }
-    </style>
 </head>
 
 <body class="bg-gray-100">
@@ -156,6 +132,57 @@ $pemasukan = mysqli_query(
     <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.1.53/build/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script>
+        // tangkap parameter dari pemasukan admin 
+        const searchParams = new URLSearchParams(window.location.search);
+
+        // sweetalert parameter dari pemasukan
+        const messageCreateData = searchParams.get("messageCreateData")
+        if(messageCreateData) {
+            if (messageCreateData === "Sucsess") {
+                Swal.fire({
+                    icon:'success',
+                    title: 'Berhasil',
+                    text: 'Data pemasukan berhasil ditambahkan'
+                }).then(() => {
+                    // hapus parameter
+                    const findparams = new URL(window.location)
+                    findparams.searchParams.delete("messageCreateData");
+                    window.history.replaceState({}, document.title, findparams);
+                });
+            } else {
+                Swal.fire({
+                    icon:'error',
+                    title: 'Gagal',
+                    text: 'Data pemasukan gagal ditambahkan'
+                });
+            }
+        }
+
+
+        // sweetalert hapus data pemasukan
+        const messageDeleteData = searchParams.get("messageDeleteData")
+        if(messageDeleteData) {
+            if (messageDeleteData === "Sucsess") {
+                Swal.fire({
+                    icon:'success',
+                    title: 'Berhasil',
+                    text: 'Data pemasukan berhasil dihapus'
+                }).then(() => {
+                    // hapus parameter
+                    const findparams = new URL(window.location)
+                    findparams.searchParams.delete("messageDeletedata");
+                    window.history.replaceState({}, document.title, findparams);
+                });
+            } else if (messageDeleteData === "Failed") {
+                Swal.fire({
+                    icon:'error',
+                    title: 'Gagal',
+                    text: 'Data pemasukan gagal dihapus'
+                });
+            }
+        }
+        
+
         $(document).ready(function() {
             // Inisialisasi DataTable
             $('#dataPemasukan').DataTable({
@@ -198,6 +225,25 @@ $pemasukan = mysqli_query(
         });
     </script>
 
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .up {
+            background-color: #F51313;
+        }
+
+        .btn {
+            background-color: #7D46FD;
+        }
+    </style>
 
 </body>
 

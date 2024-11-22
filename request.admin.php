@@ -20,31 +20,27 @@ $getData = mysqli_query($db, "
     WHERE transactions.approve = 0 
     ORDER BY transactions.date DESC;
 ");
-
+$message = "";
 // Jika tombol approve atau decline dipencet
 if (isset($_POST['approve']) || isset($_POST['decline'])) {
     $id = $_POST['id'];
-    
+
 
     if (isset($_POST['approve'])) {
         // Jika tombol approve dipencet
         $query = "UPDATE transactions SET approve = 1 WHERE id = '$id'";
+        $message = "Sucsess";
     } elseif (isset($_POST['decline'])) {
         // Jika tombol decline dipencet
         $query = "UPDATE transactions SET approve = 2 WHERE id = '$id'";
+        $message = "Decline";
     }
 
     // eksekusi query 
     $result = mysqli_query($db, $query);
 
-    // Cek apakah query berhasil dijalankan
-    if ($result) {
-        echo "<script>alert('Data berhasil diperbarui');</script>";
-    } else {
-        echo "<script>alert('Terjadi kesalahan: " . mysqli_error($db) . "');</script>";
-    }
 
-    header('location: request.admin.php');
+    header('location: request.admin.php?message=' . $message);
     exit();
 }
 
@@ -68,6 +64,8 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
 </head>
 
 <body class="bg-gray-100">
@@ -87,8 +85,8 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                 <?php include "layout/card.php" ?>
             </section>
 
-            <div class="overflow-x-auto mx-8 my-2">
-                <div class="max-h-72 relative overflow-y-auto no-scrollbar">
+            <div class="overflow-x-auto mx-8 my-2 rounded-lg">
+                <div class="max-h-80 relative overflow-y-auto no-scrollbar">
                     <?php
                     if (mysqli_num_rows($getData) > 0) {
                         // Jika data tersedia, tampilkan tabel
@@ -107,21 +105,21 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                         // Loop untuk menampilkan data
                         while ($row = mysqli_fetch_assoc($getData)) {
                             echo "<tr>";
-                            echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['tanggal'] . "</td>";
+                            echo "<td class='py-2 px-4 text-center font-mulish'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
-                            echo "<td class='py-2 px-4 text-center font-mulish'>" . number_format($row['jumlah'], 0, ',', '.') . "</td>";
+                            echo "<td class='py-2 px-4 text-center font-mulish'>" . "Rp " . number_format($row['jumlah'], 0, ',', '.') . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>
-                        <form action='request.admin.php' method='post'>
-                            <input type='hidden' name='id' value='" . $row['nomor'] . "'>
-                            <button type='submit' name='approve' value='setujui'>
-                                <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 up m-1 rounded-md p-1'>
-                            </button>
-                            <button type='submit' name='decline' value='tolak'>
-                                <img src='asset/Remove.svg' alt='Tolak' class='w-8 h-8 down m-1 rounded-md p-1'>
-                            </button>
-                        </form>
-                    </td>";
+                                    <form action='request.admin.php' method='post'>
+                                        <input type='hidden' name='id' value='" . $row['nomor'] . "'>
+                                        <button type='submit' name='approve' value='setujui'>
+                                            <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 up m-1 rounded-md p-1'>
+                                        </button>
+                                        <button type='submit' name='decline' value='tolak'>
+                                            <img src='asset/Remove.svg' alt='Tolak' class='w-8 h-8 down m-1 rounded-md p-1'>
+                                        </button>
+                                    </form>
+                                </td>";
                             echo "</tr>";
                         }
 
@@ -141,10 +139,43 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
         .up {
             background-color: #13F566;
         }
+
         .down {
             background-color: #F51313;
         }
     </style>
+
+    <script>
+        // tangkap parameter message dari action approve dan decline
+        const searchParams = new URLSearchParams(window.location.search);
+
+        // sweetalert parameter message
+        const message = searchParams.get("message");
+        if (message) {
+            if (message === "Sucsess") {
+                Swal.fire({
+                    icon:'success',
+                    title: 'Berhasil',
+                    text: 'Permintaan berhasil ditambahkan ke pengeluaran'
+                }).then(()=> {
+                    // hapus parameter setelah SweetAlert ditutup
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete("message");
+                    window.history.replaceState({}, document.title, currentUrl);
+                });
+            } else if (message === "Decline") {
+                Swal.fire({
+                    icon:'success',
+                    title: 'Request Permintaan Ditolak',
+                    text: 'Permintaan yang ditolak masuk ke History'
+                }).then(()=> {
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete("message");
+                    window.history.replaceState({}, document.title, currentUrl);
+                });
+            }
+        }
+    </script>
 </body>
 
 </html>

@@ -81,8 +81,8 @@ $saldoJson = json_encode($saldoArray);
                 <h1>Dashboard</h1>
                 <h1><?php print $_SESSION['username']; ?></h1>
             </div>
+            <?php include 'layout/card.php' ?>
             <section class="flex-1 ml-2">
-                <?php include 'layout/card.php' ?>
                 <section class="border-3">
                     <div class="flex">
                         <h1 class="mx-6 text-xl font-mulish-extend mr-4" id="tahun">Saldo :</h1>

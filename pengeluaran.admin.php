@@ -5,6 +5,23 @@ if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
+
+// menghitung pemasukan
+$querypemasukan = "SELECT SUM(amount) AS pemasukan FROM `transactions` WHERE type = 1 AND approve = 1; ";
+$result1 = $db->query($querypemasukan);
+$data = $result1->fetch_assoc();
+$pemasukan = $data['pemasukan'];
+
+// menghitung pengeluaran 
+$querypengeluaran = "SELECT SUM(amount) AS pengeluaran FROM `transactions` WHERE type = 3 AND approve = 1;";
+$result1 = $db->query($querypengeluaran);
+$data = $result1->fetch_assoc();
+$pengeluaran = $data['pengeluaran'];
+//menghitung saldo
+
+$sisa = $pemasukan - $pengeluaran;
+
+$messageCreateData = '';
 if (isset($_POST['min'])) {
     // masukkan data ke tabel dengan type = 3
     $username = $_POST['username'];
@@ -12,12 +29,18 @@ if (isset($_POST['min'])) {
     $jumlah = preg_replace('/\D/', '', $_POST['jumlah']);
     $tanggal = $_POST['tanggal'];
 
-    $result = mysqli_query($db, "
-    INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL,'$username', '$jumlah', 3 ,'$tanggal', '$keterangan', '$jumlah', 1);
-    ");
+    // 
+    if ($jumlah <= $sisa) {
+        $result = mysqli_query($db, "
+        INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL,'$username', '$jumlah', 3 ,'$tanggal', '$keterangan', '$jumlah', 1);
+        ");
+        $messageCreateData = "Sucsess"; 
+        header("location: data.pengeluaran.admin.php?message=" . $messageCreateData);
+    } else{
+        $messageCreateData = "Failed";
+        header("Location: pengeluaran.admin.php?message=" . $messageCreateData);
+    }
 
-    echo "<div class='font-mulish text-green-500'>Data berhasil ditambah</div>";
-    header("location: data.pengeluaran.admin.php");
 }
 
 
@@ -39,6 +62,8 @@ if (isset($_POST['min'])) {
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
 </head>
 
 <body class="">
@@ -63,8 +88,8 @@ if (isset($_POST['min'])) {
             </div>
 
             <section class="flex flex-col md:flex-row">
-                <div class="flex flex-1 flex-col w-full h-full p-6">
-                    <form action="pengeluaran.admin.php" class="space-y-4 font-mulish" method="POST">
+                <div class="flex flex-1 flex-col w-full h-full px-6 py-2">
+                    <form action="pengeluaran.admin.php" class="space-y-2 font-mulish" method="POST">
                         <div>
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
@@ -149,6 +174,25 @@ if (isset($_POST['min'])) {
 </style>
 
 <script>
+    // tangkap parameter message create data 
+    const searchParams = new URLSearchParams(window.location.search);
+    const messageCreateData = searchParams.get("message");
+
+
+    if (messageCreateData === "Failed") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal mendapat data',
+            text: 'Gagal input data pengeluaran, pastikan saldo cukup',
+        }).then(() => {
+            // Menghapus parameter message create data setelah dihapus
+            searchParams.delete("message");
+            window.history.replaceState({}, document.title, window.location.pathname + searchParams.toString());
+        });
+    }
+
+
+
     const jumlahUangInput = document.getElementById('amount');
 
     jumlahUangInput.addEventListener('input', function(e) {

@@ -21,9 +21,8 @@ $querypengeluaran = "SELECT SUM(amount) AS pengeluaran FROM `transactions` WHERE
 $result1 = $db->query($querypengeluaran);
 $data = $result1->fetch_assoc();
 $pengeluaran = $data['pengeluaran'];
-
-
 //menghitung saldo
+
 $sisa = $pemasukan - $pengeluaran;
 
 ?>

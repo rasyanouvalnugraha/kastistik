@@ -9,6 +9,7 @@ if ($_SESSION['role'] != '1') {
     exit();
 }
 
+$messageDeleteData = "";
 // Proses penghapusan data pengeluaran
 if (isset($_POST['delete'])) {
     $delete_id = $_POST['delete_id'];
@@ -19,17 +20,12 @@ if (isset($_POST['delete'])) {
     mysqli_stmt_bind_param($stmt, "i", $delete_id);
 
     if (mysqli_stmt_execute($stmt)) {
-        // Penghapusan berhasil
-        $_SESSION['message'] = 'Data berhasil dihapus';
-        $_SESSION['message_type'] = 'success';
+        $messageDeleteData = "Sucsess";
     } else {
-        // Jika gagal menghapus
-        $_SESSION['message'] = 'Gagal menghapus data';
-        $_SESSION['message_type'] = 'error';
+        $messageDeleteData = "Failed";
     }
 
-    mysqli_stmt_close($stmt);
-    header('Location: data.pengeluaran.admin.php');
+    header('Location: data.pengeluaran.admin.php?messageDeleteData=' . $messageDeleteData);
     exit();
 }
 
@@ -64,8 +60,8 @@ $pengeluaran = mysqli_query($db, "
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
-
-    <!-- DataTables CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
 
@@ -77,7 +73,7 @@ $pengeluaran = mysqli_query($db, "
         <!-- NAVBAR -->
         <section class="relative">
             <nav class="navbar h-screen mr-5">
-                <?php include "layout/navbar.php";?>
+                <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
 
@@ -112,23 +108,23 @@ $pengeluaran = mysqli_query($db, "
                         </thead>
                         <tbody>
                             <?php
-while ($row = mysqli_fetch_assoc($pengeluaran)) {
-    echo "<tr class='hover:bg-gray-300 hover:cursor-pointer'>";
-    echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
-    echo "<td class='py-2 px-4 text-center font-mulish' data-order='" . date('Y-m-d', strtotime($row['tanggal'])) . "'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
-    echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
-    echo "<td class='py-2 px-4 text-center font-mulish'>Rp. " . number_format($row['jumlah'], 0, '.', '.') . "</td>";
-    echo "<td class='py-2 px-4 text-center font-mulish'>";
-    echo "<form method='POST' action=''>";
-    echo "<input type='hidden' name='delete_id' value='" . $row['ID'] . "'>";
-    echo "<button type='submit' name='delete' class='focus:outline-none'>";
-    echo "<img src='asset/Remove.svg' alt='Delete' class='w-8 h-8 bg-red-500 p-1 rounded-md'>";
-    echo "</button>";
-    echo "</form>";
-    echo "</td>";
-    echo "</tr>";
-}
-?>
+                            while ($row = mysqli_fetch_assoc($pengeluaran)) {
+                                echo "<tr class='hover:bg-gray-300 hover:cursor-pointer'>";
+                                echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish' data-order='" . date('Y-m-d', strtotime($row['tanggal'])) . "'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish'>Rp. " . number_format($row['jumlah'], 0, '.', '.') . "</td>";
+                                echo "<td class='py-2 px-4 text-center font-mulish'>";
+                                echo "<form method='POST' action=''>";
+                                echo "<input type='hidden' name='delete_id' value='" . $row['ID'] . "'>";
+                                echo "<button type='submit' name='delete' class='focus:outline-none'>";
+                                echo "<img src='asset/Remove.svg' alt='Delete' class='w-8 h-8 bg-red-500 p-1 rounded-md'>";
+                                echo "</button>";
+                                echo "</form>";
+                                echo "</td>";
+                                echo "</tr>";
+                            }
+                            ?>
                         </tbody>
 
                     </table>
@@ -148,12 +144,57 @@ while ($row = mysqli_fetch_assoc($pengeluaran)) {
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 
     <script>
+        // tangkap parameter dari pengeluaran admin
+        const seacrhParams = new URLSearchParams(window.location.search);
+
+        // sweetalert create data pengeluaran
+        const messageCreateData = seacrhParams.get("messageCreateData");
+        if (messageCreateData) {
+            if (messageCreateData === "Sucsess") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Data pengeluaran berhasil ditambahkan.'
+                }).then(() => {
+                    // Hapus parameter setelah SweetAlert ditutup
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete("messageCreateData");
+                    window.history.replaceState({}, document.title, currentUrl);
+                });
+            }
+        }
+
+        // sweetalert delete data pengeluaran
+        const messageDeleteData = seacrhParams.get("messageDeleteData");
+        if (messageDeleteData) {
+            if (messageDeleteData === "Sucsess") {
+                Swal.fire({
+                    icon:'success',
+                    title: 'Berhasil!',
+                    text: 'Data pengeluaran berhasil dihapus.'
+                }).then(() => {
+                    // Hapus parameter setelah SweetAlert ditutup
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete("messageDeleteData");
+                    window.history.replaceState({}, document.title, currentUrl);
+                });
+            } else if (messageDeleteData === "Failed") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Data pengeluaran gagal dihapus.'
+                });
+            }
+        }
+
+
+
         $(document).ready(function() {
             // Tampilkan pesan alert jika ada
             <?php if (isset($_SESSION['message'])): ?>
                 alert("<?php echo $_SESSION['message']; ?>");
-                <?php unset($_SESSION['message']);?>
-            <?php endif;?>
+                <?php unset($_SESSION['message']); ?>
+            <?php endif; ?>
 
             $('#pengeluaranTable').DataTable({
                 dom: 'Bfrtip',
@@ -209,7 +250,8 @@ while ($row = mysqli_fetch_assoc($pengeluaran)) {
         width: 100%;
     }
 
-    table th, table td {
+    table th,
+    table td {
         padding: 12px;
         text-align: center;
     }

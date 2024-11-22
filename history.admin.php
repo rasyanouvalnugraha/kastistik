@@ -7,7 +7,7 @@ if ($_SESSION['role'] != '1') {
 
 include "connection/database.php";
 
-// get data request user
+// Ambil data request user
 $getData = mysqli_query($db, "
     SELECT 
         transactions.date AS tanggal, 
@@ -21,29 +21,22 @@ $getData = mysqli_query($db, "
     ORDER BY transactions.date DESC;
 ");
 
-// Jika tombol approve atau decline dipencet
-if (isset($_POST['approve']) || isset($_POST['decline'])) {
+$message = '';
+// Jika tombol delete diklik
+if (isset($_POST['delete'])) {
     $id = $_POST['id'];
 
-    if (isset($_POST['approve'])) {
-        // Jika tombol approve dipencet
-        $query = "UPDATE transactions SET approve = 1 WHERE id = '$id'";
-    } elseif (isset($_POST['decline'])) {
-        // Jika tombol decline dipencet
-        $query = "UPDATE transactions SET approve = 2 WHERE id = '$id'";
-    }
+    // Gunakan prepared statement
+    $stmt = $db->prepare("DELETE FROM transactions WHERE id = ? AND approve = 2");
+    $stmt->bind_param("i", $id);
 
-    // eksekusi query 
-    $result = mysqli_query($db, $query);
-
-    // Cek apakah query berhasil dijalankan
-    if ($result) {
-        echo "<script>alert('Data berhasil diperbarui');</script>";
+    if ($stmt->execute()) {
+        $message = "Success";
     } else {
-        echo "<script>alert('Terjadi kesalahan: " . mysqli_error($db) . "');</script>";
+        $message = "Failed";
     }
 
-    header('location: history.admin.php');
+    header("Location: history.admin.php?message=" . $message);
     exit();
 }
 
@@ -58,15 +51,11 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
     <title>Dashboard Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="card.css">
-    <link rel="stylesheet" href="css/background.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body class="bg-gray-100">
@@ -79,7 +68,7 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
 
         <section class="flex-1">
             <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>Permintaan Yang Ditolak</h1>
+                <h1>History Request</h1>
                 <h1><?php print $_SESSION['username']; ?></h1>
             </div>
             <section>
@@ -87,32 +76,31 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
             </section>
 
             <div class="overflow-x-auto mx-8 my-2">
-                <div class="max-h-72 relative overflow-y-auto no-scrollbar">
+                <div class="max-h-80 relative overflow-y-auto no-scrollbar rounded-lg">
                     <?php
                     if (mysqli_num_rows($getData) > 0) {
-                        // Jika data tersedia, tampilkan tabel
                         echo '<table class="min-w-full rounded-lg shadow-md">
-                    <thead>
-                        <tr class="bg-gradient navbar text-white">
-                            <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
-                            <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
-                            <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Jumlah</th>
-                            <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Keterangan</th>
-                            <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>';
+                            <thead>
+                                <tr class="bg-gradient navbar text-white">
+                                    <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
+                                    <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
+                                    <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Jumlah</th>
+                                    <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Keterangan</th>
+                                    <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
 
-                        // Loop untuk menampilkan data
                         while ($row = mysqli_fetch_assoc($getData)) {
-                            echo "<tr class='hover:bg-gray-400'>";
-                            echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['tanggal'] . "</td>";
+                            echo "<tr>";
+                            echo "<td class='py-2 px-4 text-center font-mulish'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
-                            echo "<td class='py-2 px-4 text-center font-mulish'>" . number_format($row['jumlah'], 0, ',', '.') . "</td>";
+                            echo "<td class='py-2 px-4 text-center font-mulish'>" .'Rp ' . number_format($row['jumlah'], 0, ',', '.') . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>
-                                    <form action='request.admin.php' method='post'>
-                                        <button type='submit' name='decline' value='tolak'>
+                                    <form action='' method='post'>
+                                        <input type='hidden' name='id' value='" . $row['nomor'] . "'>
+                                        <button type='submit' name='delete' value='tolak'>
                                             <img src='asset/Remove.svg' alt='Tolak' class='w-8 h-8 down m-1 rounded-md p-1'>
                                         </button>
                                     </form>
@@ -120,16 +108,13 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                             echo "</tr>";
                         }
 
-                    echo '</tbody>';
-                    echo '</table>';
+                        echo '</tbody></table>';
                     } else {
-                        // Jika tidak ada data, tampilkan pesan
                         echo "<div class='text-center text-lg py-5 my-5 font-mulish text-gray-500'>Data tidak ada</div>";
                     }
                     ?>
                 </div>
             </div>
-
         </section>
     </div>
 
@@ -142,6 +127,30 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
             background-color: #F51313;
         }
     </style>
+
+    <script>
+        const searchParams = new URLSearchParams(window.location.search);
+        const message = searchParams.get("message");
+
+        if (message === "Success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'History Berhasil di Delete',
+            }).then(() => {
+                // Hapus parameter setelah SweetAlert ditutup
+                const currentUrl = new URL(window.location);
+                currentUrl.searchParams.delete("message");
+                window.location.href = currentUrl.toString();
+            });
+        } else if (message === "Failed") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Permintaan gagal ditolak',
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -9,7 +9,7 @@
     <!-- NAVIGASI SECTION / BAGIAN NAVIGASI -->
     <nav>
         <ul class="font-mulish">
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1">
+            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out  hover:text-white rounded-xl mx-1">
                 <a href="admin.php" class="flex items-center space-x-3 transition-colors duration-300 ease-in-out hover:text-white">
                     <img src="asset/Content.png" alt="" class="w-6 h-6">
                     <span class="">Dashboard</span>

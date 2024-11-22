@@ -7,6 +7,7 @@ if ($_SESSION['role'] != '1') {
     exit();
 }
 
+$messageDelete = '';
 // Proses hapus data jika ada permintaan delete
 if (isset($_POST['delete'])) {
     $delete_id = $_POST['delete_id'];
@@ -21,11 +22,12 @@ if (isset($_POST['delete'])) {
     $query->bind_param('d', $delete_id);
 
     if ($query->execute()) {
-        header('Location: manage.user.admin.php');
-        exit();
+        $messageDelete = "Sucsess";
     } else {
-        echo "Error: " . $query->error;
+        $messageDelete = "Error: " . $query->error;
     }
+    header('Location: manage.user.admin.php?messageDelete=' . $messageDelete);
+    exit();
 }
 
 // Ambil data semua user
@@ -35,7 +37,9 @@ while ($row = $getAlluser->fetch_assoc()) {
     $result[] = (object) $row;
 }
 
+
 // Create user
+$messageCreate = '';
 if (isset($_POST['create'])) {
     $fullname = $_POST['fullname'];
     $username = $_POST['username'];
@@ -48,13 +52,17 @@ if (isset($_POST['create'])) {
     $query->bind_param('sssd', $fullname, $username, $password, $newpremi);
 
     if ($query->execute()) {
-        header('Location: manage.user.admin.php');
-        exit();
+        $messageCreate = "Sucsess";
     } else {
-        echo "Error: " . $query->error;
+        $messageCreate =  "Error: " . $query->error;
     }
+
+    header('location: manage.user.admin.php?messageCreate=' . $messageCreate);
+    exit();
 }
 
+
+$messageEdit = '';
 // Edit / update user
 if (isset($_POST['update'])) {
     $id = $_POST['id'];
@@ -67,8 +75,12 @@ if (isset($_POST['update'])) {
 
     $query = $db->prepare('UPDATE users SET fullname = ?, username = ?, password = ?, premi = ? WHERE id = ?');
     $query->bind_param('ssssd', $fullname, $username, $password, $premi, $id);
-    $query->execute();
-    header('location: manage.   user.admin.php');
+    if ($query->execute()) {
+        $messageEdit = "Sucsess";
+    } else {
+        $messageEdit =  "Error: " . $query->error;
+    }
+    header('location: manage.user.admin.php?messageEdit=' . $messageEdit);
     exit();
 }
 ?>
@@ -85,6 +97,8 @@ if (isset($_POST['update'])) {
     <link rel="stylesheet" href="card.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
 </head>
 
 <body class="bg-gray-100">
@@ -131,7 +145,7 @@ if (isset($_POST['update'])) {
                                         <!-- Form Hapus -->
                                         <form action="" method="POST">
                                             <input type="hidden" name="delete_id" value="<?php echo $data->id; ?>">
-                                            <button type="submit" class="text-red-500 font-mulish" name="delete" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')">Delete</button>
+                                            <button type="submit" class="text-red-500 font-mulish" name="delete">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -204,6 +218,86 @@ if (isset($_POST['update'])) {
     </div>
 
     <script>
+        // Tangkap Parameter Query
+        const searchParams = new URLSearchParams(window.location.search);
+
+        // Sweetalert Create 
+        const messageCreate = searchParams.get("messageCreate");
+
+        if (messageCreate) {
+            if (messageCreate === "Sucsess") {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'User Berhasil dibuat.',
+                    icon: 'success',
+                    confirmButtonText: 'Okay'
+                }).then(() => {
+                    // Hapus parameter setelah SweetAlert ditutup
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete("messageCreate");
+                    window.history.replaceState({}, document.title, currentUrl);
+                });
+            } else if (messageCreate.startsWith("Error")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menambah User!',
+                    confirmButtonText: 'Okay'
+                });
+            }
+        }
+        // Sweetalert Create 
+        const messageEdit = searchParams.get("messageEdit");
+
+        if (messageEdit) {
+            if (messageEdit === "Sucsess") {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'User Behasil diupdate.',
+                    icon: 'success',
+                    confirmButtonText: 'Okay'
+                }).then(() => {
+                    // Hapus parameter setelah SweetAlert ditutup
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete("messageEdit");
+                    window.history.replaceState({}, document.title, currentUrl);
+                });
+            } else if (messageEdit.startsWith("Error")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Edit user!',
+                    confirmButtonText: 'Okay'
+                });
+            }
+        }
+
+        // Sweetalert Delete
+        const messageDelete = searchParams.get("messageDelete");
+        if (messageDelete) {
+            if (messageDelete === "Sucsess") {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'User berhasil dihapus.',
+                    icon: 'success',
+                    confirmButtonText: 'Okay'
+                }).then(() => {
+                    // Hapus parameter setelah SweetAlert ditutup
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.delete("messageDelete");
+                    window.history.replaceState({}, document.title, currentUrl);
+                });
+            } else if (messageDelete.startsWith("Error")) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menghapus User!',
+                    confirmButtonText: 'Okay'
+                });
+            }
+        }
+
+
+        // Fungsi untuk menghapus user
+
+
         // Fungsi untuk membuka form tambah data
         function create() {
             document.getElementById('add').classList.remove('hidden');
@@ -224,13 +318,7 @@ if (isset($_POST['update'])) {
             document.getElementById('editForm').classList.add('hidden');
         }
 
-        // Fungsi untuk menghapus user
-        function confirmDelete(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
-                document.getElementById('delete_id').value = id;
-                document.getElementById('deleteForm').submit();
-            }
-        }
+
 
         // Fungsi untuk format input Rupiah tanpa simbol Rp
         function formatRupiah(input) {
@@ -250,8 +338,9 @@ if (isset($_POST['update'])) {
             background: rgb(125, 70, 253);
             background: linear-gradient(270deg, rgba(125, 70, 253, 1) 0%, rgba(253, 201, 145, 1) 100%);
         }
+
         .max-h {
-            max-height: 29rem;
+            max-height: 26rem;
         }
     </style>
 </body>

@@ -77,67 +77,54 @@ $pemasukan = mysqli_query($db, "
 
             <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pemasukan</h1>
 
-            <!-- Search Form -->
-            <section class="container mx-auto px-4 flex-1">
-                <form method="POST" action="" class="flex">
-                    <div class="ml-5 w-2/3">
-                        <label for="tanggal_awal" class="block text-gray-500 text-sm font-mulish mb-2">Tanggal Awal</label>
-                        <input type="date" id="tanggal_awal" name="tanggal_awal" class="py-3 appearance-none border-2 w-full px-2 text-gray-700 leading-tight rounded-lg focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div class="w-2/3 ml-6">
-                        <label for="tanggal_akhir" class="block text-gray-500 text-sm font-mulish mb-2">Tanggal Akhir</label>
-                        <input type="date" id="tanggal_akhir" name="tanggal_akhir" class="py-3 appearance-none border-2 w-full px-4 leading-tight rounded-lg focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div class="ml-4 mr-10 mt-2">
-                        <button type="submit" name="submit" class="bg-gradient text-white p-1 rounded w-full mx-2 my-4 font-mulish">
-                            <img src="asset/Search.svg" alt="">
-                        </button>
-                    </div>
-                </form>
-            </section>
-
             <!-- TABEL DATA PEMASUKAN -->
-            <div class="overflow-x-auto mx-8">
-                <div class="max-h-72 relative overflow-y-auto no-scrollbar">
-                    <table class="min-w-full rounded-lg shadow-md">
-                        <thead>
-                            <tr class="bg-gradient navbar text-white">
-                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
-                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
-                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Jumlah</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($row = mysqli_fetch_assoc($pemasukan)) : ?>
-                                <tr class='hover:bg-gray-300 hover:cursor-pointer'>
-                                    <td class='py-2 px-4 text-center font-mulish'><?= $row['nama'] ?></td>
-                                    <td class='py-2 px-4 text-center font-mulish'><?= date("d F Y", strtotime($row['tanggal'])) ?></td>
-                                    <td class='py-2 px-4 text-center font-mulish'>Rp. <?= number_format($row['jumlah'], 0, '.', '.') ?></td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- PAGINATION -->
-                <div class="flex justify-end mt-4">
-                    <?php if ($page > 1) : ?>
-                        <a href="?page=<?= $page - 1 ?>" class="bg-gray-300 px-3 py-1 rounded-l">Prev</a>
-                    <?php endif; ?>
+            <table id="dataTable" class="min-w-full rounded-lg shadow-md p-6">
+                <thead>
+                    <tr class="bg-gradient navbar text-white">
+                        <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
+                        <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
+                        <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = mysqli_fetch_assoc($pemasukan)) : ?>
+                        <tr class='hover:bg-gray-300 hover:cursor-pointer'>
+                            <td class='py-2 px-4 text-center font-mulish'><?= $row['nama'] ?></td>
+                            <td class='py-2 px-4 text-center font-mulish'><?= date("d F Y", strtotime($row['tanggal'])) ?></td>
+                            <td class='py-2 px-4 text-center font-mulish'>Rp. <?= number_format($row['jumlah'], 0, '.', '.') ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
 
-                    <?php for ($i = 1; $i <= $total_pages; $i++) : ?>
-                        <a href="?page=<?= $i ?>" class="bg-gray-300 px-3 py-1 <?= ($i == $page) ? 'bg-blue-500 text-white' : '' ?>"><?= $i ?></a>
-                    <?php endfor; ?>
-
-                    <?php if ($page < $total_pages) : ?>
-                        <a href="?page=<?= $page + 1 ?>" class="bg-gray-300 px-3 py-1 rounded-r">Next</a>
-                    <?php endif; ?>
-                </div>
-            </div>
 
 
 
         </section>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                "pageLength": 6, // Data per halaman
+                "lengthChange": false, // Hilangkan opsi dropdown jumlah data per halaman
+                "ordering": true, // Aktifkan fitur sorting
+                "language": {
+                    "paginate": {
+                        "previous": "Prev",
+                        "next": "Next"
+                    },
+                    "search": "Cari:",
+                    "zeroRecords": "Data tidak ditemukan",
+                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    "infoEmpty": "Menampilkan 0 data",
+                    "infoFiltered": "(dari total _MAX_ data)"
+                },
+                "dom": '<"flex justify-between items-center mb-4"<"text-left"f><"text-right"p>>t<"flex justify-between items-center mt-4"<"text-left"i><"text-right"p>>', // Ubah layout
+            });
+        });
+    </script>
+
 </body>
 
 <style>
@@ -151,6 +138,48 @@ $pemasukan = mysqli_query($db, "
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        background-color: #F3F4F6;
+        /* Warna tombol pagination */
+        color: #374151;
+        /* Warna teks */
+        border-radius: 4px;
+        margin: 0 2px;
+        padding: 5px 10px;
+        border: none;
+        transition: all 0.3s;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background-color: #7D46FD;
+        /* Warna hover tombol */
+        color: white;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background-color: #7D46FD;
+        /* Warna tombol aktif */
+        color: white;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #E5E7EB;
+        border-radius: 4px;
+        padding: 4px 10px;
+        margin-left: 8px;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        font-size: 0.875rem;
+        color: #6B7280;
+    }
+
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 10px;
+    }
 </style>
+
 
 </html>

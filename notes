@@ -202,3 +202,32 @@ VALUES (
 <link rel="stylesheet" href="css/font.css">
 <link rel="stylesheet" href="css/navbar.css">
 <link rel="icon" href="asset/BPS.png" type="image/x-icon">
+
+
+
+// if (message) {
+// if (message === "success") {
+// Swal.fire({
+// icon: 'success',
+// title: 'Request Berhasil!',
+// text: 'Permintaan Anda telah dikirim ke Admin, tunggu konfirmasi.'
+// }).then(() => {
+// // Hapus parameter setelah SweetAlert ditutup
+// const currentUrl = new URL(window.location);
+// currentUrl.searchParams.delete("message");
+// window.history.replaceState({}, document.title, currentUrl);
+// });
+// } else if (message === "user_not_found") {
+// Swal.fire({
+// icon: 'error',
+// title: 'User Tidak Ditemukan!',
+// text: 'Kami tidak dapat menemukan user dengan data yang diberikan.'
+// });
+// } else if (message.startsWith("error")) {
+// Swal.fire({
+// icon: 'error',
+// title: 'Terjadi Kesalahan!',
+// text: message.split(":")[1] // Menampilkan pesan error dari database
+// });
+// }
+// }
