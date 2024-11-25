@@ -147,6 +147,19 @@ $pengeluaran = mysqli_query($db, "
         // tangkap parameter dari pengeluaran admin
         const seacrhParams = new URLSearchParams(window.location.search);
 
+        const message = seacrhParams.get('message');
+        if (message === "Sucsess") {
+            Swal.fire({
+                icon:'success',
+                title: 'Berhasil!',
+                text: 'Data pengeluaran berhasil dibuat.'
+            }).then(() => {
+                // Hapus parameter setelah SweetAlert ditutup
+                const currentUrl = new URL(window.location);
+                currentUrl.searchParams.delete("message");
+                window.history.replaceState({}, document.title, currentUrl);
+            });
+        }
         // sweetalert create data pengeluaran
         const messageCreateData = seacrhParams.get("messageCreateData");
         if (messageCreateData) {

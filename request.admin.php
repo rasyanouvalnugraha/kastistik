@@ -7,6 +7,27 @@ if ($_SESSION['role'] != '1') {
 
 include "connection/database.php";
 
+
+$current_year = date('Y');
+// Menghitung pemasukan untuk tahun berjalan
+$querypemasukan = "SELECT SUM(amount) AS pemasukan 
+                   FROM `transactions` 
+                   WHERE type = 1 AND approve = 1 AND YEAR(date) = $current_year;";
+$result1 = $db->query($querypemasukan);
+$data = $result1->fetch_assoc();
+$pemasukan = $data['pemasukan'] ?? 0; // Jika null, set ke 0
+
+// Menghitung pengeluaran untuk tahun berjalan
+$querypengeluaran = "SELECT SUM(amount) AS pengeluaran 
+                     FROM `transactions` 
+                     WHERE type = 3 AND approve = 1 AND YEAR(date) = $current_year;";
+$result1 = $db->query($querypengeluaran);
+$data = $result1->fetch_assoc();
+$pengeluaran = $data['pengeluaran'] ?? 0; // Jika null, set ke 0
+
+// Menghitung saldo untuk tahun berjalan
+$sisa = $pemasukan - $pengeluaran;
+
 // get data request user
 $getData = mysqli_query($db, "
     SELECT 
@@ -21,28 +42,42 @@ $getData = mysqli_query($db, "
     ORDER BY transactions.date DESC;
 ");
 $message = "";
+
 // Jika tombol approve atau decline dipencet
 if (isset($_POST['approve']) || isset($_POST['decline'])) {
     $id = $_POST['id'];
 
-
     if (isset($_POST['approve'])) {
-        // Jika tombol approve dipencet
-        $query = "UPDATE transactions SET approve = 1 WHERE id = '$id'";
-        $message = "Sucsess";
+        // Ambil jumlah request transaksi berdasarkan ID
+        $queryTransaction = "SELECT amount FROM transactions WHERE id = '$id' AND approve = 0";
+        $resultTransaction = $db->query($queryTransaction);
+        $transactionData = $resultTransaction->fetch_assoc();
+        $requestedAmount = $transactionData['amount'] ?? 0;
+
+        // Validasi jika request amount <= sisa saldo
+        if ($requestedAmount <= $sisa) {
+            // Jika saldo cukup, update approve menjadi 1 (disetujui)
+            $query = "UPDATE transactions SET approve = 1 WHERE id = '$id'";
+            $message = "Sucsess";
+            $sisa -= $requestedAmount;
+        } else {
+            $message = "notbalance";
+        }
     } elseif (isset($_POST['decline'])) {
         // Jika tombol decline dipencet
         $query = "UPDATE transactions SET approve = 2 WHERE id = '$id'";
         $message = "Decline";
     }
 
-    // eksekusi query 
-    $result = mysqli_query($db, $query);
-
+    // Eksekusi query hanya jika query telah diatur
+    if (isset($query)) {
+        mysqli_query($db, $query);
+    }
 
     header('location: request.admin.php?message=' . $message);
     exit();
 }
+
 
 ?>
 
@@ -116,7 +151,7 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                                             <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 up m-1 rounded-md p-1'>
                                         </button>
                                         <button type='submit' name='decline' value='tolak'>
-                                            <img src='asset/Remove.svg' alt='Tolak' class='w-8 h-8 down m-1 rounded-md p-1'>
+                                            <img src='asset/Thumbs Down.svg' alt='Tolak' class='w-8 h-8 down m-1 rounded-md p-1'>
                                         </button>
                                     </form>
                                 </td>";
@@ -154,10 +189,10 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
         if (message) {
             if (message === "Sucsess") {
                 Swal.fire({
-                    icon:'success',
+                    icon: 'success',
                     title: 'Berhasil',
                     text: 'Permintaan berhasil ditambahkan ke pengeluaran'
-                }).then(()=> {
+                }).then(() => {
                     // hapus parameter setelah SweetAlert ditutup
                     const currentUrl = new URL(window.location);
                     currentUrl.searchParams.delete("message");
@@ -165,15 +200,28 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                 });
             } else if (message === "Decline") {
                 Swal.fire({
-                    icon:'success',
+                    icon: 'success',
                     title: 'Request Permintaan Ditolak',
                     text: 'Permintaan yang ditolak masuk ke History'
-                }).then(()=> {
+                }).then(() => {
                     const currentUrl = new URL(window.location);
                     currentUrl.searchParams.delete("message");
                     window.history.replaceState({}, document.title, currentUrl);
                 });
             }
+        }
+
+        if (message === "notbalance") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Saldo Tidak Cukup',
+                text: 'Permintaan tidak dapat disetujui karena saldo tidak mencukupi.'
+            }).then(() => {
+                // Hapus parameter setelah SweetAlert ditutup
+                const currentUrl = new URL(window.location);
+                currentUrl.searchParams.delete("message");
+                window.history.replaceState({}, document.title, currentUrl);
+            });
         }
     </script>
 </body>

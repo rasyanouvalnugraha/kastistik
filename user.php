@@ -104,7 +104,7 @@ $saldoJson = json_encode($saldoArray);
                         document.getElementById('year').innerHTML = year;
                     </script>
 
-                    <div class="flex h-80 mx-auto justify-center">
+                    <div class="flex md:max-h-64 xl:max-h-80 2xl:max-h-96 mx-auto justify-center">
                         <canvas id="saldoChart"></canvas>
                     </div>
                 </section>
@@ -112,9 +112,8 @@ $saldoJson = json_encode($saldoArray);
         </section>
     </div>
 </body>
-<style>
 
-</style>
+
 
 <script>
     var ctx = document.getElementById('saldoChart').getContext('2d');

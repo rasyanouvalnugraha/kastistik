@@ -42,22 +42,21 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
             </div>
 
             <!-- Form untuk memilih tahun -->
-            <section class="flex p-4 mt-4 mx-4 font-mulish-extend gap-2">
+            <section class="flex px-6 py-2 mt-4 mx-4 font-mulish-extend gap-2">
                 <!-- form untuk memilih data sesuai tahun -->
                 <form method="GET" class="flex items-center gap-4">
-                    <label for="year" class="text-xl">Pilih Tahun:</label>
+                    <img src="asset/Calendar.png" alt="Calendar" class="bg-gradient h-12 p-2 rounded-lg text-white">
                     <input type="number" id="year" name="year" min="1990" max="2100" value="<?php echo $tahun; ?>"
                         class="border border-gray-300 rounded-md px-2 py-3" required>
                     <button type="submit" class="bg-gradient px-2 py-3 rounded-lg font-mulish-extend text-white">Tampilkan</button>
                 </form>
-                <img src="asset/Calendar.png" alt="Calendar" class="bg-gradient h-12 p-2 rounded-lg text-white">
                 <a href="manage.user.admin.php" class="bg-gradient p-2 rounded-lg">
                     <img src="asset/Add User Male.svg" alt="" class="ml-1 h-8 ">
                 </a>
             </section>
 
             <!-- Tabel Data -->
-            <section class="flex-1 pb-6 mx-6 p-4">
+            <section class="flex-1 pb-6 mx-6 px-4">
                 <section class="overflow-x-auto p-2">
                     <table class="border-2 border-purple-500 font-mulish mx-auto w-full text-center rounded-lg overflow-hidden max-h">
                         <!-- Header Bulan -->

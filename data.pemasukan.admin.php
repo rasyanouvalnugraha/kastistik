@@ -212,16 +212,6 @@ $pemasukan = mysqli_query(
                     "targets": [0, 2, 3, 4] // Nonaktifkan fitur urutan di kolom lainnya
                 }]
             });
-
-            // Menampilkan pesan dari session jika ada
-            <?php if (isset($_SESSION['message'])) { ?>
-                var message = "<?php echo $_SESSION['message']; ?>";
-                var messageType = "<?php echo $_SESSION['message_type']; ?>";
-
-                alert(message); // Menampilkan pesan
-                <?php unset($_SESSION['message']);
-                unset($_SESSION['message_type']); ?>
-            <?php } ?>
         });
     </script>
 

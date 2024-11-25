@@ -98,14 +98,14 @@ if (isset($_POST['add'])) {
                         <h1 class="text-2xl font-mulish-extend mt-4">Request User To Admin</h1>
 
                         <!-- Form -->
-                        <form action="request.user.php" class="space-y-4 font-mulish" method="POST">
+                        <form action="request.user.php" class="2xl:space-y-8 space-y-4 font-mulish" method="POST">
                             <input type="hidden" name="username" value="<?php echo $_SESSION['fullname']; ?>">
 
                             <div>
                                 <label for="keperluan" class="block text-gray-700 font-semibold mb-2">Keperluan</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
                                     <img src="asset/Strategy.svg" alt="Keperluan Icon" class="w-6 h-6 ml-3">
-                                    <input type="text" id="keperluan" name="keperluan" class="w-full px-4 py-4 focus:outline-none" placeholder="Beli Sabun....." required>
+                                    <input type="text" id="keperluan" name="keperluan" class="w-full px-4 py-4 focus:outline-none 2xl:py-6" placeholder="Beli Sabun....." required>
                                 </div>
                             </div>
 
@@ -113,7 +113,7 @@ if (isset($_POST['add'])) {
                                 <label for="amount" class="block text-gray-700 font-semibold mb-2">Jumlah Uang</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
                                     <img src="asset/Receive Cash.svg" alt="Coins Icon" class="w-6 h-6 ml-3">
-                                    <input type="text" id="amount" name="amount" class="w-full px-4 py-4 focus:outline-none" placeholder="Masukkan jumlah uang" required>
+                                    <input type="text" id="amount" name="amount" class="w-full px-4 py-4 focus:outline-none 2xl:py-6" placeholder="Masukkan jumlah uang" required>
                                 </div>
                             </div>
 
@@ -122,14 +122,14 @@ if (isset($_POST['add'])) {
                             </div>
                         </form>
                     </div>
-                    <div class="flex-1 w-full md:flex md:items-center hidden">
+                    <div class="flex-1 w-full xl:flex hidden">
                         <div>
                             <img src="asset/Male specialist working in support service.svg" alt="Support Service" class="">
                         </div>
                     </div>
                 </section>
 
-                <section>
+                <section class="">
                     <?php include 'layout/card.php'; ?>
                 </section>
             </section>
@@ -156,7 +156,7 @@ if (isset($_POST['add'])) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
-                    text: 'Permintaan Anda telah dikirim ke Admin, tunggu konfirmasi.'
+                    text: 'Permintaan Anda telah dikirim ke Admin, tunggu konfirmasi dan cek data pengeluaran jika di setujui'
                 }).then(() => {
                     const currentUrl = new URL(window.location);
                     currentUrl.searchParams.delete("messageSaldo");

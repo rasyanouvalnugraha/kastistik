@@ -2,7 +2,6 @@
 include "connection/database.php";
 
 
-//menghitung jumlah users
 $sql = "SELECT COUNT(*) as total_users FROM users WHERE role = '2'";
 $result = $db->query($sql);
 // Mendapatkan hasil sebagai array asosiatif
@@ -10,19 +9,24 @@ $row = $result->fetch_assoc();
 $total_users = $row['total_users'];
 
 
-// menghitung pemasukan
-$querypemasukan = "SELECT SUM(amount) AS pemasukan FROM `transactions` WHERE type = 1 AND approve = 1; ";
+$current_year = date('Y');
+// Menghitung pemasukan untuk tahun berjalan
+$querypemasukan = "SELECT SUM(amount) AS pemasukan 
+                   FROM `transactions` 
+                   WHERE type = 1 AND approve = 1 AND YEAR(date) = $current_year;";
 $result1 = $db->query($querypemasukan);
 $data = $result1->fetch_assoc();
-$pemasukan = $data['pemasukan'];
+$pemasukan = $data['pemasukan'] ?? 0; // Jika null, set ke 0
 
-// menghitung pengeluaran 
-$querypengeluaran = "SELECT SUM(amount) AS pengeluaran FROM `transactions` WHERE type = 3 AND approve = 1;";
+// Menghitung pengeluaran untuk tahun berjalan
+$querypengeluaran = "SELECT SUM(amount) AS pengeluaran 
+                     FROM `transactions` 
+                     WHERE type = 3 AND approve = 1 AND YEAR(date) = $current_year;";
 $result1 = $db->query($querypengeluaran);
 $data = $result1->fetch_assoc();
-$pengeluaran = $data['pengeluaran'];
-//menghitung saldo
+$pengeluaran = $data['pengeluaran'] ?? 0; // Jika null, set ke 0
 
+// Menghitung saldo untuk tahun berjalan
 $sisa = $pemasukan - $pengeluaran;
 
 ?>
@@ -53,7 +57,7 @@ $sisa = $pemasukan - $pengeluaran;
             <div class="flex flex-col">
                 <label class="md:text-2xl">Pemasukan</label>
                 <label class="md:text-xl">
-                <?php
+                    <?php
                     // Menampilkan pesan jika tidak ada pemasukan
                     if ($pemasukan > 0) {
                         echo "Rp " . number_format($pemasukan, 0, ',', '.');
@@ -72,7 +76,7 @@ $sisa = $pemasukan - $pengeluaran;
             <div class="flex flex-col">
                 <label class="md:text-2xl">Pengeluaran</label>
                 <label class="md:text-xl">
-                    <?php 
+                    <?php
                     // Menampilkan pesan jika tidak ada pemasukan
                     if ($pengeluaran > 0) {
                         echo "Rp " . number_format($pengeluaran, 0, ',', '.');
@@ -90,7 +94,15 @@ $sisa = $pemasukan - $pengeluaran;
             <img src="asset/Coin Wallet.png" alt="Sisa Icon" class="w-12 h-12 mr-4">
             <div class="flex flex-col">
                 <label class="md:text-2xl">Saldo</label>
-                <label class="md:text-xl">Rp <?php print number_format($sisa, 0, ',', '.'); ?></label>
+                <label class="md:text-xl">
+                    Rp <?php
+                        if ($sisa < 0 ) {
+                            echo  "0";
+                        } else {
+                            print number_format($sisa, 0, ',', '.');
+                        }
+                        ?>
+                </label>
                 <label class="text-lg font-mulish-ket"></label>
             </div>
         </li>
@@ -98,7 +110,6 @@ $sisa = $pemasukan - $pengeluaran;
 </body>
 
 <style>
-
     /* URL FONT MULISH */
     @import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
 

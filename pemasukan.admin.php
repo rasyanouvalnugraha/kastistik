@@ -17,7 +17,7 @@ if (isset($_POST['add'])) {
     $type = $_POST['type'];
     $keterangan = $_POST['keterangan'];
 
-    $result = mysqli_query($db, "INSERT INTO transactions (id_user, amount, type, date, saldo, keterangan,approve)
+    $result = mysqli_query($db, "INSERT INTO transactions (id_user, amount, type, date, saldo, keterangan , approve)
     VALUES ('$username', '$jumlah', '$type', '$tanggal', '$jumlah','$keterangan' , 1)");
 
     if($result > 0) {
@@ -75,10 +75,10 @@ if (isset($_POST['add'])) {
             </div>
             <section class="flex flex-col md:flex-row">
 
-                <div class="flex flex-1 flex-col w-full h-full p-6">
+                <div class="flex flex-1 flex-col w-full h-full px-6">
 
 
-                    <form action="" class="space-y-4 font-mulish" method="POST">
+                    <form action="" class="space-y-3 font-mulish" method="POST">
                         <div>
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">

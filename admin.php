@@ -8,14 +8,17 @@ if ($_SESSION['role'] != '1') {
     exit();
 }
 
-// Query untuk menghitung pemasukan dan pengeluaran per bulan di tahun 2024
+// Tangkap nilai tahun dari input form, default ke tahun sekarang
+$tahunDipilih = isset($_GET['year']) ? intval($_GET['year']) : date('Y');
+
+// Query untuk menghitung pemasukan dan pengeluaran per bulan berdasarkan tahun yang dipilih
 $querySaldoBulanan = "
     SELECT 
     DATE_FORMAT(date, '%m') AS bulan, 
     SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS pemasukan,
     SUM(CASE WHEN type = 3 AND approve = 1 THEN amount ELSE 0 END) AS pengeluaran
     FROM transactions
-    WHERE YEAR(date) = YEAR(CURDATE())
+    WHERE YEAR(date) = $tahunDipilih
     GROUP BY bulan
     ORDER BY bulan;
 ";
@@ -85,9 +88,13 @@ $saldoJson = json_encode($saldoArray);
             <section class="flex-1 ml-2">
                 <section class="border-3">
                     <div class="flex">
-                        <h1 class="mx-6 text-xl font-mulish-extend mr-4" id="tahun">Saldo :</h1>
-                        <p id="year" class="text-xl font-mulish-extend"></p>
+                        <h1 class="mx-6 text-xl font-mulish-extend mr-4">Chart Saldo :</h1>
+                        <form action="" method="GET" class="flex items-center">
+                            <input type="number" class="w-16 p-1 border rounded" name="year" id="year" value="<?php echo $tahunDipilih; ?>" min="1000" max="<?php echo date('Y'); ?>">
+                            <button type="submit" class="ml-2 px-3 py-1 bg-gradient text-white rounded font-mulish">Tampilkan</button>
+                        </form>
                     </div>
+
 
                     <script>
                         const getYear = new Date();
@@ -95,7 +102,7 @@ $saldoJson = json_encode($saldoArray);
                         document.getElementById('year').innerHTML = year;
                     </script>
 
-                    <div class="flex h-80 mx-auto justify-center">
+                    <div class="flex md:max-h-64 xl:max-h-80 2xl:max-h-96 mx-auto justify-center">
                         <canvas id="saldoChart"></canvas>
                     </div>
                 </section>
