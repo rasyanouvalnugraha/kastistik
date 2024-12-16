@@ -117,7 +117,11 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                     <?php include "layout/responnavbar.php" ?>
                 </div>
                 <div class="text-lg font-mulish-extend w-full sm:p-5 p-3 justify-between flex shadow-md navbar sticky">
-                    <h1 class="text-md sm:text-lg items-center">Permintaan Dari User</h1>
+                    <div class="flex gap-3">
+                        <h1 class="text-md sm:text-lg items-center">Permintaan Dari User</h1>
+                        <h1>></h1>
+                        <a href="history.admin.php">History</a>
+                    </div>
                     <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
                 </div>
             </div>

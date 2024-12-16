@@ -73,8 +73,8 @@ $pemasukan = mysqli_query(
 <body class="bg-gray-100">
     <div class="flex">
         <!-- Sidebar -->
-        <section class="sm:flex sm:relative hidden">
-            <nav class="h-full 2xl:mr-5">
+        <section class="sm:flex hidden">
+            <nav class="navbar h-screen 2xl:mr-5">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
@@ -109,10 +109,10 @@ $pemasukan = mysqli_query(
             </div>
 
             <!-- Tabel -->
-            <div class="overflow-x-auto sm:mx-4 border-b-2 md:mx-8 my-4 sm:my-0">
-                <table id="dataPemasukan" class="rounded-lg shadow-md">
+            <div class="overflow-x-auto sm:mx-8 border-b-2">
+                <table id="dataPemasukan" class="min-w-full rounded-lg shadow-md display">
                     <thead>
-                        <tr class="bg-gradient text-white text-xs sm:text-base">
+                        <tr class="bg-gradient text-white text-xs">
                             <th class="py-2 px-4 border-b font-mulish">Nama</th>
                             <th class="py-2 px-4 border-b font-mulish">Tanggal</th>
                             <th class="py-2 px-4 border-b font-mulish">Jumlah</th>
@@ -122,7 +122,7 @@ $pemasukan = mysqli_query(
                     </thead>
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($pemasukan)) { ?>
-                            <tr class='hover:bg-gray-300 text-xs sm:text-base'>
+                            <tr class='hover:bg-gray-300 text-sm'>
                                 <td class='py-2 px-4 text-center font-mulish'><?= htmlspecialchars($row['nama']); ?></td>
                                 <td class='py-2 px-4 text-center font-mulish' data-order="<?= date('Y-m-d', strtotime($row['tanggal'])); ?>">
                                     <?= date('d M', strtotime($row['tanggal'])); ?>
@@ -186,7 +186,7 @@ $pemasukan = mysqli_query(
             Swal.fire({
                 icon: messageDeleteData === "Success" ? 'success' : 'error',
                 title: messageDeleteData === "Success" ? 'Berhasil' : 'Gagal',
-                text: messageDeleteData === "Success" ? 'Data pemasukan berhasil dihapus' : 'Data pemasukan gagal dihapus',
+                text: messageDeleteData === "Success" ? 'Data Pemasukan berhasil dihapus' : 'Data Pemasukan gagal dihapus',
             }).then(() => {
                 const url = new URL(window.location);
                 url.searchParams.delete("messageDeleteData");
@@ -199,91 +199,102 @@ $pemasukan = mysqli_query(
             const urlParams = new URLSearchParams(window.location.search);
             const tahun = urlParams.get('tahun') || new Date().getFullYear(); // Default tahun adalah tahun sekarang
 
-            $('#dataPemasukan').DataTable({
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'csv',
-                        text: 'Export CSV',
-                        title: '',
-                        filename: 'Data_Pemasukan_' + tahun,
-                        exportOptions: {
-                            columns: ':not(:last-child)' // Kecualikan kolom aksi
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        title: '',
-                        text: 'Export Excel',
-                        filename: 'Data_Pemasukan_' + tahun,
-                        exportOptions: {
-                            columns: ':not(:last-child)' // Kecualikan kolom aksi
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        title: '',
-                        text: 'Export PDF',
-                        filename: 'Data_Pemasukan_' + tahun,
-                        customize: function(doc) {
-                            doc.content.splice(0, 0, {
-                                text: 'Data Pemasukan Tahun ' + tahun,
-                                style: 'header',
-                                alignment: 'center',
-                                margin: [0, 0, 0, 10]
-                            });
-                            doc.styles.tableHeader = {
-                                bold: true,
-                                color: 'white',
-                                fillColor: '#4CAF50',
-                                alignment: 'center'
-                            };
+            $(document).ready(function() {
+                // Ambil parameter tahun dari URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const tahun = urlParams.get('tahun') || new Date().getFullYear(); // Default tahun sekarang jika tidak ada parameter
+
+                $('#dataPemasukan').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'csv',
+                            title: '',
+                            text: 'Export CSV',
+                            filename: 'Data_Pemasukan_' + tahun, // Nama file dengan tahun
+                            exportOptions: {
+                                columns: ':not(:last-child)' // Semua kecuali kolom terakhir (Aksi)
+                            }
                         },
-                        exportOptions: {
-                            columns: ':not(:last-child)' // Kecualikan kolom aksi
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        title: 'Data Pemasukan Tahun ' + tahun,
-                        exportOptions: {
-                            columns: ':not(:last-child)' // Kecualikan kolom aksi
+                        {
+                            extend: 'excel',
+                            title: '',
+                            text: 'Export Excel',
+                            filename: 'Data_Pemasukan_' + tahun,
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
                         },
-                        customize: function(win) {
-                            $(win.document.body).css('font-family', 'Arial, sans-serif').css('text-align', 'center');
-                            $(win.document.body).find('h1').addClass('text-lg font-bold').text('Data Pemasukan');
+                        {
+                            extend: 'pdf',
+                            title: '',
+                            text: 'Export PDF',
+                            filename: 'Data_Pemasukan_' + tahun,
+                            orientation: 'landscape', // PDF dalam orientasi landscape
+                            pageSize: 'A4', // Ukuran halaman
+                            customize: function(doc) {
+                                doc.content.splice(0, 0, {
+                                    text: 'Data Pemasukan Tahun ' + tahun,
+                                    style: 'header',
+                                    alignment: 'center',
+                                    margin: [0, 0, 0, 20]
+                                });
+                                doc.styles.tableHeader = {
+                                    bold: true,
+                                    fontSize: 12,
+                                    color: 'white',
+                                    fillColor: '#4CAF50',
+                                    alignment: 'center'
+                                };
+                            },
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            title: 'Data Pemasukan Tahun ' + tahun,
+                            customize: function(win) {
+                                // Hapus judul tambahan pada halaman print
+                                $(win.document.body).find('h1').css('text-align', 'center');
+                                $(win.document.body).find('table').addClass('compact').css('font-size', '12px');
+                            },
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
                         }
-                    }
-                ],
-                language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    paginate: {
-                        first: "Awal",
-                        last: "Akhir",
-                        next: "Selanjutnya",
-                        previous: "Sebelumnya"
+                    ],
+                    language: {
+                        search: "Cari:",
+                        lengthMenu: "Tampilkan _MENU_ data",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                        paginate: {
+                            first: "Awal",
+                            last: "Akhir",
+                            next: "Selanjutnya",
+                            previous: "Sebelumnya"
+                        },
+                        zeroRecords: "Data tidak ditemukan",
+                        infoEmpty: "Menampilkan 0 data",
+                        infoFiltered: "(dari total _MAX_ data)"
                     },
-                    zeroRecords: "Data tidak ditemukan",
-                    infoEmpty: "Menampilkan 0 data",
-                    infoFiltered: "(dari total _MAX_ data)"
-                },
-                responsive: true,
-                order: [
-                    [1, "desc"]
-                ],
-                columnDefs: [{
-                        targets: -1, // Kolom terakhir untuk aksi
-                        orderable: false, // Kolom ini tidak bisa diurutkan
-                        searchable: false // Kolom ini tidak ikut dalam pencarian
-                    },
-                    {
-                        targets: [0, 1, 2, 3, 4], // Center align
-                        className: "dt-center"
-                    }
-                ]
+                    responsive: true,
+                    order: [
+                        [1, "desc"]
+                    ], // Urutkan berdasarkan tanggal (kolom kedua)
+                    columnDefs: [{
+                            targets: -1, // Kolom terakhir (Aksi)
+                            orderable: false, // Nonaktifkan sorting
+                            searchable: false // Nonaktifkan pencarian
+                        },
+                        {
+                            targets: '_all', // Semua kolom
+                            className: "dt-center" // Rata tengah
+                        }
+                    ]
+                });
             });
+
         });
     </script>
 </body>

@@ -104,7 +104,7 @@ $saldoJson = json_encode($saldoArray);
                     </div>
 
                     <!-- chart saldo  -->
-                    <div class="flex md:max-h-64 xl:max-h-80 2xl:max-h-96 2xl:mt-4 mx-auto justify-center w-screen sm:w-auto">
+                    <div class="xl:bg-white xl:h-72 xl:my-4 xl:mx-8 xl:p-2 xl:rounded-md xl:shadow-lg h-72 p-2">
                         <canvas id="saldoChart"></canvas>
                     </div>
                 </section>
@@ -150,6 +150,7 @@ $saldoJson = json_encode($saldoArray);
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false, // Membiarkan chart mengisi area container
             scales: {
                 x: {
                     title: {

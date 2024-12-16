@@ -107,8 +107,8 @@ $saldoJson = json_encode($saldoArray);
                         <button class="bg-gradient font-mulish text-white px-2 py-1 rounded-md" type="submit">Tampilkan</button>
                     </form>
                 </section>
-                <div class="mx-auto">
-                    <canvas id="saldoChart" class="xl:max-h-60 p-2"></canvas>
+                <div class="xl:bg-white xl:h-72 xl:my-4 xl:mx-8 xl:p-2 xl:rounded-md xl:shadow-lg w-screen h-72 p-2">
+                    <canvas id="saldoChart" class=""></canvas>
                 </div>
             </section>
         </section>
@@ -153,6 +153,7 @@ $saldoJson = json_encode($saldoArray);
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false, // Membiarkan chart mengisi area container
                 scales: {
                     x: {
                         title: {

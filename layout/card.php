@@ -40,68 +40,75 @@ $sisa = $pemasukan - $pengeluaran;
 
 <body>
     <!-- LAYOUT CARD -->
-    <ul class="flex flex-col flex-wrap sm:flex-row sm:justify-center sm:space-x-6 space-y-4 sm:space-y-0 p-4">
+    <ul class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
 
         <!-- CARD USER -->
-        <li class="bg-gradient-user p-3 sm:p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
-            <img src="asset/People.png" alt="User Icon" class="w-6 h-6 sm:w-12 sm:h-12 mr-4">
+        <li class="bg-gradient-user p-3 sm:p-4 rounded-lg text-white font-mulish-user flex items-center shadow-lg">
+            <img src="asset/People.png" alt="User Icon" class="hidden sm:block w-6 h-6 sm:w-12 sm:h-12 mr-4">
             <div class="flex space-x-1 sm:space-x-0 sm:flex-col">
                 <label class="text-sm md:text-2xl">User</label>
                 <label class="text-sm sm:hidden">:</label>
+
                 <label class="text-sm md:text-xl"><?php print $total_users; ?></label>
             </div>
         </li>
 
         <!-- CARD PEMASUKAN -->
-        <li class="bg-gradient-pemasukan p-3 sm:p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
-            <img src="asset/Increase.png" alt="Pemasukan Icon" class="w-6 h-6 sm:w-12 sm:h-12 mr-4">
-            <div class="flex space-x-1 sm:space-y-0 sm:flex-col">
-                <label class="text-sm md:text-2xl">Pemasukan</label>
-                <label class="text-sm sm:hidden">:</label>
-                <label class="text-sm md:text-xl">
-                    <?php
-                    // Menampilkan pesan jika tidak ada pemasukan
-                    if ($pemasukan > 0) {
-                        echo "Rp " . number_format($pemasukan, 0, ',', '.');
-                    } else {
-                        echo "<span class='text-xl'>Tidak Ada</span>";
-                    }
-                    ?>
-                </label>
-                <label class="text-sm md:text-xl font-mulish-ket">Tahun Ini</label>
+        <li class="bg-gradient-pemasukan p-3 sm:p-4 rounded-lg text-white font-mulish-user flex items-center shadow-lg">
+            <img src="asset/Increase.png" alt="Pemasukan Icon" class="hidden sm:block w-6 h-6 sm:w-12 sm:h-12 mr-4">
+            <div class="flex space-x-1 sm:space-y-0 flex-col">
+                <div>
+                    <label class="text-sm md:text-2xl">Pemasukan</label>
+                    <label class="text-sm sm:hidden">:</label>
+                </div>
+                <div class="flex">
+                    <label class="text-sm md:text-xl">
+                        <?php
+                        if ($pemasukan > 0) {
+                            echo "Rp " . number_format($pemasukan, 0, ',', '.');
+                        } else {
+                            echo "<span class='text-xl'>Tidak Ada</span>";
+                        }
+                        ?>
+                    </label>
+                </div>
+                <label class="hidden md:text-xl md:block font-mulish-ket">Tahun Ini</label>
             </div>
         </li>
 
         <!-- CARD PENGELUARAN -->
-        <li class="bg-gradient-pengeluaran p-3 sm:p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
-            <img src="asset/Decrease.png" alt="Pengeluaran Icon" class="h-6 w-6 sm:w-12 sm:h-12 mr-4">
-            <div class="flex space-x-1 sm:space-y-0 sm:flex-col">
-                <label class="text-sm md:text-2xl">Pengeluaran</label>
-                <label class="text-sm sm:hidden">:</label>
-                <label class="text-sm md:text-xl">
-                    <?php
-                    // Menampilkan pesan jika tidak ada pemasukan
-                    if ($pengeluaran > 0) {
-                        echo "Rp " . number_format($pengeluaran, 0, ',', '.');
-                    } else {
-                        echo "<span class='text-xl'>Tidak ada</span>";
-                    }
-                    ?>
-                </label>
-                <label class="text-sm md:text-lg font-mulish-ket">Tahun Ini</label>
+        <li class="bg-gradient-pengeluaran p-3 sm:p-4 rounded-lg text-white font-mulish-user flex items-center shadow-lg">
+            <img src="asset/Increase.png" alt="Pemasukan Icon" class="hidden sm:block w-6 h-6 sm:w-12 sm:h-12 mr-4">
+            <div class="flex space-x-1 sm:space-y-0 flex-col">
+                <div>
+                    <label class="text-sm md:text-2xl">Pengeluaran</label>
+                    <label class="text-sm sm:hidden">:</label>
+                </div>
+                <div class="flex">
+                    <label class="text-sm md:text-xl">
+                        <?php
+                        if ($pengeluaran > 0) {
+                            echo "Rp " . number_format($pengeluaran, 0, ',', '.');
+                        } else {
+                            echo "<span class='text-xl'>Tidak Ada</span>";
+                        }
+                        ?>
+                    </label>
+                </div>
+                <label class="hidden md:text-xl md:block font-mulish-ket">Tahun Ini</label>
             </div>
         </li>
 
         <!-- CARD SALDO -->
-        <li class="bg-gradient-saldo p-3 sm:p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
-            <img src="asset/Coin Wallet.png" alt="Sisa Icon" class="w-6 h-6 sm:w-12 sm:h-12 mr-4">
+        <li class="bg-gradient-saldo p-3 sm:p-4 rounded-lg text-white font-mulish-user flex items-center shadow-lg">
+            <img src="asset/Coin Wallet.png" alt="Sisa Icon" class="hidden sm:block w-6 h-6 sm:w-12 sm:h-12 mr-4">
             <div class="flex space-x-1 sm:space-y-0 sm:flex-col">
                 <label class="text-sm md:text-2xl">Saldo</label>
                 <label class="text-sm sm:hidden">:</label>
                 <label class="text-sm md:text-xl">
                     Rp <?php
-                        if ($sisa < 0 ) {
-                            echo  "0";
+                        if ($sisa < 0) {
+                            echo "0";
                         } else {
                             print number_format($sisa, 0, ',', '.');
                         }
@@ -112,6 +119,7 @@ $sisa = $pemasukan - $pengeluaran;
         </li>
     </ul>
 </body>
+
 
 <style>
     /* URL FONT MULISH */

@@ -44,12 +44,6 @@
                 </a>
             </li>
             <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1">
-                <a href="history.admin.php" class="flex items-center space-x-3">
-                    <img src="asset/Urgent Message.svg" alt="" class="w-6 h-6">
-                    <span>History</span>
-                </a>
-            </li>
-            <li class="px-3 py-4 sm:p-5 transition-colors duration-300 ease-in-out hover:text-white rounded-xl mx-1">
                 <a href="logout.php" class="flex items-center space-x-3">
                     <img src="asset/Logout.svg" alt="" class="w-6 h-6">
                     <span>Logout</span>

@@ -20,7 +20,6 @@
             <li><a href="data.pengeluaran.admin.php" class="block">Pengeluaran</a></li>
             <hr>
             <li><a href="request.admin.php" class="block">Request</a></li>
-            <li><a href="history.admin.php" class="block">History</a></li>
             <li><a href="logout.php" class="block">Logout</a></li>
         </ul>
     </div>
