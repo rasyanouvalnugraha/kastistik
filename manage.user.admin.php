@@ -103,38 +103,35 @@ if (isset($_POST['update'])) {
 
 <body class="bg-gray-100">
     <div class="flex">
-        <section class="relative">
-            <nav class="navbar h-screen mr-5">
+        <section class="hidden sm:relative sm:flex">
+            <nav class="navbar h-screen 2xl:mr-5">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
 
         <section class="flex-1">
-            <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>Manage User</h1>
-                <h1><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
+            <div class="text-lg font-mulish-extend sm:p-5 p-3 justify-between flex shadow-md navbar z-10">
+                <h1 class="text-md sm:text-base">Manage User</h1>
+                <h1 class="text-md sm:text-base"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
             </div>
 
-
             <!-- table user -->
-            <div class="overflow-x-auto mx-8 mt-4 border-b-2 rounded-lg">
-
-
-                <div class="max-h relative overflow-y-auto no-scrollbar">
+            <div class="overflow-x-auto w-screen sm:w-auto sm:mx-8 mt-4 border-b-2 rounded-lg">
+                <div class="flex xl:max-h-96 h-[200px] overflow-y-auto no-scrollbar">
                     <table class="min-w-full rounded-lg">
-                        <thead>
+                        <thead class="text-sm sm:text-base">
                             <tr class="bg-gradient text-white sticky top-0 z-10">
-                                <th class="py-3 px-4 font-mulish text-center">#</th>
-                                <th class="py-3 px-4 font-mulish text-center">Nama</th>
-                                <th class="py-3 px-4 font-mulish text-center">Username</th>
-                                <th class="py-3 px-4 font-mulish text-center">Password</th>
-                                <th class="py-3 px-4 font-mulish text-center">Premi</th>
-                                <th class="py-3 px-4 font-mulish text-center">Action</th>
+                                <th class="font-mulish text-center p-2">#</th>
+                                <th class="font-mulish text-center p-2">Nama</th>
+                                <th class="font-mulish text-center p-2">Username</th>
+                                <th class="font-mulish text-center p-2">Password</th>
+                                <th class="font-mulish text-center p-2">Premi</th>
+                                <th class="font-mulish text-center p-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($result as $index => $data) { ?>
-                                <tr class="bg-white border-b hover:bg-gray-100 font-mulish">
+                                <tr class="bg-white border-b hover:bg-gray-100 font-mulish text-xs sm:text-base">
                                     <td class="py-3 px-4 font-mulish text-center"><?php echo $index + 1; ?></td>
                                     <td class="py-3 px-4 font-mulish"><?php echo htmlspecialchars($data->fullname); ?></td>
                                     <td class="py-3 px-4 font-mulish"><?php echo htmlspecialchars($data->username); ?></td>
@@ -154,15 +151,15 @@ if (isset($_POST['update'])) {
                     </table>
                 </div>
                 <div class="flex">
-                    <a href="javascript:void(0);" class="w-1/2 font-mulish p-3 text-white bg-gradient-r text-center" onclick="create()">Tambah Data</a>
-                    <a href="user.admin.php" class="w-1/2 font-mulish p-3 bg text-center text-white justify-center flex bg-gradient">Kembali</a>
+                    <a href="javascript:void(0);" class="w-1/2 font-mulish p-3 text-white bg-gradient-r text-center text-sm sm:text-base" onclick="create()">Tambah Data</a>
+                    <a href="user.admin.php" class="w-1/2 font-mulish p-3 bg text-center text-white justify-center flex bg-gradient text-sm sm:text-base">Kembali</a>
                 </div>
             </div>
 
 
 
             <!-- Form Edit Modal -->
-            <div id="editForm" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-20">
+            <div id="editForm" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 items-center justify-center z-20">
                 <div class="bg-white rounded-lg shadow-lg p-6 w-96">
                     <h2 class="text-2xl font-mulish-extend mb-4">Edit User</h2>
                     <form action="" method="POST">
@@ -189,7 +186,7 @@ if (isset($_POST['update'])) {
             </div>
 
             <!-- Form Create User -->
-            <div id="add" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-20">
+            <div id="add" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 items-center justify-center z-20">
                 <div class="bg-white rounded-lg shadow-lg p-6 w-96">
                     <h2 class="text-2xl font-mulish-extend mb-4">Tambah Data</h2>
                     <form action="" method="POST" class="font-mulish">
@@ -252,7 +249,7 @@ if (isset($_POST['update'])) {
             if (messageEdit === "Sucsess") {
                 Swal.fire({
                     title: 'Berhasil!',
-                    text: 'User Behasil diupdate.',
+                    text: 'User Berhasil diupdate.',
                     icon: 'success',
                     confirmButtonText: 'Okay'
                 }).then(() => {
@@ -301,11 +298,13 @@ if (isset($_POST['update'])) {
         // Fungsi untuk membuka form tambah data
         function create() {
             document.getElementById('add').classList.remove('hidden');
+            document.getElementById('add').classList.add('flex');
         }
 
         // Fungsi untuk membuka form edit
         function openEditForm(id, fullname, username, password, premi) {
             document.getElementById('editForm').classList.remove('hidden');
+            document.getElementById('editForm').classList.add('flex');
             document.getElementById('userId').value = id;
             document.getElementById('fullname').value = fullname;
             document.getElementById('username').value = username;
@@ -315,6 +314,7 @@ if (isset($_POST['update'])) {
 
         // Fungsi untuk menutup form edit
         function closeEditForm() {
+            document.getElementById('editForm').classList.remove('flex');
             document.getElementById('editForm').classList.add('hidden');
         }
 
@@ -337,10 +337,6 @@ if (isset($_POST['update'])) {
         .bg-gradient-r {
             background: rgb(125, 70, 253);
             background: linear-gradient(270deg, rgba(125, 70, 253, 1) 0%, rgba(253, 201, 145, 1) 100%);
-        }
-
-        .max-h {
-            max-height: 26rem;
         }
     </style>
 </body>

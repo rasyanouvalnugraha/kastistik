@@ -40,23 +40,25 @@ $sisa = $pemasukan - $pengeluaran;
 
 <body>
     <!-- LAYOUT CARD -->
-    <ul class="flex flex-col flex-wrap sm:flex-row sm:justify-center sm:space-x-6 space-y-6 sm:space-y-0 p-4">
+    <ul class="flex flex-col flex-wrap sm:flex-row sm:justify-center sm:space-x-6 space-y-4 sm:space-y-0 p-4">
 
         <!-- CARD USER -->
-        <li class="bg-gradient-user p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
-            <img src="asset/People.png" alt="User Icon" class="w-12 h-12 mr-4">
-            <div class="flex flex-col">
-                <label class="md:text-2xl">User</label>
-                <label class="md:text-xl"><?php print $total_users; ?></label>
+        <li class="bg-gradient-user p-3 sm:p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
+            <img src="asset/People.png" alt="User Icon" class="w-6 h-6 sm:w-12 sm:h-12 mr-4">
+            <div class="flex space-x-1 sm:space-x-0 sm:flex-col">
+                <label class="text-sm md:text-2xl">User</label>
+                <label class="text-sm sm:hidden">:</label>
+                <label class="text-sm md:text-xl"><?php print $total_users; ?></label>
             </div>
         </li>
 
         <!-- CARD PEMASUKAN -->
-        <li class="bg-gradient-pemasukan p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
-            <img src="asset/Increase.png" alt="Pemasukan Icon" class="w-12 h-12 mr-4">
-            <div class="flex flex-col">
-                <label class="md:text-2xl">Pemasukan</label>
-                <label class="md:text-xl">
+        <li class="bg-gradient-pemasukan p-3 sm:p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
+            <img src="asset/Increase.png" alt="Pemasukan Icon" class="w-6 h-6 sm:w-12 sm:h-12 mr-4">
+            <div class="flex space-x-1 sm:space-y-0 sm:flex-col">
+                <label class="text-sm md:text-2xl">Pemasukan</label>
+                <label class="text-sm sm:hidden">:</label>
+                <label class="text-sm md:text-xl">
                     <?php
                     // Menampilkan pesan jika tidak ada pemasukan
                     if ($pemasukan > 0) {
@@ -66,16 +68,17 @@ $sisa = $pemasukan - $pengeluaran;
                     }
                     ?>
                 </label>
-                <label class="text-lg font-mulish-ket">Tahun Ini</label>
+                <label class="text-sm md:text-xl font-mulish-ket">Tahun Ini</label>
             </div>
         </li>
 
         <!-- CARD PENGELUARAN -->
-        <li class="bg-gradient-pengeluaran p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
-            <img src="asset/Decrease.png" alt="Pengeluaran Icon" class="w-12 h-12 mr-4">
-            <div class="flex flex-col">
-                <label class="md:text-2xl">Pengeluaran</label>
-                <label class="md:text-xl">
+        <li class="bg-gradient-pengeluaran p-3 sm:p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
+            <img src="asset/Decrease.png" alt="Pengeluaran Icon" class="h-6 w-6 sm:w-12 sm:h-12 mr-4">
+            <div class="flex space-x-1 sm:space-y-0 sm:flex-col">
+                <label class="text-sm md:text-2xl">Pengeluaran</label>
+                <label class="text-sm sm:hidden">:</label>
+                <label class="text-sm md:text-xl">
                     <?php
                     // Menampilkan pesan jika tidak ada pemasukan
                     if ($pengeluaran > 0) {
@@ -85,16 +88,17 @@ $sisa = $pemasukan - $pengeluaran;
                     }
                     ?>
                 </label>
-                <label class="text-lg font-mulish-ket">Tahun Ini</label>
+                <label class="text-sm md:text-lg font-mulish-ket">Tahun Ini</label>
             </div>
         </li>
 
         <!-- CARD SALDO -->
-        <li class="bg-gradient-saldo p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
-            <img src="asset/Coin Wallet.png" alt="Sisa Icon" class="w-12 h-12 mr-4">
-            <div class="flex flex-col">
-                <label class="md:text-2xl">Saldo</label>
-                <label class="md:text-xl">
+        <li class="bg-gradient-saldo p-3 sm:p-4 rounded-lg text-white font-mulish-user flex-1 flex items-center shadow-lg">
+            <img src="asset/Coin Wallet.png" alt="Sisa Icon" class="w-6 h-6 sm:w-12 sm:h-12 mr-4">
+            <div class="flex space-x-1 sm:space-y-0 sm:flex-col">
+                <label class="text-sm md:text-2xl">Saldo</label>
+                <label class="text-sm sm:hidden">:</label>
+                <label class="text-sm md:text-xl">
                     Rp <?php
                         if ($sisa < 0 ) {
                             echo  "0";
@@ -103,7 +107,7 @@ $sisa = $pemasukan - $pengeluaran;
                         }
                         ?>
                 </label>
-                <label class="text-lg font-mulish-ket"></label>
+                <label class="text-sm md:text-xl font-mulish-ket"></label>
             </div>
         </li>
     </ul>

@@ -60,28 +60,33 @@ if (isset($_POST['delete'])) {
 
 <body class="bg-gray-100">
     <div class="flex">
-        <section class="relative">
-            <nav class="navbar h-screen">
+        <section class="sm:relative sm:flex hidden">
+            <nav class="navbar h-screen 2xl:mr-5">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
 
         <section class="flex-1">
-            <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>History Request</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+            <div class="flex">
+                <div class="sm:hidden flex shadow-md">
+                    <?php include "layout/responnavbar.php" ?>
+                </div>
+                <div class="text-lg font-mulish-extend w-full sm:p-5 p-3 justify-between flex shadow-md navbar sticky">
+                    <h1 class="text-md sm:text-lg items-center">History Request</h1>
+                    <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
+                </div>
             </div>
             <section>
                 <?php include "layout/card.php" ?>
             </section>
 
-            <div class="overflow-x-auto mx-8 my-2">
+            <div class="overflow-x-auto w-screen sm:w-auto sm:mx-8 my-2">
                 <div class="max-h-80 relative overflow-y-auto no-scrollbar rounded-lg">
                     <?php
                     if (mysqli_num_rows($getData) > 0) {
                         echo '<table class="min-w-full rounded-lg shadow-md">
                             <thead>
-                                <tr class="bg-gradient navbar text-white">
+                                <tr class="bg-gradient navbar text-white text-sm sm:text-base">
                                     <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
                                     <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
                                     <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Jumlah</th>
@@ -92,10 +97,10 @@ if (isset($_POST['delete'])) {
                             <tbody>';
 
                         while ($row = mysqli_fetch_assoc($getData)) {
-                            echo "<tr>";
+                            echo "<tr class='text-sm sm:text-base'>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
-                            echo "<td class='py-2 px-4 text-center font-mulish'>" .'Rp ' . number_format($row['jumlah'], 0, ',', '.') . "</td>";
+                            echo "<td class='py-2 px-4 text-center font-mulish'>" . 'Rp ' . number_format($row['jumlah'], 0, ',', '.') . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>
                                     <form action='' method='post'>

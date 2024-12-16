@@ -68,7 +68,7 @@ if (isset($_POST['min'])) {
 
 <body class="">
     <div class="flex">
-        <section class="relative">
+        <section class="hidden sm:flex">
             <nav class="navbar h-screen">
                 <?php include "layout/navbar.php"; ?>
             </nav>
@@ -83,7 +83,7 @@ if (isset($_POST['min'])) {
                 <h1 class="text-2xl font-mulish-extend">Pengeluaran</h1>
                 <a href="data.pengeluaran.admin.php" class="bg-button p-2 rounded-lg mt-2 flex text-white font-mulish gap-2 w-1/7">
                     Cancel
-                    <img src="../kastistik/asset/Left 2.svg" alt="" class="h-7 mr-1">
+                    <img src="asset/Left 2.svg" alt="" class="h-7 mr-1">
                 </a>
             </div>
 
@@ -94,7 +94,7 @@ if (isset($_POST['min'])) {
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
                                 <img src="asset/Person.png" alt="Person Icon" class="w-6 h-6 ml-3">
-                                <select name="username" id="username" class="w-full px-6 py-4 no-border">
+                                <select name="username" id="username" class="w-full px-6 py-4 no-border" required>
                                     <option value="">Pilih User</option>
                                     <?php
                                     // query mengambil jumlah users di table user

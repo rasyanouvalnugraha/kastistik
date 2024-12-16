@@ -20,12 +20,12 @@ if (isset($_POST['add'])) {
     $result = mysqli_query($db, "INSERT INTO transactions (id_user, amount, type, date, saldo, keterangan , approve)
     VALUES ('$username', '$jumlah', '$type', '$tanggal', '$jumlah','$keterangan' , 1)");
 
-    if($result > 0) {
+    if ($result > 0) {
         $messageCreateData = "Sucsess";
     } else {
         $messageCreateData = "Failed";
     }
-    header('location: data.pemasukan.admin.php?messageCreateData='.$messageCreateData);
+    header('location: data.pemasukan.admin.php?messageCreateData=' . $messageCreateData);
     exit();
 }
 ?>
@@ -54,7 +54,7 @@ if (isset($_POST['add'])) {
 
 <body class="">
     <div class="flex">
-        <section class="relative">
+        <section class="hidden sm:relative sm:flex">
             <nav class="navbar h-screen">
                 <?php include "layout/navbar.php"; ?>
             </nav>
@@ -74,16 +74,13 @@ if (isset($_POST['add'])) {
                 </a>
             </div>
             <section class="flex flex-col md:flex-row">
-
                 <div class="flex flex-1 flex-col w-full h-full px-6">
-
-
                     <form action="" class="space-y-3 font-mulish" method="POST">
                         <div>
                             <label for="username" class="flex text-gray-700 font-semibold mb-2">Username</label>
                             <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
                                 <img src="asset/Person.png" alt="Person Icon" class="w-6 h-6 ml-3">
-                                <select name="fullname" id="fullname" class="w-full px-6 py-4 no-border">
+                                <select name="fullname" id="fullname" class="w-full px-6 py-4 no-border" required>
                                     <option value="">Pilih User</option>
                                     <?php
                                     $sql = mysqli_query($db, "SELECT * FROM `users` WHERE role = '2'") or die(mysqli_error($db));

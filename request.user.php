@@ -81,28 +81,49 @@ if (isset($_POST['add'])) {
 <body>
     <div class="flex">
         <section class="relative">
-            <nav class="navbar h-screen">
+            <nav class="h-screen">
                 <?php include "layout.user/navbar.user.php"; ?>
             </nav>
         </section>
 
         <section class="flex-1">
-            <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>Dashboard</h1>
-                <h1><?php echo $_SESSION['fullname']; ?></h1>
+            <div class="flex text-lg font-mulish-extend w-full sm:p-5 shadow-md navbar">
+                <button id="mobileMenuToggle" class="sm:hidden flex px-4 py-2 bg-gradient">
+                    <img src="asset/Content.png" alt="Menu" class="h-6 w-6">
+                </button>
+                <div class="w-full flex justify-between items-center px-2 sm:px-0 sm:mt-0">
+                    <h1 class="text-sm sm:text-lg text-black">Dashboard</h1>
+                    <h1 class="text-sm sm:text-lg text-black"><?php print $_SESSION['fullname']; ?></h1>
+                </div>
             </div>
+
+            <!-- MOBILE MENU -->
+            <section id="mobileMenu" class="hidden fixed top-0 left-0 w-full h-screen bg-gray-800 bg-opacity-90 z-20">
+                <div class="bg-gray-800 h-full p-5 text-white">
+                    <button id="closeMobileMenu" class="text-xl font-bold">X</button>
+                    <ul class="mt-5 space-y-4 font-mulish">
+                        <li><a href="user.php" class="block">Dashboard</a></li>
+                        <hr>
+                        <li><a href="data.pemasukan.user.php" class="block">Pemasukan</a></li>
+                        <li><a href="data.pengeluaran.user.php" class="block">Pengeluaran</a></li>
+                        <hr>
+                        <li><a href="request.user.php" class="block">Request</a></li>
+                        <li><a href="logout.php" class="block">Logout</a></li>
+                    </ul>
+                </div>
+            </section>
 
             <section class="">
                 <section class="flex flex-col md:flex-row">
                     <div class="flex flex-1 flex-col w-full h-full px-4">
-                        <h1 class="text-2xl font-mulish-extend mt-4">Request User To Admin</h1>
+                        <h1 class="sm:text-2xl text-lg font-mulish-extend mt-2">Request Pengeluaran</h1>
 
                         <!-- Form -->
                         <form action="request.user.php" class="2xl:space-y-8 space-y-4 font-mulish" method="POST">
                             <input type="hidden" name="username" value="<?php echo $_SESSION['fullname']; ?>">
 
                             <div>
-                                <label for="keperluan" class="block text-gray-700 font-semibold mb-2">Keperluan</label>
+                                <label for="keperluan" class="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">Keperluan</label>
                                 <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
                                     <img src="asset/Strategy.svg" alt="Keperluan Icon" class="w-6 h-6 ml-3">
                                     <input type="text" id="keperluan" name="keperluan" class="w-full px-4 py-4 focus:outline-none 2xl:py-6" placeholder="Beli Sabun....." required>
@@ -110,8 +131,8 @@ if (isset($_POST['add'])) {
                             </div>
 
                             <div>
-                                <label for="amount" class="block text-gray-700 font-semibold mb-2">Jumlah Uang</label>
-                                <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500">
+                                <label for="amount" class="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">Jumlah Uang</label>
+                                <div class="flex items-center border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 bg-white">
                                     <img src="asset/Receive Cash.svg" alt="Coins Icon" class="w-6 h-6 ml-3">
                                     <input type="text" id="amount" name="amount" class="w-full px-4 py-4 focus:outline-none 2xl:py-6" placeholder="Masukkan jumlah uang" required>
                                 </div>
@@ -122,9 +143,9 @@ if (isset($_POST['add'])) {
                             </div>
                         </form>
                     </div>
-                    <div class="flex-1 w-full xl:flex hidden">
-                        <div>
-                            <img src="asset/Male specialist working in support service.svg" alt="Support Service" class="">
+                    <div class="flex-1 w-full md:flex hidden">
+                        <div class="flex text-center">
+                            <img src="asset/Male specialist working in support service.svg" alt="Support Service" class="w-80 h-80 center">
                         </div>
                     </div>
                 </section>
@@ -191,6 +212,18 @@ if (isset($_POST['add'])) {
                 minimumFractionDigits: 0
             }).format(value).replace("Rp", "Rp ");
         });
+
+        // MOBILE MENU TOGGLE
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
     </script>
 </body>
 
@@ -211,6 +244,13 @@ if (isset($_POST['add'])) {
 
     select.no-border option {
         border: none;
+    }
+
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
     }
 </style>
 

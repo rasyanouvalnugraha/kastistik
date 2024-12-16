@@ -1,36 +1,43 @@
 <?php
 session_start();
-
 include "connection/database.php";
 
-// Pastikan hanya admin yang bisa mengakses halaman ini
+// Cek role pengguna
 if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
 
-$messageDeleteData = "";
-// Proses penghapusan data pengeluaran
+// Pesan delete
+$messageDeleteData = '';
 if (isset($_POST['delete'])) {
-    $delete_id = $_POST['delete_id'];
+    $delete_id = mysqli_real_escape_string($db, $_POST['delete_id']);
 
-    // Query untuk menghapus data pengeluaran berdasarkan ID
-    $query = "DELETE FROM transactions WHERE id = ?";
-    $stmt = mysqli_prepare($db, $query);
-    mysqli_stmt_bind_param($stmt, "i", $delete_id);
+    // Query untuk menghapus data berdasarkan ID
+    $delete_query = "DELETE FROM transactions WHERE id = '$delete_id' AND type IN (3)";
+    $result = mysqli_query($db, $delete_query);
 
-    if (mysqli_stmt_execute($stmt)) {
-        $messageDeleteData = "Sucsess";
+    if ($result && mysqli_affected_rows($db) > 0) {
+        $messageDeleteData = "Success";
     } else {
         $messageDeleteData = "Failed";
     }
 
-    header('Location: data.pengeluaran.admin.php?messageDeleteData=' . $messageDeleteData);
+    // Redirect ke halaman ini dengan pesan
+    header("Location: data.pengeluaran.admin.php?messageDeleteData=" . $messageDeleteData);
     exit();
 }
 
-// Ambil data pengeluaran
-$pengeluaran = mysqli_query($db, "
+// Ambil data tahun, default ke tahun sekarang
+$tahun = isset($_GET['tahun']) ? intval($_GET['tahun']) : date('Y');
+if ($tahun < 1000 || $tahun > intval(date('Y'))) {
+    $tahun = date('Y');
+}
+
+// Query untuk data pengeluaran
+$pengeluaran = mysqli_query(
+    $db,
+    "
     SELECT
         transactions.id AS ID,
         transactions.date AS tanggal,
@@ -39,10 +46,11 @@ $pengeluaran = mysqli_query($db, "
         transactions.keterangan AS Keterangan
     FROM transactions
     JOIN users ON transactions.id_user = users.id
-    WHERE transactions.type = 3
-    AND transactions.approve = 1
-    ORDER BY transactions.date DESC
-");
+    WHERE transactions.type IN (3)
+        AND transactions.approve = 1
+        AND YEAR(date) = $tahun
+    ORDER BY transactions.date DESC, transactions.id DESC"
+);
 ?>
 
 <!DOCTYPE html>
@@ -54,224 +62,241 @@ $pengeluaran = mysqli_query($db, "
     <title>Dashboard Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/background.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200..1000&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/font.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/font.css">
     <link rel="icon" href="asset/BPS.png" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="sweetalert2.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 </head>
 
 <body class="bg-gray-100">
     <div class="flex">
-
-        <!-- NAVBAR -->
-        <section class="relative">
-            <nav class="navbar h-screen mr-5">
+        <!-- Sidebar -->
+        <section class="sm:flex hidden">
+            <nav class="navbar h-screen 2xl:mr-5">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
 
+        <!-- Main Content -->
         <section class="flex-1">
-            <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>Data Pengeluaran</h1>
-                <h1><?php echo $_SESSION['username']; ?></h1>
+            <div class="flex">
+                <div class="sm:hidden flex shadow-md">
+                    <?php include "layout/responnavbar.php" ?>
+                </div>
+                <div class="text-lg font-mulish-extend w-full sm:p-5 p-3 justify-between flex shadow-md navbar sticky">
+                    <h1 class="text-md sm:text-lg items-center">Data Pengeluaran</h1>
+                    <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
+                </div>
             </div>
 
+            <!-- Filter dan Tambah -->
             <div class="flex justify-between">
-                <h1 class="text-2xl font-mulish-extend mx-4 my-5">Data Pengeluaran</h1>
-                <div class="flex mr-10">
+                <div class="flex sm:mx-4 mx-2 my-5 space-x-4">
+                    <h1 class="sm:text-2xl mt-2 text-sm sm:mt-0 font-mulish-extend hidden sm:flex">Data Pengeluaran</h1>
+                    <form action="" method="GET" class="space-x-2 flex">
+                        <input type="number" name="tahun" min="1000" max="<?php echo date('Y'); ?>" value="<?php echo htmlspecialchars($tahun); ?>" class="sm:w-16 border-1 border-gray-500 rounded-md focus:border-teal-500">
+                        <button type="submit" class="sm:px-4 sm:py-2 rounded-lg bg-gradient font-mulish text-white text-xs sm:text-base p-3">Tampilkan</button>
+                    </form>
+                </div>
+                <div class="flex sm:mr-10 mr-6">
                     <a href="pengeluaran.admin.php" class="flex items-center justify-center gap-2">
-                        <h1 class="font-mulish">Tambah</h1>
-                        <img src="asset/Plus Math.svg" alt="" class="w-10 h-10 bg-gradient p-1 rounded-lg">
+                        <h1 class="font-mulish text-sm sm:text-base">Tambah</h1>
+                        <img src="asset/Plus Math.svg" alt="Tambah" class="w-10 h-10 bg-gradient p-1 rounded-lg">
                     </a>
                 </div>
             </div>
 
-            <!-- TABEL DATA PENGELUARAN -->
-            <div class="overflow-x-auto mx-8 border-b-2">
-                <div class="max-h-80 relative overflow-y-auto no-scrollbar">
-                    <table id="pengeluaranTable" class="min-w-full rounded-lg shadow-md">
-                        <thead>
-                            <tr class="bg-gradient navbar text-white">
-                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
-                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Tanggal</th>
-                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Keterangan</th>
-                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Jumlah</th>
-                                <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 text-start">Action</th>
+            <!-- Tabel -->
+            <div class="overflow-x-auto sm:mx-8 border-b-2">
+                <table id="dataPengeluaran" class="min-w-full rounded-lg shadow-md display">
+                    <thead>
+                        <tr class="bg-gradient text-white text-xs">
+                            <th class="py-2 px-4 border-b font-mulish">Nama</th>
+                            <th class="py-2 px-4 border-b font-mulish">Tanggal</th>
+                            <th class="py-2 px-4 border-b font-mulish">Jumlah</th>
+                            <th class="py-2 px-4 border-b font-mulish">Keterangan</th>
+                            <th class="py-2 px-4 border-b font-mulish">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = mysqli_fetch_assoc($pengeluaran)) { ?>
+                            <tr class='hover:bg-gray-300 text-sm'>
+                                <td class='py-2 px-4 text-center font-mulish'><?= htmlspecialchars($row['nama']); ?></td>
+                                <td class='py-2 px-4 text-center font-mulish' data-order="<?= date('Y-m-d', strtotime($row['tanggal'])); ?>">
+                                    <?= date('d M', strtotime($row['tanggal'])); ?>
+                                </td>
+                                <td class='py-2 px-4 text-center font-mulish'>Rp. <?= number_format($row['jumlah'], 0, '.', '.'); ?></td>
+                                <td class='py-2 px-4 text-center font-mulish'><?= !empty($row['Keterangan']) ? htmlspecialchars($row['Keterangan']) : " - "; ?></td>
+                                <td class='py-2 px-4 text-center font-mulish'>
+                                    <form method='POST' action=''>
+                                        <input type='hidden' name='delete_id' value='<?= $row['ID']; ?>'>
+                                        <button type='submit' name='delete' class='focus:outline-none'>
+                                            <img src='asset/Remove.svg' alt='Delete' class='w-8 h-8 p-1 rounded-md bg-red-700'>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            while ($row = mysqli_fetch_assoc($pengeluaran)) {
-                                echo "<tr class='hover:bg-gray-300 hover:cursor-pointer'>";
-                                echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
-                                echo "<td class='py-2 px-4 text-center font-mulish' data-order='" . date('Y-m-d', strtotime($row['tanggal'])) . "'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
-                                echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
-                                echo "<td class='py-2 px-4 text-center font-mulish'>Rp. " . number_format($row['jumlah'], 0, '.', '.') . "</td>";
-                                echo "<td class='py-2 px-4 text-center font-mulish'>";
-                                echo "<form method='POST' action=''>";
-                                echo "<input type='hidden' name='delete_id' value='" . $row['ID'] . "'>";
-                                echo "<button type='submit' name='delete' class='focus:outline-none'>";
-                                echo "<img src='asset/Remove.svg' alt='Delete' class='w-8 h-8 bg-red-500 p-1 rounded-md'>";
-                                echo "</button>";
-                                echo "</form>";
-                                echo "</td>";
-                                echo "</tr>";
-                            }
-                            ?>
-                        </tbody>
-
-                    </table>
-                </div>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
         </section>
     </div>
 
-    <!-- DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.7/build/pdfmake.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfmake@0.2.7/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
     <script>
-        // tangkap parameter dari pengeluaran admin
-        const seacrhParams = new URLSearchParams(window.location.search);
-
-        const message = seacrhParams.get('message');
-        if (message === "Sucsess") {
-            Swal.fire({
-                icon:'success',
-                title: 'Berhasil!',
-                text: 'Data pengeluaran berhasil dibuat.'
-            }).then(() => {
-                // Hapus parameter setelah SweetAlert ditutup
-                const currentUrl = new URL(window.location);
-                currentUrl.searchParams.delete("message");
-                window.history.replaceState({}, document.title, currentUrl);
-            });
-        }
-        // sweetalert create data pengeluaran
-        const messageCreateData = seacrhParams.get("messageCreateData");
+        const messageCreateData = new URLSearchParams(window.location.search).get("message");
         if (messageCreateData) {
             if (messageCreateData === "Sucsess") {
                 Swal.fire({
+                    title: 'Berhasil',
+                    text: 'Data Pengeluaran Berhasil ditambah',
                     icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Data pengeluaran berhasil ditambahkan.'
+                    confirmButtonText: 'Okay'
                 }).then(() => {
-                    // Hapus parameter setelah SweetAlert ditutup
-                    const currentUrl = new URL(window.location);
-                    currentUrl.searchParams.delete("messageCreateData");
-                    window.history.replaceState({}, document.title, currentUrl);
-                });
-            }
-        }
-
-        // sweetalert delete data pengeluaran
-        const messageDeleteData = seacrhParams.get("messageDeleteData");
-        if (messageDeleteData) {
-            if (messageDeleteData === "Sucsess") {
-                Swal.fire({
-                    icon:'success',
-                    title: 'Berhasil!',
-                    text: 'Data pengeluaran berhasil dihapus.'
-                }).then(() => {
-                    // Hapus parameter setelah SweetAlert ditutup
-                    const currentUrl = new URL(window.location);
-                    currentUrl.searchParams.delete("messageDeleteData");
-                    window.history.replaceState({}, document.title, currentUrl);
-                });
-            } else if (messageDeleteData === "Failed") {
+                    const url = new URL(window.location);
+                    url.searchParams.delete("message");
+                    window.history.replaceState({}, document.title, url);
+                })
+            } else if (messageCreateData === "Failed") {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Gagal!',
-                    text: 'Data pengeluaran gagal dihapus.'
+                    title: 'Gagal',
+                    text: 'Data Pemasukan gagal ditambah',
+                }).then(() => {
+                    const url = new URL(window.location);
+                    url.searchParams.delete("message");
+                    window.history.replaceState({}, document.title, url);
                 });
             }
         }
 
-
+        const messageDeleteData = new URLSearchParams(window.location.search).get("messageDeleteData");
+        if (messageDeleteData) {
+            Swal.fire({
+                icon: messageDeleteData === "Success" ? 'success' : 'error',
+                title: messageDeleteData === "Success" ? 'Berhasil' : 'Gagal',
+                text: messageDeleteData === "Success" ? 'Data Pengeluaran berhasil dihapus' : 'Data Pengeluaran gagal dihapus',
+            }).then(() => {
+                const url = new URL(window.location);
+                url.searchParams.delete("messageDeleteData");
+                window.history.replaceState({}, document.title, url);
+            });
+        }
 
         $(document).ready(function() {
-            // Tampilkan pesan alert jika ada
-            <?php if (isset($_SESSION['message'])): ?>
-                alert("<?php echo $_SESSION['message']; ?>");
-                <?php unset($_SESSION['message']); ?>
-            <?php endif; ?>
+            // Ambil parameter tahun dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const tahun = urlParams.get('tahun') || new Date().getFullYear(); // Default tahun adalah tahun sekarang
 
-            $('#pengeluaranTable').DataTable({
-                dom: 'Bfrtip',
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-                "order": [
-                    [1, "desc"]
-                ], // Urutkan berdasarkan kolom tanggal (index 1) secara descending
-                "columnDefs": [{
-                        "orderable": false,
-                        "targets": [0, 2, 3, 4]
-                    } // Nonaktifkan fitur urutan di kolom lainnya
-                ],
-                "language": {
-                    "search": "Cari:",
-                    "lengthMenu": "Tampilkan _MENU_ data",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    "paginate": {
-                        "first": "Awal",
-                        "last": "Akhir",
-                        "next": "Selanjutnya",
-                        "previous": "Sebelumnya"
-                    }
-                }
+            $(document).ready(function() {
+                // Ambil parameter tahun dari URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const tahun = urlParams.get('tahun') || new Date().getFullYear(); // Default tahun sekarang jika tidak ada parameter
+
+                $('#dataPengeluaran').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'csv',
+                            title: '',
+                            text: 'Export CSV',
+                            filename: 'Data_Pengeluaran_' + tahun, // Nama file dengan tahun
+                            exportOptions: {
+                                columns: ':not(:last-child)' // Semua kecuali kolom terakhir (Aksi)
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            title: '',
+                            text: 'Export Excel',
+                            filename: 'Data_Pengeluaran_' + tahun,
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'pdf',
+                            title: '',
+                            text: 'Export PDF',
+                            filename: 'Data_Pengeluaran_' + tahun,
+                            orientation: 'landscape', // PDF dalam orientasi landscape
+                            pageSize: 'A4', // Ukuran halaman
+                            customize: function(doc) {
+                                doc.content.splice(0, 0, {
+                                    text: 'Data Pengeluaran Tahun ' + tahun,
+                                    style: 'header',
+                                    alignment: 'center',
+                                    margin: [0, 0, 0, 20]
+                                });
+                                doc.styles.tableHeader = {
+                                    bold: true,
+                                    fontSize: 12,
+                                    color: 'white',
+                                    fillColor: '#4CAF50',
+                                    alignment: 'center'
+                                };
+                            },
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            title: 'Data Pengeluaran Tahun ' + tahun,
+                            customize: function(win) {
+                                // Hapus judul tambahan pada halaman print
+                                $(win.document.body).find('h1').css('text-align', 'center');
+                                $(win.document.body).find('table').addClass('compact').css('font-size', '12px');
+                            },
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        }
+                    ],
+                    language: {
+                        search: "Cari:",
+                        lengthMenu: "Tampilkan _MENU_ data",
+                        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                        paginate: {
+                            first: "Awal",
+                            last: "Akhir",
+                            next: "Selanjutnya",
+                            previous: "Sebelumnya"
+                        },
+                        zeroRecords: "Data tidak ditemukan",
+                        infoEmpty: "Menampilkan 0 data",
+                        infoFiltered: "(dari total _MAX_ data)"
+                    },
+                    responsive: true,
+                    order: [
+                        [1, "desc"]
+                    ], // Urutkan berdasarkan tanggal (kolom kedua)
+                    columnDefs: [{
+                            targets: -1, // Kolom terakhir (Aksi)
+                            orderable: false, // Nonaktifkan sorting
+                            searchable: false // Nonaktifkan pencarian
+                        },
+                        {
+                            targets: '_all', // Semua kolom
+                            className: "dt-center" // Rata tengah
+                        }
+                    ]
+                });
             });
+
         });
     </script>
-
 </body>
-<style>
-    /* Hapus scrollbar pada browser berbasis WebKit */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Hapus scrollbar untuk browser lain */
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-    .bg-red-500 {
-        background-color: #F51313;
-    }
-
-    /* Styling untuk tombol hapus */
-    button:hover img {
-        transform: scale(1.1);
-        transition: transform 0.2s ease;
-    }
-
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    table th,
-    table td {
-        padding: 12px;
-        text-align: center;
-    }
-
-    table tr:hover {
-        background-color: #f1f1f1;
-    }
-</style>
 
 </html>

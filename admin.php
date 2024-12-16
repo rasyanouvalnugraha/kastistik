@@ -72,21 +72,29 @@ $saldoJson = json_encode($saldoArray);
 </head>
 
 <body class="bg-gray-100">
-    <div class="flex">
-        <section class="relative">
-            <nav class="navbar h-screen">
+    <div class="flex flex-1">
+        <section class="hidden sm:flex">
+            <nav class="navbar h-screen 2xl:mr-5">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
 
         <section class="flex-1">
-            <div class="text-lg font-mulish-extend w-full p-5 justify-between flex shadow-md navbar">
-                <h1>Dashboard</h1>
-                <h1><?php print $_SESSION['username']; ?></h1>
+            <div class="flex">
+                <div class="sm:hidden flex shadow-md">
+                    <?php include "layout/responnavbar.php" ?>
+                </div>
+                <div class="text-lg font-mulish-extend w-full sm:p-5 p-3 justify-between flex shadow-md navbar">
+                    <div class="text-md sm:text-lg flex items-center gap-x-4">
+                        <h1>Dashboard</h1>
+                    </div>
+                    <h1><?php print $_SESSION['username']; ?></h1>
+                </div>
             </div>
             <?php include 'layout/card.php' ?>
             <section class="flex-1 ml-2">
                 <section class="border-3">
+                    <!-- inputan tahun data untuk chart saldo -->
                     <div class="flex">
                         <h1 class="mx-6 text-xl font-mulish-extend mr-4">Chart Saldo :</h1>
                         <form action="" method="GET" class="flex items-center">
@@ -95,14 +103,8 @@ $saldoJson = json_encode($saldoArray);
                         </form>
                     </div>
 
-
-                    <script>
-                        const getYear = new Date();
-                        const year = getYear.getFullYear();
-                        document.getElementById('year').innerHTML = year;
-                    </script>
-
-                    <div class="flex md:max-h-64 xl:max-h-80 2xl:max-h-96 mx-auto justify-center">
+                    <!-- chart saldo  -->
+                    <div class="flex md:max-h-64 xl:max-h-80 2xl:max-h-96 2xl:mt-4 mx-auto justify-center w-screen sm:w-auto">
                         <canvas id="saldoChart"></canvas>
                     </div>
                 </section>
