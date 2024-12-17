@@ -74,7 +74,7 @@ $saldoJson = json_encode($saldoArray);
 <body class="bg-gray-100">
     <div class="flex flex-1">
         <section class="hidden sm:flex">
-            <nav class="navbar h-screen 2xl:mr-5">
+            <nav class="navbar h-screen">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
@@ -104,7 +104,7 @@ $saldoJson = json_encode($saldoArray);
                     </div>
 
                     <!-- chart saldo  -->
-                    <div class="xl:bg-white xl:h-72 xl:my-4 xl:mx-8 xl:p-2 xl:rounded-md xl:shadow-lg h-72 p-2">
+                    <div class="xl:bg-white xl:h-72 xl:my-4 xl:mx-8 xl:p-2 xl:rounded-md xl:shadow-lg h-72 p-2 2xl:h-96">
                         <canvas id="saldoChart"></canvas>
                     </div>
                 </section>

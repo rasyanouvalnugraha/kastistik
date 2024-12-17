@@ -61,7 +61,7 @@ if (isset($_POST['delete'])) {
 <body class="bg-gray-100">
     <div class="flex">
         <section class="sm:relative sm:flex hidden">
-            <nav class="navbar h-screen 2xl:mr-5">
+            <nav class="navbar h-screen">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
@@ -71,10 +71,22 @@ if (isset($_POST['delete'])) {
                 <div class="sm:hidden flex shadow-md">
                     <?php include "layout/responnavbar.php" ?>
                 </div>
-                <div class="text-lg font-mulish-extend w-full sm:p-5 p-3 justify-between flex shadow-md navbar sticky">
-                    <h1 class="text-md sm:text-lg items-center">History Request</h1>
-                    <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
+                <div class="w-full">
+                    <div class="text-lg font-mulish-extend w-full sm:p-5 p-3 shadow-md navbar sticky">
+                        <div class="flex gap-3 justify-between">
+                            <h1 class="text-md sm:text-lg items-center">History</h1>
+                            <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
+                        </div>
+                    </div>
+                    <div class="space-x-2 text-xs xl:text-sm 2xl:text-base font-mulish-extend mx-5 mt-3 sm:flex hidden">
+                        <a href="request.admin.php" class="bg-gradient p-2 text-white rounded-md">Request</a>
+                        <a href="history.admin.php" class="bg-gradient p-2 text-white rounded-md">History Request</a>
+                    </div>
                 </div>
+            </div>
+            <div class="space-x-2 text-xs xl:text-sm 2xl:text-base font-mulish-extend mx-5 mt-3 flex">
+                <a href="request.admin.php" class="bg-gradient p-2 text-white rounded-md">Request</a>
+                <a href="history.admin.php" class="bg-gradient p-2 text-white rounded-md">History Request</a>
             </div>
             <section>
                 <?php include "layout/card.php" ?>
@@ -97,7 +109,7 @@ if (isset($_POST['delete'])) {
                             <tbody>';
 
                         while ($row = mysqli_fetch_assoc($getData)) {
-                            echo "<tr class='text-sm sm:text-base'>";
+                            echo "<tr class='text-xs sm:text-base'>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . 'Rp ' . number_format($row['jumlah'], 0, ',', '.') . "</td>";

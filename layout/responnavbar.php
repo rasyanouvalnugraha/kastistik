@@ -7,7 +7,7 @@
 </button>
 
 <!-- MOBILE NAVBAR MENU -->
-<section id="mobileMenu" class="hidden fixed top-0 left-0 w-full h-screen bg-gray-900 bg-opacity-75 z-20">
+<section id="mobileMenu" class="hidden fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-75 z-20">
     <div class="bg-gradient h-full p-5 text-white">
         <button id="closeMobileMenu" class="text-xl font-bold">
             X

@@ -30,7 +30,7 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
 <body class="bg-gray-100">
     <div class="flex">
         <section class="relative">
-            <nav class="hidden sm:flex navbar h-screen 2xl:mr-5">
+            <nav class="hidden sm:flex navbar h-screen ">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>

@@ -96,7 +96,9 @@ $saldoJson = json_encode($saldoArray);
                 </div>
             </section>
 
-            <?php include "layout/card.php" ?>
+            <div>
+                <?php include "layout/card.php" ?>
+            </div>
 
             <section class="flex-1">
                 <section class="flex items-center">
@@ -107,7 +109,7 @@ $saldoJson = json_encode($saldoArray);
                         <button class="bg-gradient font-mulish text-white px-2 py-1 rounded-md" type="submit">Tampilkan</button>
                     </form>
                 </section>
-                <div class="xl:bg-white xl:h-72 xl:my-4 xl:mx-8 xl:p-2 xl:rounded-md xl:shadow-lg w-screen h-72 p-2">
+                <div class="xl:bg-white xl:h-72 xl:my-4 xl:mx-8 xl:p-2 xl:rounded-md xl:shadow-lg xl:w-auto w-screen h-72 p-2">
                     <canvas id="saldoChart" class=""></canvas>
                 </div>
             </section>

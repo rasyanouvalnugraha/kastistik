@@ -74,7 +74,7 @@ $pemasukan = mysqli_query(
     <div class="flex">
         <!-- Sidebar -->
         <section class="sm:flex hidden">
-            <nav class="navbar h-screen 2xl:mr-5">
+            <nav class="navbar h-screen">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
@@ -121,8 +121,9 @@ $pemasukan = mysqli_query(
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = mysqli_fetch_assoc($pemasukan)) { ?>
-                            <tr class='hover:bg-gray-300 text-sm'>
+                        <?php 
+                        while ($row = mysqli_fetch_assoc($pemasukan)) { ?>
+                            <tr class='hover:bg-gray-300 text-xs'>
                                 <td class='py-2 px-4 text-center font-mulish'><?= htmlspecialchars($row['nama']); ?></td>
                                 <td class='py-2 px-4 text-center font-mulish' data-order="<?= date('Y-m-d', strtotime($row['tanggal'])); ?>">
                                     <?= date('d M', strtotime($row['tanggal'])); ?>

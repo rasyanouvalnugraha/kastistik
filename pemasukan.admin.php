@@ -133,7 +133,7 @@ if (isset($_POST['add'])) {
                     </form>
                 </div>
 
-                <div class="flex-1 w-full md:flex md:items-center hidden ">
+                <div class="flex-1 w-full md:flex md:items-center hidden 2xl:flex 2xl:items-center 2xl:justify-center">
                     <div>
                         <img src="asset/man and woman discussing idea.png" alt="Man and woman discussing idea" class="p-6">
                     </div>

@@ -106,7 +106,7 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
 <body class="bg-gray-100">
     <div class="flex">
         <section class="sm:relative sm:flex hidden">
-            <nav class="navbar h-screen 2xl:mr-5">
+            <nav class="navbar h-screen">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
@@ -116,21 +116,29 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                 <div class="sm:hidden flex shadow-md">
                     <?php include "layout/responnavbar.php" ?>
                 </div>
-                <div class="text-lg font-mulish-extend w-full sm:p-5 p-3 justify-between flex shadow-md navbar sticky">
-                    <div class="flex gap-3">
-                        <h1 class="text-md sm:text-lg items-center">Permintaan Dari User</h1>
-                        <h1>></h1>
-                        <a href="history.admin.php">History</a>
+                <div class="w-full">
+                    <div class="text-lg font-mulish-extend w-full sm:p-5 p-3 shadow-md navbar sticky">
+                        <div class="flex gap-3 justify-between">
+                            <h1 class="text-md sm:text-lg items-center">Request</h1>
+                            <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
+                        </div>
                     </div>
-                    <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
+                    <div class="hidden sm:flex space-x-2 text-xs xl:text-sm 2xl:text-base font-mulish-extend mx-5 mt-3">
+                        <a href="request.admin.php" class="bg-gradient p-2 text-white rounded-md">Request</a>
+                        <a href="history.admin.php" class="bg-gradient p-2 text-white rounded-md">History Request</a>
+                    </div>
                 </div>
+            </div>
+            <div class="flex space-x-2 text-xs xl:text-sm 2xl:text-base font-mulish-extend mx-5 mt-3">
+                <a href="request.admin.php" class="bg-gradient p-2 text-white rounded-md">Request</a>
+                <a href="history.admin.php" class="bg-gradient p-2 text-white rounded-md">History Request</a>
             </div>
             <section>
                 <?php include "layout/card.php" ?>
             </section>
 
             <div class="overflow-x-auto sm:mx-8 my-2 rounded-lg w-screen sm:w-auto">
-                <div class="max-h-80 relative overflow-y-auto no-scrollbar">
+                <div class="max-h-72 xl:max-h-72 2xl:max-h-full relative overflow-y-auto no-scrollbar">
                     <?php
                     if (mysqli_num_rows($getData) > 0) {
                         // Jika data tersedia, tampilkan tabel
@@ -141,20 +149,20 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                             <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Nama</th>
                             <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Jumlah</th>
                             <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Keterangan</th>
-                            <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10 px-10">Aksi</th>
+                            <th class="py-2 px-4 border-b font-mulish sticky top-0 z-10">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>';
 
                         // Loop untuk menampilkan data
                         while ($row = mysqli_fetch_assoc($getData)) {
-                            echo "<tr class='text-sm sm:text-base'>";
+                            echo "<tr class='text-xs sm:text-base'>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . date('d M Y', strtotime($row['tanggal'])) . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['nama'] . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . "Rp " . number_format($row['jumlah'], 0, ',', '.') . "</td>";
                             echo "<td class='py-2 px-4 text-center font-mulish'>" . $row['Keterangan'] . "</td>";
-                            echo "<td class='py-2 px-4 text-center font-mulish px-4'>
-                                    <form action='request.admin.php' method='post' class='flex'>
+                            echo "<td class='py-2 px-4 text-center font-mulish'>
+                                    <form action='request.admin.php' method='post' class='flex items-center justify-center'>
                                         <input type='hidden' name='id' value='" . $row['nomor'] . "'>
                                         <button type='submit' name='approve' value='setujui'>
                                             <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 up m-1 rounded-md p-1'>
@@ -175,6 +183,12 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                     ?>
                 </div>
             </div>
+            <div class="sm:mx-8 hidden sm:block">
+                <a href="history.admin.php" class="">
+                    <p class="font-mulish-extend text-white bg-gradient p-2">History</p>
+                </a>
+            </div>
+
 
         </section>
     </div>

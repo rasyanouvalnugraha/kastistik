@@ -34,13 +34,12 @@ if (isset($_POST['min'])) {
         $result = mysqli_query($db, "
         INSERT INTO `transactions` (`id`, `id_user`, `amount`, `type`, `date`, `keterangan`, `saldo`, `approve`) VALUES (NULL,'$username', '$jumlah', 3 ,'$tanggal', '$keterangan', '$jumlah', 1);
         ");
-        $messageCreateData = "Sucsess"; 
+        $messageCreateData = "Sucsess";
         header("location: data.pengeluaran.admin.php?message=" . $messageCreateData);
-    } else{
+    } else {
         $messageCreateData = "Failed";
         header("Location: pengeluaran.admin.php?message=" . $messageCreateData);
     }
-
 }
 
 
@@ -137,10 +136,9 @@ if (isset($_POST['min'])) {
                     </form>
                 </div>
 
-                <div class="flex-1 w-full md:flex md:items-center hidden">
-                    <div>
-                        <img src="asset/Woman shopping online on tablet.svg" alt="Man and woman discussing idea" class="p-6">
-                    </div>
+                <div class="flex-1 w-full md:flex md:items-center hidden 2xl:items-center justify-center">
+                    <img src="asset/Woman shopping online on tablet.svg" alt="Man and woman discussing idea" class="xl:p-6 2xl:p-0">
+
                 </div>
             </section>
 

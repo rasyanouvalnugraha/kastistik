@@ -104,7 +104,7 @@ if (isset($_POST['update'])) {
 <body class="bg-gray-100">
     <div class="flex">
         <section class="hidden sm:relative sm:flex">
-            <nav class="navbar h-screen 2xl:mr-5">
+            <nav class="navbar h-screen">
                 <?php include "layout/navbar.php"; ?>
             </nav>
         </section>
@@ -116,11 +116,11 @@ if (isset($_POST['update'])) {
             </div>
 
             <!-- table user -->
-            <div class="overflow-x-auto w-screen sm:w-auto sm:mx-8 mt-4 border-b-2 rounded-lg">
-                <div class="flex xl:max-h-96 h-[200px] overflow-y-auto no-scrollbar">
+            <div class="overflow-x-auto w-screen sm:w-auto sm:mx-8 mt-4 border-b-2 rounded-lg 2xl:my-4">
+                <div class="flex max-h-96 xl:max-h-96 2xl:max-h-full h-[200px] overflow-y-auto no-scrollbar">
                     <table class="min-w-full rounded-lg">
-                        <thead class="text-sm sm:text-base">
-                            <tr class="bg-gradient text-white sticky top-0 z-10">
+                        <thead class="text-sm sm:text-base sticky top-0 z-10 2xl:z-0 ">
+                            <tr class="bg-gradient text-white ">
                                 <th class="font-mulish text-center p-2">#</th>
                                 <th class="font-mulish text-center p-2">Nama</th>
                                 <th class="font-mulish text-center p-2">Username</th>
