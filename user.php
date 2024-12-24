@@ -82,7 +82,7 @@ $saldoJson = json_encode($saldoArray);
             </div> 
 
             <section id="mobileMenu" class="hidden fixed top-0 left-0 w-full h-screen bg-gradient bg-opacity-90 z-20">
-                <div class="bg-gray-800 h-full p-5 text-white">
+                <div class="bg-gradient h-full p-5 text-white">
                     <button id="closeMobileMenu" class="text-xl font-bold">X</button>
                     <ul class="mt-5 space-y-4 font-mulish">
                         <li><a href="user.php" class="block">Dashboard</a></li>

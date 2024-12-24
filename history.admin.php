@@ -7,6 +7,9 @@ if ($_SESSION['role'] != '1') {
 
 include "connection/database.php";
 
+// Validasi dan ambil tahun dari query string
+$tahun = isset($_GET['tahun']) && is_numeric($_GET['tahun']) ? intval($_GET['tahun']) : date('Y');
+
 // Ambil data request user
 $getData = mysqli_query($db, "
     SELECT 
@@ -18,7 +21,8 @@ $getData = mysqli_query($db, "
     FROM transactions
     JOIN users ON transactions.id_user = users.id 
     WHERE transactions.approve = 2 
-    ORDER BY transactions.date DESC;
+    AND YEAR(transactions.date) = $tahun 
+    ORDER BY transactions.date DESC
 ");
 
 $message = '';
@@ -39,8 +43,8 @@ if (isset($_POST['delete'])) {
     header("Location: history.admin.php?message=" . $message);
     exit();
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -78,18 +82,23 @@ if (isset($_POST['delete'])) {
                             <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
                         </div>
                     </div>
-                    <div class="space-x-2 text-xs xl:text-sm 2xl:text-base font-mulish-extend mx-5 mt-3 sm:flex hidden">
-                        <a href="request.admin.php" class="bg-gradient p-2 text-white rounded-md">Request</a>
-                        <a href="history.admin.php" class="bg-gradient p-2 text-white rounded-md">History Request</a>
-                    </div>
                 </div>
-            </div>
-            <div class="space-x-2 text-xs xl:text-sm 2xl:text-base font-mulish-extend mx-5 mt-3 flex">
-                <a href="request.admin.php" class="bg-gradient p-2 text-white rounded-md">Request</a>
-                <a href="history.admin.php" class="bg-gradient p-2 text-white rounded-md">History Request</a>
             </div>
             <section>
                 <?php include "layout/card.php" ?>
+            </section>
+
+            <section>
+                <div class="flex mx-5 font-mulish-extend space-x-2">
+                    <div class="flex space-x-2">
+                        <h1 class="p-2 text-xs 2xl:text-xl xl:text-lg  justify-center items-center mt-1 sm:mt-0">Pilih Tahun :</h1>
+                        <form action="" method="GET" class="space-x-2">
+                            <input type="number" class="py-2 sm:w-20 w-10 h-8 sm:h-11 rounded-md" name="tahun" min="1990" max="<?php echo date('Y'); ?>" value="<?php echo htmlspecialchars($_GET['tahun'] ?? date('Y')); ?>" required>
+                            <button class="bg-gradient p-2 text-white rounded-md font-mulish-extend 2xl:text-lg xl:text-base text-sm" type="submit">Tampilkan</button>
+                            <a href="request.admin.php" class="bg-gradient p-2.5 text-white rounded-md font-mulish-extend 2xl:text-lg xl:text-base text-sm">Request</a>
+                        </form>
+                    </div>
+                </div>
             </section>
 
             <div class="overflow-x-auto w-screen sm:w-auto sm:mx-8 my-2">

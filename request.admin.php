@@ -28,6 +28,9 @@ $pengeluaran = $data['pengeluaran'] ?? 0; // Jika null, set ke 0
 // Menghitung saldo untuk tahun berjalan
 $sisa = $pemasukan - $pengeluaran;
 
+$tahun = isset($_GET['tahun']) && is_numeric($_GET['tahun']) ? intval($_GET['tahun']) : date('Y');
+
+
 // get data request user
 $getData = mysqli_query($db, "
     SELECT 
@@ -39,8 +42,10 @@ $getData = mysqli_query($db, "
     FROM transactions
     JOIN users ON transactions.id_user = users.id 
     WHERE transactions.approve = 0 
+    AND YEAR(date) = $tahun 
     ORDER BY transactions.date DESC;
 ");
+
 $message = "";
 
 // Jika tombol approve atau decline dipencet
@@ -123,18 +128,23 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                             <h1 class="text-md sm:text-lg items-center"><?php echo htmlspecialchars($_SESSION['username']); ?></h1>
                         </div>
                     </div>
-                    <div class="hidden sm:flex space-x-2 text-xs xl:text-sm 2xl:text-base font-mulish-extend mx-5 mt-3">
-                        <a href="request.admin.php" class="bg-gradient p-2 text-white rounded-md">Request</a>
-                        <a href="history.admin.php" class="bg-gradient p-2 text-white rounded-md">History Request</a>
-                    </div>
                 </div>
-            </div>
-            <div class="flex space-x-2 text-xs xl:text-sm 2xl:text-base font-mulish-extend mx-5 mt-3">
-                <a href="request.admin.php" class="bg-gradient p-2 text-white rounded-md">Request</a>
-                <a href="history.admin.php" class="bg-gradient p-2 text-white rounded-md">History Request</a>
             </div>
             <section>
                 <?php include "layout/card.php" ?>
+            </section>
+
+            <section>
+                <div class="flex mx-5 font-mulish-extend space-x-2">
+                    <div class="flex space-x-2">
+                        <h1 class="p-2 text-xs 2xl:text-xl xl:text-lg  justify-center items-center mt-1 sm:mt-0">Pilih Tahun :</h1>
+                        <form action="" method="GET" class="space-x-2">
+                            <input type="number" class="py-2 sm:w-20 w-10 h-8 sm:h-11 rounded-md" name="tahun" min="1990" max="<?php echo date('Y'); ?>" value="<?php echo htmlspecialchars($_GET['tahun'] ?? date('Y')); ?>" required>
+                            <button class="bg-gradient p-2 text-white rounded-md font-mulish-extend 2xl:text-lg xl:text-base text-sm" type="submit">Tampilkan</button>
+                            <a href="history.admin.php" class="bg-gradient p-2.5 text-white rounded-md font-mulish-extend 2xl:text-lg xl:text-base text-sm">History</a>
+                        </form>
+                    </div>
+                </div>
             </section>
 
             <div class="overflow-x-auto sm:mx-8 my-2 rounded-lg w-screen sm:w-auto">
@@ -164,11 +174,11 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                             echo "<td class='py-2 px-4 text-center font-mulish'>
                                     <form action='request.admin.php' method='post' class='flex items-center justify-center'>
                                         <input type='hidden' name='id' value='" . $row['nomor'] . "'>
-                                        <button type='submit' name='approve' value='setujui'>
-                                            <img src='asset/Thumbs Up.svg' alt='Setujui' class='w-8 h-8 up m-1 rounded-md p-1'>
+                                        <button type='submit' name='approve' value='setujui' >
+                                            <img src='asset/Thumbs Up.svg' alt='Setujui' class='sm:w-8 sm:h-8 w-full up m-1 rounded-md py-1'>
                                         </button>
                                         <button type='submit' name='decline' value='tolak'>
-                                            <img src='asset/Thumbs Down.svg' alt='Tolak' class='w-8 h-8 down m-1 rounded-md py-1'>
+                                            <img src='asset/Thumbs Down.svg' alt='Tolak' class='sm:w-8 sm:h-8 w-full down m-1 rounded-md py-1'>
                                         </button>
                                     </form>
                                 </td>";
@@ -183,13 +193,6 @@ if (isset($_POST['approve']) || isset($_POST['decline'])) {
                     ?>
                 </div>
             </div>
-            <div class="sm:mx-8 hidden sm:block">
-                <a href="history.admin.php" class="">
-                    <p class="font-mulish-extend text-white bg-gradient p-2">History</p>
-                </a>
-            </div>
-
-
         </section>
     </div>
 
