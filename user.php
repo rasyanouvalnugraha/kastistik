@@ -77,9 +77,11 @@ $saldoJson = json_encode($saldoArray);
                 </button>
                 <div class="w-full flex justify-between items-center px-2 sm:px-0 sm:mt-0">
                     <h1 class="text-sm sm:text-lg text-black">Dashboard</h1>
-                    <h1 class="text-sm sm:text-lg text-black"></h1>
+                    <h1 class="text-sm sm:text-lg text-black">
+                        <?php print $_SESSION['fullname']; ?>
+                    </h1>
                 </div>
-            </div> 
+            </div>
 
             <section id="mobileMenu" class="hidden fixed top-0 left-0 w-full h-screen bg-gradient bg-opacity-90 z-20">
                 <div class="bg-gradient h-full p-5 text-white">
