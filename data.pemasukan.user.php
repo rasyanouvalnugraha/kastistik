@@ -7,7 +7,11 @@
         exit();
     }
 
-
+    // Ambil data tahun, default ke tahun sekarang
+    $tahun = isset($_GET['tahun']) ? intval($_GET['tahun']) : date('Y');
+    if ($tahun < 1000 || $tahun > intval(date('Y'))) {
+        $tahun = date('Y');
+    }
     // Fetch paginated data
     $pemasukan = mysqli_query($db, "
         SELECT 
@@ -17,7 +21,7 @@
         transactions.keterangan AS Keterangan 
     FROM transactions 
     JOIN users ON transactions.id_user = users.id 
-    WHERE transactions.type IN (1,2) AND transactions.approve = 1 
+    WHERE transactions.type IN (1,2) AND transactions.approve = 1 AND YEAR (transactions.date) = $tahun
     ORDER BY transactions.date DESC, users.fullname DESC, transactions.amount DESC
     ");
 
@@ -80,7 +84,14 @@
                     </div>
                 </section>
 
-                <h1 class="sm:text-2xl font-mulish-extend mx-4 my-5">Data Pemasukan</h1>
+                <div class="flex">
+                    <h1 class="sm:text-2xl font-mulish-extend mx-4 my-5">Data Pemasukan</h1>
+                    <form action="" method="GET" class="space-x-2 justify-center items-center flex">
+                        <input type="number" name="tahun" min="1000" max="<?php echo date('Y'); ?>" value="<?php echo htmlspecialchars($tahun); ?>" class="sm:w-16 border-1 border-gray-500 rounded-md focus:border-teal-500 py-2">
+                        <button type="submit" class="sm:px-4 sm:py-2 rounded-lg bg-gradient font-mulish text-white text-xs sm:text-base p-3">Tampilkan</button>
+                    </form>
+                </div>
+
 
                 <!-- TABEL DATA PEMASUKAN -->
                 <div class="sm:mx-8 sm:px-6 px-2">
@@ -123,7 +134,7 @@
                 $('#dataTable').DataTable({
                     "pageLength": 6, // Data per halaman
                     "lengthChange": false, // Hilangkan opsi dropdown jumlah data per halaman
-                    "ordering": true, // Aktifkan fitur sorting
+                    "order": [0],
                     "language": {
                         "paginate": {
                             "previous": "Prev",

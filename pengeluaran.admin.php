@@ -5,15 +5,15 @@ if ($_SESSION['role'] != '1') {
     header('location: index.php');
     exit();
 }
-
+$current_year = date('Y');
 // menghitung pemasukan
-$querypemasukan = "SELECT SUM(amount) AS pemasukan FROM `transactions` WHERE type = 1 AND approve = 1; ";
+$querypemasukan = "SELECT SUM(amount) AS pemasukan FROM `transactions` WHERE type IN (1,2) AND approve = 1 AND Year(date) = $current_year; ";
 $result1 = $db->query($querypemasukan);
 $data = $result1->fetch_assoc();
 $pemasukan = $data['pemasukan'];
 
 // menghitung pengeluaran 
-$querypengeluaran = "SELECT SUM(amount) AS pengeluaran FROM `transactions` WHERE type = 3 AND approve = 1;";
+$querypengeluaran = "SELECT SUM(amount) AS pengeluaran FROM `transactions` WHERE type = 3 AND approve = 1 AND Year(date) = $current_year;";
 $result1 = $db->query($querypengeluaran);
 $data = $result1->fetch_assoc();
 $pengeluaran = $data['pengeluaran'];

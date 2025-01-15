@@ -67,12 +67,12 @@ $sisa = $pemasukan - $pengeluaran;
                         if ($pemasukan > 0) {
                             echo "Rp " . number_format($pemasukan, 0, ',', '.');
                         } else {
-                            echo "<span class='text-xl'>Tidak Ada</span>";
+                            echo "<span class='sm:text-xl text-sm'>Tidak Ada</span>";
                         }
                         ?>
                     </label>
                 </div>
-                <label class="hidden md:text-xl md:block font-mulish-ket">Tahun Ini</label>
+                <label class="hidden text-sm md:text-xl md:block font-mulish-ket">Tahun Ini</label>
             </div>
         </li>
 
@@ -90,12 +90,12 @@ $sisa = $pemasukan - $pengeluaran;
                         if ($pengeluaran > 0) {
                             echo "Rp " . number_format($pengeluaran, 0, ',', '.');
                         } else {
-                            echo "<span class='text-xl'>Tidak Ada</span>";
+                            echo "<span class='sm:text-xl text-sm'>Tidak Ada</span>";
                         }
                         ?>
                     </label>
                 </div>
-                <label class="hidden md:text-xl md:block font-mulish-ket">Tahun Ini</label>
+                <label class="hidden text-sm md:text-xl md:block font-mulish-ket">Tahun Ini</label>
             </div>
         </li>
 
