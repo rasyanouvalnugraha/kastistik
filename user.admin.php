@@ -48,9 +48,9 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
             </div>
 
             <!-- Form untuk memilih tahun -->
-            <section class="sm:flex sm:px-6 sm:py-2 sm:mx-4 font-mulish-extend sm:gap-2">
+            <section class="sm:flex sm:px-6 sm:py-2 sm:mx-4 font-mulish-extend sm:gap-2 sm:bg-white sm:m-2 sm:rounded-lg sm:shadow-xl">
                 <form method="GET" class="flex items-center sm:gap-4 gap-2 mx-4 sm:mx-0 mt-2 sm:mt-0">
-                    <h1 class="sm:text-xl text-xs mt-2">Data user yang sudah bayar perbulan dalam 1 tahun</h1>
+                    <h1 class="sm:text-xl text-xs">Data user yang sudah bayar perbulan dalam 1 tahun</h1>
                     <img src="asset/Calendar.png" alt="Calendar" class="bg-gradient h-12 p-2 rounded-lg text-white">
                     <input type="number" id="year" name="year" min="1990" max="2100" value="<?php echo $tahun; ?>"
                         class="border border-gray-300 rounded-md px-2 py-3" required>
@@ -121,7 +121,7 @@ $getuser = mysqli_query($db, "SELECT * FROM users WHERE role = '2'");
             </div>
 
             <!-- Tabel untuk Desktop -->
-            <section class="hidden sm:block overflow-x-auto p-6 rounded-lg">
+            <section class="hidden sm:block overflow-x-auto sm:mx-6 sm:p-4 sm:bg-white sm:rounded-md sm:shadow-lg">
                 <table class="table-auto w-full border-collapse border border-gray-300 text-center">
                     <thead class="bg-gradient text-white">
                         <tr>

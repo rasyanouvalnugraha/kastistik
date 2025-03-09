@@ -134,7 +134,7 @@
                 $('#dataTable').DataTable({
                     "pageLength": 6, // Data per halaman
                     "lengthChange": false, // Hilangkan opsi dropdown jumlah data per halaman
-                    "order": [0],
+                    "order": false,
                     "language": {
                         "paginate": {
                             "previous": "Prev",

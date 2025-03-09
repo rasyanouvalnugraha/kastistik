@@ -116,7 +116,7 @@ if (isset($_POST['update'])) {
             </div>
 
             <!-- table user -->
-            <div class="overflow-x-auto w-screen sm:w-auto sm:mx-8 mt-4 border-b-2 rounded-lg 2xl:my-4">
+            <div class="overflow-x-auto w-screen sm:w-auto sm:mx-8 mt-4 border-b-2 rounded-lg 2xl:my-4 bg-white ">
                 <div class="flex max-h-96 xl:max-h-96 2xl:max-h-full h-[200px] overflow-y-auto no-scrollbar">
                     <table class="min-w-full rounded-lg">
                         <thead class="text-sm sm:text-base sticky top-0 z-10 2xl:z-0 ">
